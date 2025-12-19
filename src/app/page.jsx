@@ -66,7 +66,7 @@ export default function Home() {
   const [isBrandsLoading, setIsBrandsLoading] = useState(true);
   const [isModelsLoading, setIsModelsLoading] = useState(true);
   const [isBanksLoading, setIsBanksLoading] = useState(true);
-  const [heroVideoSrc, setHeroVideoSrc] = useState("/hero1.mp4");
+  const [heroVideoSrc, setHeroVideoSrc] = useState("/https://res.cloudinary.com/dshvevzgv/video/upload/v1766159273/hero1_hv4wxn.mp4");
   const [sectionVideoSrc, setSectionVideoSrc] = useState("/sectionBG4.mp4");
   const [featuredVideoSrc, setFeaturedVideoSrc] = useState("/featured.mp4");
   const [brandsVideoSrc, setBrandsVideoSrc] = useState("/");
@@ -163,7 +163,7 @@ export default function Home() {
   useEffect(() => {
     const updateVideoSrc = () => {
       const isMobile = window.innerWidth <= 768;
-      setHeroVideoSrc(isMobile ? "/hero1.mp4" : "/hero1.mp4");
+      setHeroVideoSrc(isMobile ? "/https://res.cloudinary.com/dshvevzgv/video/upload/v1766159273/hero1_hv4wxn.mp4" : "/https://res.cloudinary.com/dshvevzgv/video/upload/v1766159273/hero1_hv4wxn.mp4");
     };
 
     updateVideoSrc(); // Set initial src
