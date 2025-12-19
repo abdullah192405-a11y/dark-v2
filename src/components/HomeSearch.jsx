@@ -8,6 +8,7 @@ import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
 import useFetch from "../../hooks/use-fetch";
 import { processAiImageSearch } from "@/actions/home";
+import LoadingBar from "./LoadingBar";
 
 const HomeSearch = () => {
   const [serachTerm, setSerachTerm] = useState("");
@@ -16,7 +17,8 @@ const HomeSearch = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [searchImage, setSearchImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  
+  const [isSearching, setIsSearching] = useState(false);
+
   // Dropdown states
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -159,23 +161,27 @@ const HomeSearch = () => {
     }
 
     setShowSuggestions(false);
+    setIsSearching(true);
+    // Dispatch custom event to show loading immediately
+    window.dispatchEvent(new CustomEvent('startLoading'));
     router.push(`/cars?search=${encodeURIComponent(serachTerm)}`);
   };
 
   const handleSuggestionClick = async (suggestion) => {
   setSerachTerm(suggestion);
   setShowSuggestions(false);
-  
+
   // Parse the suggestion to extract make and model
   // Assuming suggestion format is like "Toyota Camry" or just "Toyota"
   const parts = suggestion.trim().split(/\s+/);
-  
+
   // Only proceed if both make AND model are present
   if (parts.length > 1) {
     const params = new URLSearchParams();
     params.set("make", parts[0]); // First word is the make
     params.set("model", parts.slice(1).join(" ")); // Rest is the model
-    
+
+    setIsSearching(true);
     router.push(`/cars?${params.toString()}`);
   }
   // If only make exists (parts.length === 1), do nothing - just update search term
@@ -208,6 +214,9 @@ const HomeSearch = () => {
       return;
     }
 
+    setIsSearching(true);
+    // Dispatch custom event to show loading immediately
+    window.dispatchEvent(new CustomEvent('startLoading'));
     const formData = new FormData();
     formData.append("image", searchImage);
 
@@ -430,6 +439,7 @@ const HomeSearch = () => {
           </form>
         </div>
       )}
+      {isSearching && <LoadingBar />}
     </div>
   );
 };

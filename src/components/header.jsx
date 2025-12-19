@@ -111,9 +111,17 @@ const Header = ({ isAdminPage = false }) => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 rtl:space-x-reverse">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="text-white hover:text-yellow-600 transition-colors text-sm font-medium">
+            <button
+              key={item.href}
+              onClick={() => {
+                // Dispatch custom event to show loading immediately
+                window.dispatchEvent(new CustomEvent('startLoading'));
+                router.push(item.href);
+              }}
+              className="text-white hover:text-yellow-600 transition-colors text-sm font-medium"
+            >
               {item.name}
-            </Link>
+            </button>
           ))}
         </nav>
 
@@ -130,10 +138,13 @@ const Header = ({ isAdminPage = false }) => {
                 <div className="flex flex-col space-y-4 mt-8">
                   <div className="mt-4"></div>
                   {navItems.map((item) => (
-                    <Button key={item.href} asChild variant="ghost" className="justify-start text-lg font-medium" onClick={() => setOpen(false)}>
-                      <Link href={item.href}>
-                        {item.name}
-                      </Link>
+                    <Button key={item.href} variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
+                      setOpen(false);
+                      // Dispatch custom event to show loading immediately
+                      window.dispatchEvent(new CustomEvent('startLoading'));
+                      router.push(item.href);
+                    }}>
+                      {item.name}
                     </Button>
                   ))}
                   
@@ -143,25 +154,34 @@ const Header = ({ isAdminPage = false }) => {
                         <Loader2 className="animate-spin" size={20} />
                       </div>
                     ) : isAdmin ? (
-                      <Button asChild variant="ghost" className="justify-start text-lg font-medium" onClick={() => setOpen(false)}>
-                        <Link href="/admin">
+                      <Button variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
+                        setOpen(false);
+                        // Dispatch custom event to show loading immediately
+                        window.dispatchEvent(new CustomEvent('startLoading'));
+                        router.push('/admin');
+                      }}>
                         <Layout size={18} className="ml-2" />
-                          لوحة الإدارة
-                        </Link>
+                        لوحة الإدارة
                       </Button>
                     ) : (
                       <>
-                        <Button asChild variant="ghost" className="justify-start text-lg font-medium" onClick={() => setOpen(false)}>
-                          <Link href="/saved-cars">
-                            <CarFront size={18} className="ml-2" />
-                            السيارات المحفوظة
-                          </Link>
+                        <Button variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
+                          setOpen(false);
+                          // Dispatch custom event to show loading immediately
+                          window.dispatchEvent(new CustomEvent('startLoading'));
+                          router.push('/saved-cars');
+                        }}>
+                          <CarFront size={18} className="ml-2" />
+                          السيارات المحفوظة
                         </Button>
-                        <Button asChild variant="ghost" className="justify-start text-lg font-medium" onClick={() => setOpen(false)}>
-                          <Link href="/reservations">
-                            <Heart size={18} className="ml-2" />
-                            حجوزاتي
-                          </Link>
+                        <Button variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
+                          setOpen(false);
+                          // Dispatch custom event to show loading immediately
+                          window.dispatchEvent(new CustomEvent('startLoading'));
+                          router.push('/reservations');
+                        }}>
+                          <Heart size={18} className="ml-2" />
+                          حجوزاتي
                         </Button>
                       </>
                     )}
@@ -180,13 +200,14 @@ const Header = ({ isAdminPage = false }) => {
             )} */}
 
             {isAdminPage ? (
-              <Link href="/">
-                <Button variant="outline" className="flex items-center gap-2">
-                 
-                  <span className="hidden md:inline">العودة للتطبيق</span>
-                   <ArrowLeft size={18} />
-                </Button>
-              </Link>
+              <Button variant="outline" className="flex items-center gap-2" onClick={() => {
+                // Dispatch custom event to show loading immediately
+                window.dispatchEvent(new CustomEvent('startLoading'));
+                router.push('/');
+              }}>
+                <span className="hidden md:inline">العودة للتطبيق</span>
+                <ArrowLeft size={18} />
+              </Button>
             ) : roleLoading ? (
               <div className="hidden md:flex items-center gap-2">
                 <Loader2 className="animate-spin text-white" size={20} />
@@ -231,7 +252,10 @@ const Header = ({ isAdminPage = false }) => {
 
           <SignedOut>
             <SignInButton>
-              <Button variant="outline">تسجيل الدخول</Button>
+              <Button variant="outline" onClick={() => {
+                // Dispatch custom event to show loading immediately
+                window.dispatchEvent(new CustomEvent('startLoading'));
+              }}>تسجيل الدخول</Button>
             </SignInButton>
           </SignedOut>
         </div>

@@ -141,7 +141,11 @@ const CarCard = ({ car, isFeatured }) => {
         <div className="flex justify-between">
           <Button
             className="flex-1"
-            onClick={() => router.push(`/cars/${car.id}`)}
+            onClick={() => {
+              // Dispatch custom event to show loading immediately
+              window.dispatchEvent(new CustomEvent('startLoading'));
+              router.push(`/cars/${car.id}`);
+            }}
           >
             عرض السيارة
           </Button>

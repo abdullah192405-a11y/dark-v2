@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Facebook, Instagram, Mail, Phone, Video, Youtube } from "lucide-react";
 import { SiTiktok, SiWhatsapp, SiSnapchat } from "react-icons/si";
 
@@ -16,6 +17,8 @@ const navItems = [
 ];
 
 const Footer = () => {
+  const router = useRouter();
+
   return (
     <footer className="bg-black py-12" dir="rtl">
       <div className="container mx-auto px-4">
@@ -81,9 +84,17 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white mb-4">روابط سريعة</h3>
             <div className="grid grid-cols-2 gap-2 justify-items-center md:justify-items-start">
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href} className="text-gray-300 hover:text-white transition-colors">
+                <button
+                  key={item.href}
+                  onClick={() => {
+                    // Dispatch custom event to show loading immediately
+                    window.dispatchEvent(new CustomEvent('startLoading'));
+                    router.push(item.href);
+                  }}
+                  className="text-gray-300 hover:text-white transition-colors"
+                >
                   {item.name}
-                </Link>
+                </button>
               ))}
             </div>
           </div>

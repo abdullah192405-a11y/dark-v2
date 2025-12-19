@@ -29,6 +29,8 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 
 import BackgroundMovingObjects from "@/components/BackgroundMovingObjects";
 import AdPopup from "@/components/AdPopup";
+import LoadingBar from "@/components/LoadingBar";
+import { useRouter } from "next/navigation";
 const LetterByLetterText = ({ text, delay = 50, startDelay = 0, className = "" }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -74,6 +76,7 @@ export default function Home() {
   const [isChatBotOpen, setIsChatBotOpen] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [isReviewsLoading, setIsReviewsLoading] = useState(true);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Refs for sections to observe
   const sectionRefs = useRef([]);
@@ -279,8 +282,16 @@ export default function Home() {
     }
   };
 
+  const handleNavigation = (href) => {
+    // Dispatch custom event to show loading immediately
+    window.dispatchEvent(new CustomEvent('startLoading'));
+    setIsNavigating(true);
+    router.push(href);
+  };
+
   return (
     <div className="pt-20 flex flex-col bg-black">
+      {(isLoading || isBrandsLoading || isModelsLoading || isBanksLoading || isReviewsLoading) && <LoadingBar />}
       {/* Hero */}
       <section className="relative pt-32 pb-48 md:pt-24 md:pb-48 lg:pt-32 lg:pb-60">
         <video
@@ -356,12 +367,10 @@ export default function Home() {
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold px-8 py-4 rounded-full shadow-2xl hover:shadow-yellow-500/25 transform hover:scale-105 transition-all duration-300 border-2 border-yellow-400/50"
-                  asChild
+                  onClick={() => handleNavigation('/about')}
                 >
-                  <Link href="/about" className="flex items-center space-x-2 space-x-reverse">
-                    <span>اعرف المزيد</span>
-                    {/* <Zap className="h-5 w-5" /> */}
-                  </Link>
+                  <span>اعرف المزيد</span>
+                  {/* <Zap className="h-5 w-5" /> */}
                 </Button>
               </div>
             </div>
@@ -406,10 +415,8 @@ export default function Home() {
   <div className="container mx-auto relative z-10">
     <div className="flex justify-between items-center mb-8">
       <h2 className="text-2xl font-bold text-white">السيارات المميزة</h2>
-      <Button variant="ghost" className="flex items-center" asChild>
-        <Link href={`/cars`}>
-          عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
-        </Link>
+      <Button variant="ghost" className="flex items-center" onClick={() => handleNavigation('/cars')}>
+        عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
       </Button>
     </div>
     {/* Featured Cars Car-card*/}
@@ -433,6 +440,7 @@ export default function Home() {
         </div>
       )}
     </div>
+    {isNavigating && <LoadingBar />}
   </div>
 </section>
 
@@ -442,11 +450,8 @@ export default function Home() {
         <div className="container mx-auto ">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold">البنوك الشريكة</h2>
-            <Button variant="ghost" className="flex items-center" asChild>
-              <Link href={`/banks`}>
-
-                عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
-              </Link>
+            <Button variant="ghost" className="flex items-center" onClick={() => handleNavigation('/banks')}>
+              عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
             </Button>
           </div>
 
@@ -494,10 +499,8 @@ export default function Home() {
         <div className="container mx-auto relative z-10">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold">الشركات المميزة</h2>
-            <Button variant="ghost" className="flex items-center" asChild>
-              <Link href={`/companies`}>
-                عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
-              </Link>
+            <Button variant="ghost" className="flex items-center" onClick={() => handleNavigation('/companies')}>
+              عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
             </Button>
           </div>
 
@@ -586,10 +589,8 @@ export default function Home() {
         <div className="container mx-auto">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold text-white">آراء العملاء</h2>
-            <Button variant="ghost" className="flex items-center" asChild>
-              <Link href={`/reviews`}>
-                عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
-              </Link>
+            <Button variant="ghost" className="flex items-center" onClick={() => handleNavigation('/reviews')}>
+              عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
             </Button>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -621,10 +622,8 @@ export default function Home() {
         <div className="container mx-auto ">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold">الموديلات المميزة</h2>
-            <Button variant="ghost" className="flex items-center" asChild>
-              <Link href={`/cars`}>
-                عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
-              </Link>
+            <Button variant="ghost" className="flex items-center" onClick={() => handleNavigation('/cars')}>
+              عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -716,12 +715,12 @@ export default function Home() {
             انضم إلى آلاف العملاء الراضين الذين وجدوا سيارتهم المثالية من خلال منصتنا.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/cars">عرض جميع السيارات</Link>
+            <Button size="lg" variant="secondary" onClick={() => handleNavigation('/cars')}>
+              عرض جميع السيارات
             </Button>
             <SignedOut>
-              <Button size="lg" asChild>
-                <Link href="/sign-up">سجل الآن</Link>
+              <Button size="lg" onClick={() => handleNavigation('/sign-up')}>
+                سجل الآن
               </Button>
             </SignedOut>
           </div>
@@ -735,7 +734,7 @@ export default function Home() {
       <ChatBot onOpenChange={setIsChatBotOpen} />
 
       {/* Ad Popup */}
-      <AdPopup />
+      {/* <AdPopup /> */}
     </div>
   );
 }
