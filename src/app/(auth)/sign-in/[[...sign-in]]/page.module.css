@@ -1,0 +1,33 @@
+.customSigninWrapper {
+  direction: rtl;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: transparent;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  position: relative;
+}
+
+.customSigninWrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('/back2.jpg') center/cover no-repeat;
+  filter: blur(5px);
+  z-index: -1;
+  border-radius: 10px;
+}
+
+.customSigninWrapper input[type="email"],
+.customSigninWrapper input[name*="email"],
+.customSigninWrapper input[name*="pin"],
+.customSigninWrapper input[name*="otp"],
+.customSigninWrapper input[name*="code"] {
+  direction: ltr;
+  text-align: left;
+}
