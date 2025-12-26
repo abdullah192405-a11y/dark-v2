@@ -93,11 +93,11 @@ const Header = ({ isAdminPage = false }) => {
 
   return (
     <header className="fixed top-0 w-full bg-[#000000] backdrop-blur-none z-50 border-b">
-      <nav className="mx-auto px-4 py-4 flex items-center justify-between">
+      <nav className="mx-auto px-4 md:px-12 py-4 flex items-center justify-between">
         {/* CarLogo */}
-        <Link href={isAdminPage ? "/admin" : "/"} className="flex items-center gap-2">
+        <Link href={isAdminPage ? "/admin" : "/"} className="flex items-center gap-2 md:mr-12">
           <Image
-            src={"/logo33.png"}
+            src={"/logo-white.png"}
             alt="click_car_logo"
             width={100}
             height={60}
@@ -215,8 +215,8 @@ const Header = ({ isAdminPage = false }) => {
             ) : (
               <>
                 {isAdmin ? (
-                  <Link href="/admin" className="hidden md:block">
-                    <Button variant="outline" className="cursor-pointer flex items-center gap-2 bg-green-600 hover:bg-green-700">
+                  <Link href="/admin" className="hidden md:block ml-4">
+                    <Button variant="outline" className="cursor-pointer flex items-center gap-2 bg-green-600 hover:bg-green-700 pl-4">
                       <Layout size={18} />
                       <span>لوحة الإدارة</span>
                     </Button>
@@ -230,8 +230,8 @@ const Header = ({ isAdminPage = false }) => {
                       </Button>
                     </Link>
 
-                    <Link href="/reservations" className="hidden md:block">
-                      <Button variant="outline" className="flex items-center gap-2">
+                    <Link href="/reservations" className="hidden md:block ml-4">
+                      <Button variant="outline" className="flex items-center gap-2 pl-4">
                         <Heart size={18} />
                         <span>حجوزاتي</span>
                       </Button>

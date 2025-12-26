@@ -16,7 +16,7 @@ const CarsPage = async () => {
 
   return (
     <>
-      <div className="w-full px-6 md:px-12">
+      <div className="w-full px-4 md:px-8">
         <h1 className="text-2xl md:text-4xl mb-4 gradient-title">تصفح السيارات</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">

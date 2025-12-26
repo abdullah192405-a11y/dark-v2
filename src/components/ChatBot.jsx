@@ -13,7 +13,7 @@ export default function ChatBot({ onOpenChange }) {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "مرحباً! أنا مساعد Click Car AI الذكي. كيف يمكنني مساعدتك اليوم؟ 🚗",
+      text: "مرحباً! أنا مساعد Crown Auto AI الذكي. كيف يمكنني مساعدتك اليوم؟ 🚗",
       sender: "bot",
       timestamp: new Date(),
       cars: [],
@@ -242,15 +242,15 @@ export default function ChatBot({ onOpenChange }) {
             <div className="flex items-center gap-3">
               <div className="bg-black-500 rounded-full p-4">
                 <Image
-                  src="/chat.png"
+                  src="/logo-white.png"
                   alt="Chat icon"
-                  width={70}
-                  height={70}
+                  width={100}
+                  height={100}
                   className="h-7 w-7 md:h-8 md:w-8"
                 />
               </div>
               <div>
-                <h3 className="font-bold text-base md:text-lg">مساعد Click Car AI</h3>
+                <h3 className="font-bold text-base md:text-lg">مساعد Crown Auto AI</h3>
                 <p className="text-xs text-gray-300">متصل الآن</p>
               </div>
             </div>

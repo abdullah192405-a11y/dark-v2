@@ -308,8 +308,8 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl mx-auto text-center">
          <div className="mb-24 mt-8">
   <h1 className="text-5xl md:text-6xl lg:text-7xl mb-4 text-white font-bold leading-tight mx-4 md:mx-0">
-    <LetterByLetterText 
-      text="ابحث عن سيارة أحلامك مع كليك كار " 
+    <LetterByLetterText
+      text="ابحث عن سيارة أحلامك مع كراون أوتو "
       delay={50}
       startDelay={100}
     />
@@ -342,7 +342,7 @@ export default function Home() {
             {/* Content - Right Side (displayed first on mobile, second on desktop) */}
             <div className="text-right space-y-6 order-2 md:order-1 animate-fade-in-up animation-delay-200">
               <h2 className="text-5xl md:text-6xl font-bold text-white leading-tight">
-                عن كليك كار   
+                عن كراون أوتو
               </h2>
 
               <div className="space-y-4">
@@ -381,7 +381,7 @@ export default function Home() {
                 <div className="relative rounded-3xl">
                 
                   <img
-                    src="/icon-about.png"
+                    src="/logo.jpg"
                     alt="About Click Car AI"
                     className="w-full h-auto object-cover"
                   />

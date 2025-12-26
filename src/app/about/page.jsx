@@ -59,7 +59,7 @@ export default function About() {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-6">من نحن</h1>
             <p className="text-lg text-black-600 max-w-4xl mx-auto leading-relaxed">
-              Click Car AI هي المنصة الرائدة في الشرق الأوسط للبحث عن السيارات باستخدام تقنية الذكاء الاصطناعي. نحن نجمع بين الخبرة في مجال السيارات والتكنولوجيا المتقدمة لنوفر تجربة شراء فريدة ومضمونة لعملائنا.
+              Crown Auto هي المنصة الرائدة في الشرق الأوسط للبحث عن السيارات باستخدام تقنية الذكاء الاصطناعي. نحن نجمع بين الخبرة في مجال السيارات والتكنولوجيا المتقدمة لنوفر تجربة شراء فريدة ومضمونة لعملائنا.
             </p>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function About() {
       <section ref={addToRefs} className="py-16 px-0 md:px-10 bg-black-50 scroll-animate">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
-            لماذا Click Car AI؟
+            لماذا Crown Auto؟
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">

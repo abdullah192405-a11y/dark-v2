@@ -61,7 +61,7 @@ const CarCard = ({ car, isFeatured }) => {
   return (
     <Card className="overflow-hidden hover:shadow-xl trasition group py-0 shadow-lg bg-black/30 backdrop-blur-xl bg-white/10 border border-white/20">
       {/* Car image */}
-      <div className="relative h-48">
+      <div className="relative h-56">
         {car.images && car.images.length > 0 ? (
           <div className="relative w-full h-full">
             <Image

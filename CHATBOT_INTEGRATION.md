@@ -1,7 +1,7 @@
 # AI Chatbot Integration with Gemini AI
 
 ## Overview
-The Click Car AI chatbot is now powered by Google's Gemini AI, providing intelligent, context-aware responses to user queries about cars, test drives, and platform features.
+The Crown Auto chatbot is now powered by Google's Gemini AI, providing intelligent, context-aware responses to user queries about cars, test drives, and platform features.
 
 ## Features
 
@@ -9,7 +9,7 @@ The Click Car AI chatbot is now powered by Google's Gemini AI, providing intelli
 - **Context-Aware**: Maintains conversation history for more natural interactions
 - **Arabic Language Support**: Responds in clear, professional Arabic
 - **Car Expertise**: Specialized knowledge about car brands, models, and features
-- **Platform-Specific**: Understands Click Car AI services and features
+- **Platform-Specific**: Understands Crown Auto services and features
 
 ### 🚗 Capabilities
 The chatbot can help with:

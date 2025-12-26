@@ -940,7 +940,7 @@ export async function getChatbotResponse(message, conversationHistory = []) {
     }
 
     // Create a context-aware prompt with car dealership information
-    const systemContext = `أنت مساعد ذكي لمنصة Click Car AI، منصة متخصصة في بيع وشراء السيارات في المملكة العربية السعودية. 
+    const systemContext = `أنت مساعد ذكي لمنصة Crown Auto، منصة متخصصة في بيع وشراء السيارات في المملكة العربية السعودية.
 
 معلومات عن المنصة:
 - نوفر آلاف السيارات الجديدة والمستعملة المفحوصة
