@@ -13,13 +13,6 @@ import { formatSaudiRiyalReact } from "@/lib/helper";
 import { Currency, User, Mail, Phone, MessageSquare, Calendar, ChevronLeft, ChevronRight, Upload, CheckCircle, Car, File, Key, Lock, Banknote, TrendingUp, AlertTriangle, Shield, Target, Award, BarChart3, DollarSign, Percent, Clock, Star } from "lucide-react";
 
 const LoanRequestForm = ({ car }) => {
-  // Car dropdown options from database
-  const [carMakes, setCarMakes] = useState([]);
-  const [carModels, setCarModels] = useState([]);
-  const [carCategories, setCarCategories] = useState([]);
-  const [carYears, setCarYears] = useState([]);
-  const [loadingCarData, setLoadingCarData] = useState(true);
-
   const initialFormData = {
     idNumber: "",
     idImage: null,
@@ -52,7 +45,6 @@ const LoanRequestForm = ({ car }) => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState(initialFormData);
-  const [selectedDetails, setSelectedDetails] = useState(['make', 'model', 'category', 'year']);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [banks, setBanks] = useState([]);
@@ -127,8 +119,8 @@ const LoanRequestForm = ({ car }) => {
   };
 
   const steps = [
-    { title: "معلومات السيارة ", icon: Car },
     { title: "تفاصيل السيارة والهوية", icon: File },
+    { title: "معلومات السيارة ", icon: Car },
     { title: "البيانات الشخصية", icon: User },
     { title: "البيانات الإئتمانية", icon: Lock },
     { title: "العروض التمويلية", icon: Banknote },
@@ -150,122 +142,11 @@ const LoanRequestForm = ({ car }) => {
     fetchBanks();
   }, []);
 
-  // Fetch car data from database
-  useEffect(() => {
-    const fetchCarData = async () => {
-      try {
-        setLoadingCarData(true);
-
-        // Fetch makes
-        const makesResponse = await fetch('/api/car-makes');
-        const makesData = await makesResponse.json();
-        setCarMakes(makesData.makes || []);
-
-        // Fetch categories (assuming we have this endpoint)
-        // For now, keep the static categories
-        setCarCategories([
-          "سيدان", "SUV", "هاتشباك", "كوبيه", "كروس أوفر", "بيك أب", "فان", "كونفرتيبل", "أخرى"
-        ]);
-
-        // Fetch years
-        const yearsResponse = await fetch('/api/car-years');
-        const yearsData = await yearsResponse.json();
-        setCarYears(yearsData.years || []);
-
-      } catch (error) {
-        console.error('Error fetching car data:', error);
-      } finally {
-        setLoadingCarData(false);
-      }
-    };
-
-    fetchCarData();
-  }, []);
-
-
-
-  // Fetch years when make or model changes
-  useEffect(() => {
-    const fetchYears = async () => {
-      try {
-        let url = '/api/car-years';
-        const params = [];
-        if (formData.carMake) {
-          params.push(`make=${encodeURIComponent(formData.carMake)}`);
-        }
-        if (formData.carModel) {
-          params.push(`model=${encodeURIComponent(formData.carModel)}`);
-        }
-        if (params.length > 0) {
-          url += '?' + params.join('&');
-        }
-        const response = await fetch(url);
-        const data = await response.json();
-        setCarYears(data.years || []);
-      } catch (error) {
-        console.error('Error fetching car years:', error);
-        setCarYears([]);
-      }
-    };
-
-    fetchYears();
-  }, [formData.carMake, formData.carModel]);
-
-  // Fetch models when make changes
-  useEffect(() => {
-    const fetchModels = async () => {
-      if (formData.carMake) {
-        try {
-          const response = await fetch(`/api/car-models?make=${encodeURIComponent(formData.carMake)}`);
-          const data = await response.json();
-          setCarModels(data.models || []);
-        } catch (error) {
-          console.error('Error fetching car models:', error);
-          setCarModels([]);
-        }
-      } else {
-        setCarModels([]);
-      }
-    };
-
-    fetchModels();
-  }, [formData.carMake]);
-
-  // Fetch categories when make, model, and year are all selected
-  useEffect(() => {
-    const fetchCategories = async () => {
-      if (formData.carMake && formData.carModel && formData.carYear) {
-        try {
-          const response = await fetch(`/api/car-categories?make=${encodeURIComponent(formData.carMake)}&model=${encodeURIComponent(formData.carModel)}&year=${encodeURIComponent(formData.carYear)}`);
-          const data = await response.json();
-          setCarCategories(data.categories || []);
-        } catch (error) {
-          console.error('Error fetching car categories:', error);
-          setCarCategories([]);
-        }
-      } else {
-        setCarCategories([]);
-      }
-    };
-
-    fetchCategories();
-  }, [formData.carMake, formData.carModel, formData.carYear]);
-
   const handleInputChange = (field, value) => {
-    setFormData(prev => {
-      const newData = { ...prev, [field]: value };
-      if (field === 'carMake') {
-        newData.carModel = '';
-        newData.carYear = '';
-        newData.carCategory = '';
-      } else if (field === 'carModel') {
-        newData.carYear = '';
-        newData.carCategory = '';
-      } else if (field === 'carYear') {
-        newData.carCategory = '';
-      }
-      return newData;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleFileChange = (e) => {
@@ -280,14 +161,6 @@ const LoanRequestForm = ({ car }) => {
       };
       reader.readAsDataURL(file);
     }
-  };
-
-  const handleDetailSelection = (detail) => {
-    setSelectedDetails(prev =>
-      prev.includes(detail)
-        ? prev.filter(d => d !== detail)
-        : [...prev, detail]
-    );
   };
 
   const validateCurrentStep = () => {
@@ -393,76 +266,91 @@ const LoanRequestForm = ({ car }) => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              معلومات السيارة
-            </h3>
+          <div className="space-y-6">
+            {/* Car Details */}
+            <div className="bg-yellow-700 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold mb-4">تفاصيل السيارة</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium">السنة:</span> {car.year}
+                </div>
+                <div>
+                  <span className="font-medium">الماركة:</span> {car.make}
+                </div>
+                <div>
+                  <span className="font-medium">الموديل:</span> {car.model}
+                </div>
+                <div>
+                  <span className="font-medium">السعر:</span> {formatSaudiRiyalReact(car.price)}
+                </div>
+                <div>
+                  <span className="font-medium">المسافة المقطوعة:</span> {car.mileage?.toLocaleString() || 'غير محدد'} كم
+                </div>
+                <div>
+                  <span className="font-medium">اللون:</span> {car.color || 'غير محدد'}
+                </div>
+                <div>
+                  <span className="font-medium">نوع الوقود:</span> {car.fuelType || 'غير محدد'}
+                </div>
+                <div>
+                  <span className="font-medium">ناقل الحركة:</span> {car.transmission || 'غير محدد'}
+                </div>
+                <div>
+                  <span className="font-medium">نوع الهيكل:</span> {car.bodyType || 'غير محدد'}
+                </div>
+                <div>
+                  <span className="font-medium">عدد المقاعد:</span> {car.seats || 'غير محدد'}
+                </div>
+              </div>
+              {car.description && (
+                <div className="mt-4 pt-4 border-t border-yellow-600">
+                  <span className="font-medium">الوصف:</span>
+                  <p className="mt-1 text-sm leading-relaxed">{car.description}</p>
+                </div>
+              )}
+            </div>
 
+            {/* ID Information */}
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="carMake" className="mb-2">ماركة السيارة *</Label>
-                <Select value={formData.carMake} onValueChange={(value) => handleInputChange('carMake', value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر ماركة السيارة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {carMakes.map((make) => (
-                      <SelectItem key={make} value={make}>
-                        {make}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <h3 className="text-lg font-semibold">معلومات الهوية (السعودية)</h3>
 
               <div>
-                <Label htmlFor="carModel" className="mb-2">موديل السيارة *</Label>
-                <Select value={formData.carModel} onValueChange={(value) => handleInputChange('carModel', value)} disabled={!formData.carMake}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر موديل السيارة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {carModels.map((model) => (
-                      <SelectItem key={model} value={model}>
-                        {model}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label htmlFor="idNumber" className="mb-2">رقم الهوية *</Label>
+                <Input
+                  id="idNumber"
+                  type="text"
+                  value={formData.idNumber}
+                  onChange={(e) => handleInputChange('idNumber', e.target.value)}
+                  required
+                  placeholder="أدخل رقم الهوية"
+                  maxLength="10"
+                />
               </div>
 
-              <div>
-                <Label htmlFor="carYear" className="mb-2">سنة صنع السيارة *</Label>
-                <Select value={formData.carYear} onValueChange={(value) => handleInputChange('carYear', value)} disabled={!formData.carModel || (formData.carMake === "كيا" && formData.carModel === "k5 أستندر")}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر سنة صنع السيارة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {carYears.map((year) => (
-                      <SelectItem key={year} value={year}>
-                        {year}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="carCategory" className="mb-2">فئة السيارة</Label>
-                <Select value={formData.carCategory} onValueChange={(value) => handleInputChange('carCategory', value)} disabled={!formData.carYear}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر فئة السيارة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {carCategories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {/* <div>
+                <Label htmlFor="idImage" className="mb-2">صورة الهوية *</Label>
+                <div className="mt-1">
+                  <input
+                    id="idImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    required
+                  />
+                  <label
+                    htmlFor="idImage"
+                    className="flex items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-center">
+                      <Upload className="mx-auto h-8 w-8 text-gray-400" />
+                      <p className="mt-2 text-sm text-gray-600">
+                        {formData.idImage ? "تم تحميل الصورة" : "انقر لتحميل صورة الهوية"}
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              </div> */}
             </div>
           </div>
         );
@@ -477,98 +365,48 @@ const LoanRequestForm = ({ car }) => {
 
             <div className="space-y-4">
               <div>
-                <Label className="mb-2">اختر التفاصيل المراد عرضها:</Label>
-                <div className="flex flex-wrap gap-4 mt-2">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={selectedDetails.includes('make')}
-                      onChange={() => handleDetailSelection('make')}
-                      className="ml-2"
-                    />
-                    ماركة السيارة
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={selectedDetails.includes('model')}
-                      onChange={() => handleDetailSelection('model')}
-                      className="ml-2"
-                    />
-                    موديل السيارة
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={selectedDetails.includes('category')}
-                      onChange={() => handleDetailSelection('category')}
-                      className="ml-2"
-                    />
-                    فئة السيارة
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={selectedDetails.includes('year')}
-                      onChange={() => handleDetailSelection('year')}
-                      className="ml-2"
-                    />
-                    سنة صنع السيارة
-                  </label>
-                </div>
+                <Label htmlFor="carMake" className="mb-2">ماركة السيارة *</Label>
+                <Input
+                  id="carMake"
+                  type="text"
+                  value={formData.carMake}
+                  disabled
+                  placeholder="أدخل ماركة السيارة"
+                />
               </div>
 
-              {selectedDetails.includes('make') && (
-                <div>
-                  <Label htmlFor="carMake" className="mb-2">ماركة السيارة *</Label>
-                  <Input
-                    id="carMake"
-                    type="text"
-                    value={formData.carMake}
-                    onChange={(e) => handleInputChange('carMake', e.target.value)}
-                    placeholder="أدخل ماركة السيارة"
-                  />
-                </div>
-              )}
+              <div>
+                <Label htmlFor="carModel" className="mb-2">موديل السيارة *</Label>
+                <Input
+                  id="carModel"
+                  type="text"
+                  value={formData.carModel}
+                  disabled
+                  placeholder="أدخل موديل السيارة"
+                />
+              </div>
 
-              {selectedDetails.includes('model') && (
-                <div>
-                  <Label htmlFor="carModel" className="mb-2">موديل السيارة *</Label>
-                  <Input
-                    id="carModel"
-                    type="text"
-                    value={formData.carModel}
-                    onChange={(e) => handleInputChange('carModel', e.target.value)}
-                    placeholder="أدخل موديل السيارة"
-                  />
-                </div>
-              )}
+              <div>
+                <Label htmlFor="carCategory" className="mb-2">فئة السيارة</Label>
+                <Input
+                  id="carCategory"
+                  type="text"
+                  value={formData.carCategory}
+                  disabled
+                  placeholder="أدخل فئة السيارة"
+                />
+              </div>
 
-              {selectedDetails.includes('category') && (
-                <div>
-                  <Label htmlFor="carCategory" className="mb-2">فئة السيارة</Label>
-                  <Input
-                    id="carCategory"
-                    type="text"
-                    value={formData.carCategory}
-                    onChange={(e) => handleInputChange('carCategory', e.target.value)}
-                    placeholder="أدخل فئة السيارة"
-                  />
-                </div>
-              )}
-
-              {selectedDetails.includes('year') && (
-                <div>
-                  <Label htmlFor="carYear" className="mb-2">سنة صنع السيارة *</Label>
-                  <Input
-                    id="carYear"
-                    type="number"
-                    value={formData.carYear}
-                    onChange={(e) => handleInputChange('carYear', e.target.value)}
-                    placeholder="أدخل سنة صنع السيارة"
-                  />
-                </div>
-              )}
+              <div>
+                <Label htmlFor="carYear" className="mb-2">سنة صنع السيارة *</Label>
+                <Input
+                  id="carYear"
+                  type="number"
+                  value={formData.carYear}
+                  disabled
+                  placeholder="أدخل سنة صنع السيارة"
+                />
+              </div>
             </div>
           </div>
         );
