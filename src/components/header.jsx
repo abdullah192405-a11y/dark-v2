@@ -97,7 +97,7 @@ const Header = ({ isAdminPage = false }) => {
         {/* CarLogo */}
         <Link href={isAdminPage ? "/admin" : "/"} className="flex items-center gap-2 md:mr-12">
           <Image
-            src={"/logo-white.png"}
+            src={"/logo1.png"}
             alt="click_car_logo"
             width={100}
             height={60}
