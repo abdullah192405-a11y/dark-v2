@@ -1,4 +1,4 @@
-import arcjet, { createMiddleware, detectBot, shield } from "@arcjet/next";
+import arcjet, { createMiddleware, detectBot, shield, ip } from "@arcjet/next";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -11,6 +11,8 @@ const isProtectedRoute = createRouteMatcher([
 
 const aj = arcjet({
   key: process.env.ARCJET_KEY,
+  ip: ip(["CF-Connecting-IP", "X-Forwarded-For", "X-Real-IP", "Forwarded"]),
+  characteristics: ["ip.src"],
   rules: [
     // sheild protection for content and security
     shield({
