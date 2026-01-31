@@ -1,0 +1,68 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import LoadingBar from "@/components/LoadingBar";
+import Header from "@/components/header";
+import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
+
+export default function ClientWrapper({ children, isSignUpPage, navLogo, footerData }) {
+    const [theme, setTheme] = useState("dark");
+    const [isLoading, setIsLoading] = useState(false);
+    const pathname = usePathname();
+    const isAdminPage = pathname?.startsWith("/admin");
+    const isAuthPage = pathname?.includes("/sign-in") || pathname?.includes("/sign-up") || isSignUpPage;
+
+    useEffect(() => {
+        // Remove previously applied theme classes
+        document.body.classList.remove("dark", "dark-alt");
+        // Apply the selected theme class if not light
+        if (theme === "dark") {
+            document.body.classList.add("dark");
+        } else if (theme === "dark-alt") {
+            document.body.classList.add("dark-alt");
+        }
+    }, [theme]);
+
+    // Handle loading bar for navigation
+    useEffect(() => {
+        let timeoutId;
+
+        const handleStartLoading = () => {
+            setIsLoading(true);
+            if (timeoutId) clearTimeout(timeoutId);
+        };
+
+        const handleRouteChange = () => {
+            // Hide the loader immediately when the route changes
+            setIsLoading(false);
+        };
+
+        window.addEventListener('startLoading', handleStartLoading);
+
+        if (pathname) {
+            handleRouteChange();
+        }
+
+        return () => {
+            window.removeEventListener('startLoading', handleStartLoading);
+            if (timeoutId) clearTimeout(timeoutId);
+        };
+    }, [pathname]);
+
+    // Initial load: don't show artificial loader
+    useEffect(() => {
+        setIsLoading(false);
+    }, []);
+
+    return (
+        <>
+            {!isAuthPage && !isAdminPage && <Header navLogo={navLogo} />}
+            <main className="min-h-screen">{children}</main>
+            <Toaster richColors />
+            {!isAuthPage && !isAdminPage && <Footer initialData={footerData} />}
+            {isLoading && <LoadingBar />}
+        </>
+    );
+}

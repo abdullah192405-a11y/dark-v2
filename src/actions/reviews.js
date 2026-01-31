@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/prisma";
 import { createClient } from "@/lib/superbase";
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { unstable_cache, revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
 
 // function to convert File to Base64
@@ -107,6 +107,24 @@ export async function addReview(formData) {
     };
   }
 }
+
+// getHomeReviews - fetch limited reviews for homepage with caching
+export const getHomeReviews = unstable_cache(
+  async (limit = 3) => {
+    try {
+      const reviews = await db.review.findMany({
+        take: limit,
+        orderBy: { createdAt: "desc" },
+      });
+      return reviews;
+    } catch (error) {
+      console.error("Error fetching home reviews:", error);
+      return [];
+    }
+  },
+  ["home-reviews"],
+  { revalidate: 3600, tags: ["reviews"] }
+);
 
 // getReviews - fetch reviews from db
 export async function getReviews(search = "") {

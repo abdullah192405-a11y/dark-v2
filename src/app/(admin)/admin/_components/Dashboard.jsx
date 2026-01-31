@@ -8,20 +8,21 @@ import OverviewTab from "./OverviewTab";
 import TestDriveTab from "./TestDriveTab";
 
 const Dashboard = ({ initialData }) => {
-  const { cars, testDrives } = initialData.data;
   const [activeTab, setActiveTab] = useState("overview");
 
-  if (!initialData || !initialData.success) {
+  if (!initialData || !initialData.success || !initialData.data) {
     return (
       <Alert variant="destructive">
         <Info className="h-4 w-4" />
         <AlertTitle>خطأ</AlertTitle>
         <AlertDescription>
-          {initialData?.error || "فشل تحميل لوحة التحكم"}
+          {initialData?.error?.message || initialData?.error || "ليس لديك صلاحية للوصول إلى هذه الصفحة أو فشل تحميل البيانات"}
         </AlertDescription>
       </Alert>
     );
   }
+
+  const { cars, testDrives } = initialData.data;
 
   return (
     <div>

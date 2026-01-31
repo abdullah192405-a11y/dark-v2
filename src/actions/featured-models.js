@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 
+import { unstable_cache } from "next/cache";
+
 // Get unique car body types from database
 export async function getCarBodyTypes() {
   try {
@@ -36,25 +38,29 @@ export async function getCarBodyTypes() {
 }
 
 // Get all featured models (public - no auth required)
-export async function getFeaturedModels() {
-  try {
-    const models = await db.featuredModel.findMany({
-      where: { isActive: true },
-      orderBy: { order: "asc" },
-    });
+export const getFeaturedModels = unstable_cache(
+  async () => {
+    try {
+      const models = await db.featuredModel.findMany({
+        where: { isActive: true },
+        orderBy: { order: "asc" },
+      });
 
-    return {
-      success: true,
-      data: models,
-    };
-  } catch (error) {
-    console.error("Error fetching featured models:", error);
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-}
+      return {
+        success: true,
+        data: models,
+      };
+    } catch (error) {
+      console.error("Error fetching featured models:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  },
+  ["featured-models"],
+  { revalidate: 3600, tags: ["models"] }
+);
 
 // Get all featured models for admin (includes inactive)
 export async function getAllFeaturedModelsAdmin(search = "") {

@@ -19,7 +19,12 @@ export const metadata = generateMetadata({
   ogType: "website",
 });
 
-export const dynamic = "force-dynamic"; // prevent prerender errors
+export const dynamic = "force-dynamic";
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 const CarsPage = async () => {
   const filtersData = await getCarFilters();

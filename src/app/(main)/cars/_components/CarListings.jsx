@@ -97,19 +97,20 @@ const CarListings = () => {
     return <CarsListingLoading />;
   }
 
-  // Error if unable to fect cars data
-  if (fetchCarsError || (!carsData && !carsData?.data)) {
-    <Alert variant="destructive">
-      <Info className="h-4 w-4" />
-      <AlertTitle>خطأ</AlertTitle>
-      <AlertDescription>
-        فشل تحميل السيارات. يرجى المحاولة مرة أخرى لاحقاً.
-      </AlertDescription>
-    </Alert>;
+  // Error if unable to fetch cars data
+  if (fetchCarsError || (!getCarsLoading && !carsData)) {
+    return (
+      <Alert variant="destructive">
+        <Info className="h-4 w-4" />
+        <AlertTitle>خطأ</AlertTitle>
+        <AlertDescription>
+          فشل تحميل السيارات. يرجى المحاولة مرة أخرى لاحقاً.
+        </AlertDescription>
+      </Alert>
+    );
   }
 
-  //
-  if (!carsData || !carsData?.data) {
+  if (!carsData || !carsData.success || !carsData.data) {
     return null;
   }
 

@@ -1,0 +1,16 @@
+export const ADMIN_ROUTES = [
+    { id: "dashboard", label: "لوحة التحكم", href: "/admin" },
+    { id: "cars", label: "السيارات", href: "/admin/cars" },
+    { id: "brands", label: "العلامات التجارية", href: "/admin/featured-brands" },
+    { id: "models", label: "الموديلات المميزة", href: "/admin/featured-models" },
+    { id: "test-drives", label: "اختبارات القيادة", href: "/admin/test-drives" },
+    { id: "chat-analytics", label: "تحليلات الدردشة", href: "/admin/chat-analytics" },
+    { id: "loan-requests", label: "طلبات القروض", href: "/admin/loan-requests" },
+    { id: "site-data", label: "إدارة بيانات الموقع", href: "/admin/site-data" },
+    { id: "settings", label: "الإعدادات", href: "/admin/settings", isAdminOnly: true },
+    { id: "bank", label: "البنك", href: "/admin/bank" },
+    { id: "articles", label: "المقالات", href: "/admin/articles" },
+    { id: "reviews", label: "التقييمات", href: "/admin/reviews" },
+    { id: "contacts", label: "الرسائل", href: "/admin/contacts" },
+    { id: "users", label: "تحكم وصول الصفحات", href: "/admin/users", isAdminOnly: true },
+];

@@ -115,7 +115,8 @@ export type HeroSection = $Result.DefaultSelection<Prisma.$HeroSectionPayload>
 export namespace $Enums {
   export const UserRole: {
   USER: 'USER',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -2778,6 +2779,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     role: number
+    permissions: number
     _all: number
   }
 
@@ -2816,6 +2818,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     role?: true
+    permissions?: true
     _all?: true
   }
 
@@ -2901,6 +2904,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     role: $Enums.UserRole
+    permissions: JsonValue | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -2930,6 +2934,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
+    permissions?: boolean
     TestDriveBooking?: boolean | User$TestDriveBookingArgs<ExtArgs>
     UserSavedCar?: boolean | User$UserSavedCarArgs<ExtArgs>
     articles?: boolean | User$articlesArgs<ExtArgs>
@@ -2946,6 +2951,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
+    permissions?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2958,6 +2964,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
+    permissions?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -2970,9 +2977,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     role?: boolean
+    permissions?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkUserId" | "email" | "name" | "imageUrl" | "phone" | "createdAt" | "updatedAt" | "role", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkUserId" | "email" | "name" | "imageUrl" | "phone" | "createdAt" | "updatedAt" | "role" | "permissions", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     TestDriveBooking?: boolean | User$TestDriveBookingArgs<ExtArgs>
     UserSavedCar?: boolean | User$UserSavedCarArgs<ExtArgs>
@@ -2999,6 +3007,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       role: $Enums.UserRole
+      permissions: Prisma.JsonValue | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -3434,6 +3443,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly role: FieldRef<"User", 'UserRole'>
+    readonly permissions: FieldRef<"User", 'Json'>
   }
     
 
@@ -24159,7 +24169,8 @@ export namespace Prisma {
     phone: 'phone',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    role: 'role'
+    role: 'role',
+    permissions: 'permissions'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -24491,14 +24502,6 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -24506,6 +24509,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -24552,6 +24563,20 @@ export namespace Prisma {
    * Reference to a field of type 'UserRole[]'
    */
   export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -24633,20 +24658,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'LoanRequestStatus'
    */
   export type EnumLoanRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoanRequestStatus'>
@@ -24690,6 +24701,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    permissions?: JsonNullableFilter<"User">
     TestDriveBooking?: TestDriveBookingListRelationFilter
     UserSavedCar?: UserSavedCarListRelationFilter
     articles?: ArticleListRelationFilter
@@ -24705,6 +24717,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
+    permissions?: SortOrderInput | SortOrder
     TestDriveBooking?: TestDriveBookingOrderByRelationAggregateInput
     UserSavedCar?: UserSavedCarOrderByRelationAggregateInput
     articles?: ArticleOrderByRelationAggregateInput
@@ -24723,6 +24736,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    permissions?: JsonNullableFilter<"User">
     TestDriveBooking?: TestDriveBookingListRelationFilter
     UserSavedCar?: UserSavedCarListRelationFilter
     articles?: ArticleListRelationFilter
@@ -24738,6 +24752,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
+    permissions?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -24756,6 +24771,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    permissions?: JsonNullableWithAggregatesFilter<"User">
   }
 
   export type CarWhereInput = {
@@ -26281,6 +26297,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingCreateNestedManyWithoutUserInput
     UserSavedCar?: UserSavedCarCreateNestedManyWithoutUserInput
     articles?: ArticleCreateNestedManyWithoutAuthorInput
@@ -26296,6 +26313,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUncheckedCreateNestedManyWithoutUserInput
     UserSavedCar?: UserSavedCarUncheckedCreateNestedManyWithoutUserInput
     articles?: ArticleUncheckedCreateNestedManyWithoutAuthorInput
@@ -26311,6 +26329,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUpdateManyWithoutUserNestedInput
     UserSavedCar?: UserSavedCarUpdateManyWithoutUserNestedInput
     articles?: ArticleUpdateManyWithoutAuthorNestedInput
@@ -26326,6 +26345,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUncheckedUpdateManyWithoutUserNestedInput
     UserSavedCar?: UserSavedCarUncheckedUpdateManyWithoutUserNestedInput
     articles?: ArticleUncheckedUpdateManyWithoutAuthorNestedInput
@@ -26341,6 +26361,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUpdateManyMutationInput = {
@@ -26353,6 +26374,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -26365,6 +26387,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CarCreateInput = {
@@ -28162,6 +28185,29 @@ export namespace Prisma {
     notIn?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type TestDriveBookingListRelationFilter = {
     every?: TestDriveBookingWhereInput
@@ -28208,6 +28254,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     role?: SortOrder
+    permissions?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -28292,6 +28339,32 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -28865,29 +28938,6 @@ export namespace Prisma {
   export type BankSumOrderByAggregateInput = {
     interestRate?: SortOrder
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
@@ -28947,32 +28997,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     image?: SortOrder
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -30137,6 +30161,29 @@ export namespace Prisma {
     _min?: NestedEnumUserRoleFilter<$PrismaModel>
     _max?: NestedEnumUserRoleFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
@@ -30292,29 +30339,6 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -30981,6 +31005,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingCreateNestedManyWithoutUserInput
     articles?: ArticleCreateNestedManyWithoutAuthorInput
   }
@@ -30995,6 +31020,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUncheckedCreateNestedManyWithoutUserInput
     articles?: ArticleUncheckedCreateNestedManyWithoutAuthorInput
   }
@@ -31086,6 +31112,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUpdateManyWithoutUserNestedInput
     articles?: ArticleUpdateManyWithoutAuthorNestedInput
   }
@@ -31100,6 +31127,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUncheckedUpdateManyWithoutUserNestedInput
     articles?: ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   }
@@ -31169,6 +31197,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     UserSavedCar?: UserSavedCarCreateNestedManyWithoutUserInput
     articles?: ArticleCreateNestedManyWithoutAuthorInput
   }
@@ -31183,6 +31212,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     UserSavedCar?: UserSavedCarUncheckedCreateNestedManyWithoutUserInput
     articles?: ArticleUncheckedCreateNestedManyWithoutAuthorInput
   }
@@ -31274,6 +31304,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     UserSavedCar?: UserSavedCarUpdateManyWithoutUserNestedInput
     articles?: ArticleUpdateManyWithoutAuthorNestedInput
   }
@@ -31288,6 +31319,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     UserSavedCar?: UserSavedCarUncheckedUpdateManyWithoutUserNestedInput
     articles?: ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   }
@@ -31398,6 +31430,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingCreateNestedManyWithoutUserInput
     UserSavedCar?: UserSavedCarCreateNestedManyWithoutUserInput
   }
@@ -31412,6 +31445,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     role?: $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUncheckedCreateNestedManyWithoutUserInput
     UserSavedCar?: UserSavedCarUncheckedCreateNestedManyWithoutUserInput
   }
@@ -31442,6 +31476,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUpdateManyWithoutUserNestedInput
     UserSavedCar?: UserSavedCarUpdateManyWithoutUserNestedInput
   }
@@ -31456,6 +31491,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    permissions?: NullableJsonNullValueInput | InputJsonValue
     TestDriveBooking?: TestDriveBookingUncheckedUpdateManyWithoutUserNestedInput
     UserSavedCar?: UserSavedCarUncheckedUpdateManyWithoutUserNestedInput
   }

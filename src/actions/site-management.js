@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 export async function uploadFile(file, folder = "site-data") {
   try {
     const user = await getAuthenticatedUser();
-    
+
     if (!file || file.size === 0) {
       return { success: false, error: "لم يتم توفير ملف" };
     }
@@ -35,7 +35,7 @@ export async function uploadFile(file, folder = "site-data") {
 
     // Convert file to buffer - this handles the file properly
     const fileBuffer = await file.arrayBuffer();
-    
+
     // Upload with timeout
     const uploadPromise = supabase.storage
       .from("car-images")
@@ -66,7 +66,7 @@ export async function uploadFile(file, folder = "site-data") {
     }
 
     const fileUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/car-images/${data.path}`;
-    
+
     console.log(`[uploadFile] Successfully uploaded: ${fileName} to ${data.path}`);
     return { success: true, url: fileUrl, filePath: data.path };
   } catch (error) {
@@ -176,31 +176,38 @@ export async function deleteSocialMediaLink(id) {
 
 // ==================== STORE INFO MANAGEMENT ====================
 
-export async function getStoreInfo() {
-  try {
-    let storeInfo = await db.storeInfo.findFirst();
+import { unstable_cache } from "next/cache";
 
-    // If no store info exists, create a default one
-    if (!storeInfo) {
-      storeInfo = await db.storeInfo.create({
-        data: {
-          name: "Click Car Motors",
-          description: "متخصصون في بيع السيارات",
-          address: "الرياض، المملكة العربية السعودية",
-          city: "الرياض",
-          country: "السعودية",
-          phone: "+966 123 456 789",
-          email: "info@clickcar.com",
-        },
-      });
+// ==================== STORE INFO MANAGEMENT ====================
+
+export const getStoreInfo = unstable_cache(
+  async () => {
+    try {
+      let storeInfo = await db.storeInfo.findFirst();
+
+      if (!storeInfo) {
+        storeInfo = await db.storeInfo.create({
+          data: {
+            name: "Click Car Motors",
+            description: "متخصصون في بيع السيارات",
+            address: "الرياض، المملكة العربية السعودية",
+            city: "الرياض",
+            country: "السعودية",
+            phone: "+966 123 456 789",
+            email: "info@clickcar.com",
+          },
+        });
+      }
+
+      return { success: true, data: storeInfo };
+    } catch (error) {
+      console.error("Error fetching store info:", error);
+      return { success: false, error: error.message };
     }
-
-    return { success: true, data: storeInfo };
-  } catch (error) {
-    console.error("Error fetching store info:", error);
-    return { success: false, error: error.message };
-  }
-}
+  },
+  ["store-info"],
+  { revalidate: 3600, tags: ["site-settings"] }
+);
 
 export async function updateStoreInfo(data) {
   try {
@@ -242,6 +249,7 @@ export async function updateStoreInfo(data) {
     }
 
     revalidatePath("/admin/site-management/store-info");
+    revalidatePath("/", "layout");
     return { success: true, data: storeInfo };
   } catch (error) {
     console.error("Error updating store info:", error);
@@ -276,18 +284,22 @@ export async function getActiveLogo() {
   }
 }
 
-export async function getLogoByType(type) {
-  try {
-    const logo = await db.logo.findFirst({
-      where: { type, isActive: true },
-      orderBy: { createdAt: "desc" },
-    });
-    return { success: true, data: logo };
-  } catch (error) {
-    console.error(`Error fetching ${type} logo:`, error);
-    return { success: false, error: error.message };
-  }
-}
+export const getLogoByType = unstable_cache(
+  async (type) => {
+    try {
+      const logo = await db.logo.findFirst({
+        where: { type, isActive: true },
+        orderBy: { createdAt: "desc" },
+      });
+      return { success: true, data: logo };
+    } catch (error) {
+      console.error(`Error fetching ${type} logo:`, error);
+      return { success: false, error: error.message };
+    }
+  },
+  ["site-logos"],
+  { revalidate: 3600, tags: ["site-settings", "logos"] }
+);
 
 export async function createLogo(data) {
   try {
@@ -311,6 +323,7 @@ export async function createLogo(data) {
     });
 
     revalidatePath("/admin/site-management/logo");
+    revalidatePath("/", "layout");
     return { success: true, data: logo };
   } catch (error) {
     console.error("Error creating logo:", error);
@@ -344,6 +357,7 @@ export async function updateLogo(id, data) {
     });
 
     revalidatePath("/admin/site-management/logo");
+    revalidatePath("/", "layout");
     return { success: true, data: updatedLogo };
   } catch (error) {
     console.error("Error updating logo:", error);
@@ -360,6 +374,7 @@ export async function deleteLogo(id) {
     });
 
     revalidatePath("/admin/site-management/logo");
+    revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
     console.error("Error deleting logo:", error);
@@ -433,31 +448,34 @@ export async function updateAboutPage(data) {
 
 // ==================== HERO SECTION MANAGEMENT ====================
 
-export async function getHeroSection() {
-  try {
-    let heroSection = await db.heroSection.findFirst();
+export const getHeroSection = unstable_cache(
+  async () => {
+    try {
+      let heroSection = await db.heroSection.findFirst();
 
-    // If no hero section exists, create a default one
-    if (!heroSection) {
-      heroSection = await db.heroSection.create({
-        data: {
-          videoUrl: "",
-          title: "مرحباً بك",
-          subtitle: "",
-          isActive: true,
-          autoplay: true,
-          loop: true,
-          muted: true,
-        },
-      });
+      if (!heroSection) {
+        heroSection = await db.heroSection.create({
+          data: {
+            videoUrl: "",
+            title: "مرحباً بك",
+            subtitle: "",
+            isActive: true,
+            autoplay: true,
+            loop: true,
+            muted: true,
+          },
+        });
+      }
+
+      return { success: true, data: heroSection };
+    } catch (error) {
+      console.error("Error fetching hero section:", error);
+      return { success: false, error: error.message };
     }
-
-    return { success: true, data: heroSection };
-  } catch (error) {
-    console.error("Error fetching hero section:", error);
-    return { success: false, error: error.message };
-  }
-}
+  },
+  ["hero-section"],
+  { revalidate: 3600, tags: ["site-settings"] }
+);
 
 export async function updateHeroSection(data) {
   try {
@@ -505,19 +523,23 @@ export async function updateHeroSection(data) {
 
 // ==================== WHATSAPP NUMBER ====================
 
-export async function getWhatsAppNumber() {
-  try {
-    const storeInfo = await db.storeInfo.findFirst({
-      select: { whatsapp: true },
-    });
+export const getWhatsAppNumber = unstable_cache(
+  async () => {
+    try {
+      const storeInfo = await db.storeInfo.findFirst({
+        select: { whatsapp: true },
+      });
 
-    if (!storeInfo || !storeInfo.whatsapp) {
+      if (!storeInfo || !storeInfo.whatsapp) {
+        return { success: false, data: null };
+      }
+
+      return { success: true, data: storeInfo.whatsapp };
+    } catch (error) {
+      console.error("Error fetching WhatsApp number:", error);
       return { success: false, data: null };
     }
-
-    return { success: true, data: storeInfo.whatsapp };
-  } catch (error) {
-    console.error("Error fetching WhatsApp number:", error);
-    return { success: false, data: null };
-  }
-}
+  },
+  ["whatsapp-number"],
+  { revalidate: 3600, tags: ["site-settings"] }
+);

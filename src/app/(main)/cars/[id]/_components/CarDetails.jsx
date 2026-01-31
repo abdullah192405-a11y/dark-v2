@@ -43,7 +43,7 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
   const [isWishlisted, setIsWishlisted] = useState(car.wishliseted);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [mediaType, setMediaType] = useState('image'); // 'image' or 'video'
-   const [carUrl, setCarUrl] = useState('');
+  const [carUrl, setCarUrl] = useState('');
 
   // Helper function to extract YouTube video ID and generate embed URL
   const getYouTubeEmbedUrl = (url) => {
@@ -73,7 +73,7 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
     return "/logo.png";
   };
 
-    useEffect(() => {
+  useEffect(() => {
     setCarUrl(window.location.href);
   }, []);
 
@@ -144,6 +144,7 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
       return;
     }
 
+    window.dispatchEvent(new CustomEvent('startLoading'));
     router.push(`/test-drive/${car.id}`);
   };
 
@@ -191,11 +192,10 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
               {car.images && car.images.map((image, index) => (
                 <div
                   key={`image-${index}`}
-                  className={`relative cursor-pointer rounded-md h-20 w-24 flex-shrink-0 transition ${
-                    mediaType === 'image' && index === currentImageIndex
+                  className={`relative cursor-pointer rounded-md h-20 w-24 flex-shrink-0 transition ${mediaType === 'image' && index === currentImageIndex
                       ? "border-2 border-yellow-600"
                       : "opacity-70 hover:opacity-100"
-                  }`}
+                    }`}
                   onClick={() => {
                     setCurrentImageIndex(index);
                     setMediaType('image');
@@ -203,9 +203,8 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
                 >
                   <Image
                     src={image}
-                    alt={`${car.year} ${car.make} ${car.model} - view ${
-                      index + 1
-                    }`}
+                    alt={`${car.year} ${car.make} ${car.model} - view ${index + 1
+                      }`}
                     fill
                     className="object-cover"
                   />
@@ -213,11 +212,10 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
               ))}
               {car.videoUrl && (
                 <div
-                  className={`relative cursor-pointer rounded-md h-20 w-24 flex-shrink-0 transition ${
-                    mediaType === 'video'
+                  className={`relative cursor-pointer rounded-md h-20 w-24 flex-shrink-0 transition ${mediaType === 'video'
                       ? "border-2 border-yellow-600"
                       : "opacity-70 hover:opacity-100"
-                  }`}
+                    }`}
                   onClick={() => setMediaType('video')}
                 >
                   <Image
@@ -239,9 +237,8 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
             {/* Saved */}
             <Button
               variant="outline"
-              className={`flex items-center gap-2 flex-1 ${
-                isWishlisted ? "text-yellow-500" : ""
-              }`}
+              className={`flex items-center gap-2 flex-1 ${isWishlisted ? "text-yellow-500" : ""
+                }`}
               onClick={handleSaveCar}
               disabled={savingCarLoading}
             >
@@ -263,7 +260,10 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
             <Button
               variant="default"
               className="w-full flex items-center gap-2 bg-yellow-700 text-white flex-1 hover:bg-yellow-700"
-              onClick={() => router.push(`/loan-request/${car.id}`)}
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('startLoading'));
+                router.push(`/loan-request/${car.id}`);
+              }}
             >
               <Currency className="h-5 w-5" />
               طلب قرض
@@ -314,7 +314,7 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
                     القسط الشهري المتوقع: حوالي
                     <span className="font-bold text-yellow-900">
                       {" "}
-                      {formatSaudiRiyalReact (car.price / 60)}
+                      {formatSaudiRiyalReact(car.price / 60)}
                     </span>{" "}
                     لمدة 60 شهراً
                   </div>
@@ -334,30 +334,30 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
           </Dialog>
 
           {/* Request More Info */}
-           <Card className="my-6 ">
-        <CardContent className="p-4 ">
-          <div className="flex items-center gap-2 text-lg font-medium mb-2">
-            <MessageSquare className="h-5 w-5 text-yellow-600" />
-            <h3>لديك أسئلة؟</h3>
-          </div>
-          <p className="text-sm text-gray-600 mb-3">
-            ممثلونا متاحون للإجابة على جميع استفساراتك حول هذه السيارة.
-          </p>
-          <a 
-            href={`https://wa.me/6282227015893?text=${encodeURIComponent(
-               `السلام عليكم ورحمة الله وبركاته،\n` +
-              `مرحباً، أنا مهتم بـ ${car.year} ${car.make} ${car.model}\n` +
-              `رابط السيارة: ${carUrl}`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button variant="outline" className="w-full cursor-pointer">
-              طلب معلومات
-            </Button>
-          </a>
-        </CardContent>
-      </Card>
+          <Card className="my-6 ">
+            <CardContent className="p-4 ">
+              <div className="flex items-center gap-2 text-lg font-medium mb-2">
+                <MessageSquare className="h-5 w-5 text-yellow-600" />
+                <h3>لديك أسئلة؟</h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-3">
+                ممثلونا متاحون للإجابة على جميع استفساراتك حول هذه السيارة.
+              </p>
+              <a
+                href={`https://wa.me/6282227015893?text=${encodeURIComponent(
+                  `السلام عليكم ورحمة الله وبركاته،\n` +
+                  `مرحباً، أنا مهتم بـ ${car.year} ${car.make} ${car.model}\n` +
+                  `رابط السيارة: ${carUrl}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" className="w-full cursor-pointer">
+                  طلب معلومات
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
 
           {/* if car is sold or unavailable */}
           {(car.status === "SOLD" || car.status === "UNAVAILABLE") && (
@@ -379,9 +379,9 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
               <Calendar className="ml-2 h-5 w-5" />
               {testDriveInfo.userTestDrive
                 ? `محجوز لتاريخ ${format(
-                    new Date(testDriveInfo.userTestDrive.bookingDate),
-                    "EEEE، d MMMM yyyy"
-                  )}`
+                  new Date(testDriveInfo.userTestDrive.bookingDate),
+                  "EEEE، d MMMM yyyy"
+                )}`
                 : "احجز اختبار قيادة"}
             </Button>
           )}
@@ -510,61 +510,61 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
               <div className="space-y-2">
                 {testDriveInfo.dealership?.workingHours
                   ? testDriveInfo.dealership.workingHours
-                      .sort((a, b) => {
-                        const days = [
-                          "MONDAY",
-                          "TUESDAY",
-                          "WEDNESDAY",
-                          "THURSDAY",
-                          "FRIDAY",
-                          "SATURDAY",
-                          "SUNDAY",
-                        ];
-                        return (
-                          days.indexOf(a.dayOfWeek) - days.indexOf(b.dayOfWeek)
-                        );
-                      })
-                      .map((day) => {
-                        const arabicDays = {
-                          MONDAY: "الإثنين",
-                          TUESDAY: "الثلاثاء",
-                          WEDNESDAY: "الأربعاء",
-                          THURSDAY: "الخميس",
-                          FRIDAY: "الجمعة",
-                          SATURDAY: "السبت",
-                          SUNDAY: "الأحد"
-                        };
-                        return (
-                          <div
-                            key={day.dayOfWeek}
-                            className="flex justify-between text-sm"
-                          >
-                            <span className="text-white-600">
-                              {arabicDays[day.dayOfWeek]}
-                            </span>
-                            <span>
-                              {day.isOpen
-                                ? `${day.openTime} - ${day.closeTime}`
-                                : "مغلق"}
-                            </span>
-                          </div>
-                        );
-                      })
+                    .sort((a, b) => {
+                      const days = [
+                        "MONDAY",
+                        "TUESDAY",
+                        "WEDNESDAY",
+                        "THURSDAY",
+                        "FRIDAY",
+                        "SATURDAY",
+                        "SUNDAY",
+                      ];
+                      return (
+                        days.indexOf(a.dayOfWeek) - days.indexOf(b.dayOfWeek)
+                      );
+                    })
+                    .map((day) => {
+                      const arabicDays = {
+                        MONDAY: "الإثنين",
+                        TUESDAY: "الثلاثاء",
+                        WEDNESDAY: "الأربعاء",
+                        THURSDAY: "الخميس",
+                        FRIDAY: "الجمعة",
+                        SATURDAY: "السبت",
+                        SUNDAY: "الأحد"
+                      };
+                      return (
+                        <div
+                          key={day.dayOfWeek}
+                          className="flex justify-between text-sm"
+                        >
+                          <span className="text-white-600">
+                            {arabicDays[day.dayOfWeek]}
+                          </span>
+                          <span>
+                            {day.isOpen
+                              ? `${day.openTime} - ${day.closeTime}`
+                              : "مغلق"}
+                          </span>
+                        </div>
+                      );
+                    })
                   : // Default hours if none provided
-                    [
-                      { day: "الإثنين", hours: "9:00 - 18:00" },
-                      { day: "الثلاثاء", hours: "9:00 - 18:00" },
-                      { day: "الأربعاء", hours: "9:00 - 18:00" },
-                      { day: "الخميس", hours: "9:00 - 18:00" },
-                      { day: "الجمعة", hours: "9:00 - 18:00" },
-                      { day: "السبت", hours: "10:00 - 16:00" },
-                      { day: "الأحد", hours: "مغلق" },
-                    ].map((item) => (
-                      <div key={item.day} className="flex justify-between text-sm">
-                        <span className="text-white-600">{item.day}</span>
-                        <span>{item.hours}</span>
-                      </div>
-                    ))}
+                  [
+                    { day: "الإثنين", hours: "9:00 - 18:00" },
+                    { day: "الثلاثاء", hours: "9:00 - 18:00" },
+                    { day: "الأربعاء", hours: "9:00 - 18:00" },
+                    { day: "الخميس", hours: "9:00 - 18:00" },
+                    { day: "الجمعة", hours: "9:00 - 18:00" },
+                    { day: "السبت", hours: "10:00 - 16:00" },
+                    { day: "الأحد", hours: "مغلق" },
+                  ].map((item) => (
+                    <div key={item.day} className="flex justify-between text-sm">
+                      <span className="text-white-600">{item.day}</span>
+                      <span>{item.hours}</span>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>

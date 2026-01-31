@@ -1,31 +1,40 @@
 import ReviewCard from "@/components/ReviewCard";
+import { db } from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 
 export const dynamic = 'force-dynamic';
 
-async function getReviews() {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/reviews`, {
-      cache: 'no-store'
-    });
-    if (!res.ok) {
-      console.error('Failed to fetch reviews:', res.status, res.statusText);
+const getCachedReviews = unstable_cache(
+  async (search = "") => {
+    try {
+      let where = {};
+      if (search) {
+        where.OR = [
+          { clientName: { contains: search, mode: "insensitive" } },
+          { city: { contains: search, mode: "insensitive" } },
+          { car: { contains: search, mode: "insensitive" } },
+          { reviewText: { contains: search, mode: "insensitive" } },
+        ];
+      }
+
+      const reviews = await db.review.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+      });
+      return reviews;
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
       return [];
     }
-    const data = await res.json();
-    if (data.success) {
-      return data.data;
-    }
-    console.error('API returned success false:', data);
-    return [];
-  } catch (error) {
-    console.error('Error fetching reviews:', error);
-    return [];
-  }
-}
+  },
+  ["all-reviews"],
+  { revalidate: 3600, tags: ["reviews"] }
+);
 
-export default async function ReviewsPage() {
-  const reviews = await getReviews();
+export default async function ReviewsPage({ searchParams }) {
+  const { search = "" } = await searchParams;
+  const reviews = await getCachedReviews(search);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <section className="py-12 px-6 md:px-12">
@@ -39,9 +48,15 @@ export default async function ReviewsPage() {
         </div>
       </section>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
+        {reviews.length > 0 ? (
+          reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))
+        ) : (
+          <div className="col-span-full text-center py-12 text-gray-400">
+            لا توجد آراء حالياً
+          </div>
+        )}
       </div>
     </div>
   );

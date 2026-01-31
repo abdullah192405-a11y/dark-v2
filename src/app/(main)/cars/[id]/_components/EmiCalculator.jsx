@@ -158,14 +158,14 @@ function EmiCalculator({ price, carId }) {
                   className="w-full pl-8 pr-4 py-2 rounded-md border border-white-200 bg-gray-600 text-white-700 dark:text-white focus:outline-none focus:border-white-900 cursor-not-allowed"
                 />
               </div>
-                <input
-                  type="range"
-                  min="1000"
-                  max="150000"
-                  value={loanAmount}
-                  disabled
-                  className="w-full [&::-webkit-slider-thumb]:bg-gray-400 [&::-webkit-slider-track]:bg-gray-300 cursor-not-allowed"
-                />
+              <input
+                type="range"
+                min="1000"
+                max="150000"
+                value={loanAmount}
+                disabled
+                className="w-full [&::-webkit-slider-thumb]:bg-gray-400 [&::-webkit-slider-track]:bg-gray-300 cursor-not-allowed"
+              />
             </div>
           </div>
 
@@ -355,7 +355,10 @@ function EmiCalculator({ price, carId }) {
           {results && (
             <div className="flex justify-center mt-4">
               <button
-                onClick={() => router.push(`/loan-request/${carId}`)}
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('startLoading'));
+                  router.push(`/loan-request/${carId}`);
+                }}
                 className="w-1/2 bg-yellow-700 text-white px-6 py-2 rounded-lg hover:bg-yellow-800 transition-colors"
               >
                 طلب قرض

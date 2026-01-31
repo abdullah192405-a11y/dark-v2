@@ -182,16 +182,52 @@ export async function updateUserRole(userId, role) {
       throw new Error("Unauthorised : Admin access required");
     }
 
+    // Validate role
+    const validRoles = ["USER", "ADMIN", "EDITOR"];
+    if (!validRoles.includes(role)) {
+      throw new Error("Invalid role");
+    }
+
     await db.User.update({
       where: { id: userId },
       data: { role },
     });
 
+    revalidatePath("/admin/settings");
     revalidatePath("/");
     return {
       success: true,
     };
   } catch (error) {
     console.error(`Error in updateUserRole server action ${error.message}`);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+}
+
+export async function updateUserPermissions(userId, permissions) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (user?.role !== "ADMIN") {
+      throw new Error("Unauthorized: Admin access required");
+    }
+
+    await db.User.update({
+      where: { id: userId },
+      data: { permissions },
+    });
+
+    revalidatePath("/admin/settings");
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(`Error in updateUserPermissions server action: ${error.message}`);
+    return {
+      success: false,
+      error: error.message,
+    };
   }
 }

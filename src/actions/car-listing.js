@@ -4,87 +4,93 @@ import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { serializedCarsData } from "@/lib/helper";
 import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { 
-  fuelTypes as predefinedFuelTypes, 
-  transmissions as predefinedTransmissions, 
-  bodyTypeOptions as predefinedBodyTypes 
+import {
+  fuelTypes as predefinedFuelTypes,
+  transmissions as predefinedTransmissions,
+  bodyTypeOptions as predefinedBodyTypes
 } from "@/lib/data";
 
+import { unstable_cache } from "next/cache";
+
 // creating filter on the basis of cars in db
-export async function getCarFilters() {
-  try {
-    // get unique makes
-    const makes = await db.Car.findMany({
-      where: { status: "AVAILABLE" },
-      select: { make: true },
-      distinct: ["make"],
-      orderBy: { make: "asc" },
-    });
+export const getCarFilters = unstable_cache(
+  async () => {
+    try {
+      // get unique makes
+      const makes = await db.Car.findMany({
+        where: { status: "AVAILABLE" },
+        select: { make: true },
+        distinct: ["make"],
+        orderBy: { make: "asc" },
+      });
 
-    // get unique bodyTypes
-    const bodyTypes_db = await db.Car.findMany({
-      where: { status: "AVAILABLE" },
-      select: { bodyType: true },
-      distinct: ["bodyType"],
-      orderBy: { bodyType: "asc" },
-    });
+      // get unique bodyTypes
+      const bodyTypes_db = await db.Car.findMany({
+        where: { status: "AVAILABLE" },
+        select: { bodyType: true },
+        distinct: ["bodyType"],
+        orderBy: { bodyType: "asc" },
+      });
 
-    // get unique fuelTypes
-    const fuelTypes_db = await db.Car.findMany({
-      where: { status: "AVAILABLE" },
-      select: { fuelType: true },
-      distinct: ["fuelType"],
-      orderBy: { fuelType: "asc" },
-    });
+      // get unique fuelTypes
+      const fuelTypes_db = await db.Car.findMany({
+        where: { status: "AVAILABLE" },
+        select: { fuelType: true },
+        distinct: ["fuelType"],
+        orderBy: { fuelType: "asc" },
+      });
 
-    // get unique transmissions
-    const transmissions_db = await db.Car.findMany({
-      where: { status: "AVAILABLE" },
-      select: { transmission: true },
-      distinct: ["transmission"],
-      orderBy: { transmission: "asc" },
-    });
+      // get unique transmissions
+      const transmissions_db = await db.Car.findMany({
+        where: { status: "AVAILABLE" },
+        select: { transmission: true },
+        distinct: ["transmission"],
+        orderBy: { transmission: "asc" },
+      });
 
-    //   get min and max prices using Prisma Aggregations
-    const priceAggregations = await db.Car.aggregate({
-      where: { status: "AVAILABLE" },
-      _min: { price: true },
-      _max: { price: true },
-    });
+      //   get min and max prices using Prisma Aggregations
+      const priceAggregations = await db.Car.aggregate({
+        where: { status: "AVAILABLE" },
+        _min: { price: true },
+        _max: { price: true },
+      });
 
-    // Extract values from database
-    const makesList = makes.map((item) => item.make);
-    const bodyTypesList = bodyTypes_db.map((item) => item.bodyType);
-    const fuelTypesList = fuelTypes_db.map((item) => item.fuelType);
-    const transmissionsList = transmissions_db.map((item) => item.transmission);
+      // Extract values from database
+      const makesList = makes.map((item) => item.make);
+      const bodyTypesList = bodyTypes_db.map((item) => item.bodyType);
+      const fuelTypesList = fuelTypes_db.map((item) => item.fuelType);
+      const transmissionsList = transmissions_db.map((item) => item.transmission);
 
-    // Filter predefined options to only show those that exist in database
-    const availableBodyTypes = predefinedBodyTypes.filter(type => bodyTypesList.includes(type));
-    const availableFuelTypes = predefinedFuelTypes.filter(type => fuelTypesList.includes(type));
-    const availableTransmissions = predefinedTransmissions.filter(type => transmissionsList.includes(type));
+      // Filter predefined options to only show those that exist in database
+      const availableBodyTypes = predefinedBodyTypes.filter(type => bodyTypesList.includes(type));
+      const availableFuelTypes = predefinedFuelTypes.filter(type => fuelTypesList.includes(type));
+      const availableTransmissions = predefinedTransmissions.filter(type => transmissionsList.includes(type));
 
-    return {
-      success: true,
-      data: {
-        makes: makesList.length >= 2 ? makesList : [],
-        bodyTypes: availableBodyTypes.length >= 2 ? availableBodyTypes : [],
-        fuelTypes: availableFuelTypes.length >= 2 ? availableFuelTypes : [],
-        transmissions: availableTransmissions.length >= 2 ? availableTransmissions : [],
-        priceRange: {
-          min: priceAggregations._min.price
-            ? parseFloat(priceAggregations._min.price.toString())
-            : 0,
-          max: priceAggregations._max.price
-            ? parseFloat(priceAggregations._max.price.toString())
-            : 100000,
+      return {
+        success: true,
+        data: {
+          makes: makesList.length >= 2 ? makesList : [],
+          bodyTypes: availableBodyTypes.length >= 2 ? availableBodyTypes : [],
+          fuelTypes: availableFuelTypes.length >= 2 ? availableFuelTypes : [],
+          transmissions: availableTransmissions.length >= 2 ? availableTransmissions : [],
+          priceRange: {
+            min: priceAggregations._min.price
+              ? parseFloat(priceAggregations._min.price.toString())
+              : 0,
+            max: priceAggregations._max.price
+              ? parseFloat(priceAggregations._max.price.toString())
+              : 100000,
+          },
         },
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching car filters:", error);
-    throw new Error(`Error fetching car filters: ${error.message}`);
-  }
-}
+      };
+    } catch (error) {
+      console.error("Error fetching car filters:", error);
+      throw new Error(`Error fetching car filters: ${error.message}`);
+    }
+  },
+  ["car-filters"],
+  { revalidate: 3600, tags: ["cars"] }
+);
 
 // fetch cars as per filters
 export async function getCarsByFilters({

@@ -8,8 +8,8 @@ import { serializedCarsData } from "@/lib/helper";
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { checkPermission } from "@/lib/permissions";
 
-// fetch a admin user from a db through userId
 export async function getAdmin() {
   // check is a user is logged in
   const { userId } = await auth();
@@ -20,11 +20,11 @@ export async function getAdmin() {
     where: { clerkUserId: userId },
   });
 
-  //   check if user does not exist in db or is not a admin
-  if (!user || user.role !== "ADMIN") {
+  //   check if user does not exist in db or is not an admin/editor
+  if (!user || (user.role !== "ADMIN" && user.role !== "EDITOR")) {
     return {
       authorized: false,
-      reason: "not-admin",
+      reason: "unauthorized",
     };
   }
   return {
@@ -35,10 +35,11 @@ export async function getAdmin() {
 
 export async function getAdminTestDrives({ search = "", status = "" }) {
   try {
-    const user = await getAuthenticatedUser();
-    if (!user) throw new Error("User not found");
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
 
-    if (user.role !== "ADMIN") throw new Error("Unauthoirzed access");
+    const hasPermission = await checkPermission(userId, "test-drives");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     let where = {};
     if (status) {
@@ -115,10 +116,11 @@ export async function getAdminTestDrives({ search = "", status = "" }) {
 
 export async function updateTestDriveStatus({ bookingId, newStatus }) {
   try {
-    const user = await getAuthenticatedUser();
-    if (!user) throw new Error("User not found");
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
 
-    if (user.role !== "ADMIN") throw new Error("Unauthoirzed access");
+    const hasPermission = await checkPermission(userId, "test-drives");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     // get the booking
     const booking = await db.TestDriveBooking.findUnique({
@@ -169,8 +171,11 @@ export async function updateTestDriveStatus({ bookingId, newStatus }) {
 
 export async function getDashboardData() {
   try {
-    const user = await getAuthenticatedUser();
-    if (!user || user.role !== "ADMIN") {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const hasPermission = await checkPermission(userId, "dashboard");
+    if (!hasPermission) {
       return {
         success: false,
         error: "Unauthorized access",

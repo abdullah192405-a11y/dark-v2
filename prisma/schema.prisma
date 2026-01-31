@@ -19,6 +19,7 @@ model User {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   role             UserRole           @default(USER)
+  permissions      Json?              // For storing editor permissions
   TestDriveBooking TestDriveBooking[]
   UserSavedCar     UserSavedCar[]
   articles         Article[]
@@ -170,6 +171,7 @@ model FeaturedModel {
 enum UserRole {
   USER
   ADMIN
+  EDITOR
 }
 
 enum CarStatus {

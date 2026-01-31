@@ -2,13 +2,14 @@
 import { useEffect, useState } from "react";
 import { CarIcon, Heart, Loader } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { useRouter } from "next/navigation";
 import { toggleSavedCars } from "@/actions/car-listing";
-import useFetch from "../../hooks/use-fetch"; 
+import useFetch from "../../hooks/use-fetch";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
 import '@abdulrysr/saudi-riyal-new-symbol-font/style.css';
@@ -91,11 +92,10 @@ const CarCard = ({ car, isFeatured }) => {
             ) : (
               <Heart
                 fill={isSaved ? "currentColor" : "none"}
-                className={`h-5 w-5 ${
-                  isSaved
-                    ? "text-red-500 hover:text-red-600"
-                    : "text-gray-500 hover:text-gray-900"
-                }`}
+                className={`h-5 w-5 ${isSaved
+                  ? "text-red-500 hover:text-red-600"
+                  : "text-gray-500 hover:text-gray-900"
+                  }`}
               />
             )}
           </Button>
@@ -127,7 +127,7 @@ const CarCard = ({ car, isFeatured }) => {
             {car.bodyType}
           </Badge>
 
-         
+
 
           <Badge variant="outline" className="bg-black/30">
             {car.mileage.toLocaleString()} ميل
@@ -139,16 +139,15 @@ const CarCard = ({ car, isFeatured }) => {
         </div>
 
         <div className="flex justify-between">
-          <Button
-            className="flex-1"
+          <Link
+            href={`/cars/${car.id}`}
+            className="flex-1 inline-flex items-center justify-center rounded-md text-sm font-medium h-10 bg-zinc-100 text-zinc-900 hover:bg-zinc-200 transition-colors"
             onClick={() => {
-              // Dispatch custom event to show loading immediately
               window.dispatchEvent(new CustomEvent('startLoading'));
-              router.push(`/cars/${car.id}`);
             }}
           >
             عرض السيارة
-          </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

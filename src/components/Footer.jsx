@@ -46,16 +46,18 @@ const getIconComponent = (platform) => {
   }
 };
 
-const Footer = () => {
+const Footer = ({ initialData }) => {
   const router = useRouter();
-  const [logo, setLogo] = useState(null);
-  const [socialLinks, setSocialLinks] = useState([]);
-  const [storeInfo, setStoreInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [logo, setLogo] = useState(initialData?.logo);
+  const [socialLinks, setSocialLinks] = useState(initialData?.socialLinks || []);
+  const [storeInfo, setStoreInfo] = useState(initialData?.storeInfo);
+  const [loading, setLoading] = useState(!initialData);
 
   useEffect(() => {
-    loadFooterData();
-  }, []);
+    if (!initialData) {
+      loadFooterData();
+    }
+  }, [initialData]);
 
   const loadFooterData = async () => {
     try {
@@ -226,7 +228,7 @@ const Footer = () => {
 
         {/* Call to Action Section */}
         <div className="pt-4 bg-black mt-2 pb-2">
-         
+
         </div>
         {/* Copyright */}
         <div className="pt-4 border-t border-gray-700 text-center text-gray-300">

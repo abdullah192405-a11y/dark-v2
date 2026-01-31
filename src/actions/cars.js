@@ -12,6 +12,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
+import { checkPermission } from "@/lib/permissions";
 
 // function to convert File to Base64
 async function fileToBase64(file) {
@@ -35,9 +36,9 @@ export async function processCarImageWithAI(formData) {
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    
+
     // Using gemini-2.5-flash - latest model
-    const model = genAI.getGenerativeModel({ 
+    const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.4,
@@ -100,7 +101,7 @@ export async function processCarImageWithAI(formData) {
     let retries = 3;
     let lastError;
     let carDetails;
-    
+
     for (let i = 0; i < retries; i++) {
       try {
         const result = await model.generateContent([imagePart, prompt]); // generate a result
@@ -112,7 +113,7 @@ export async function processCarImageWithAI(formData) {
         break; // Success, exit retry loop
       } catch (error) {
         lastError = error;
-        
+
         // Check if it's a 503 error and retry
         if (error.message?.includes("503") || error.message?.includes("overloaded")) {
           console.log(`Retry attempt ${i + 1}/${retries} after model overload...`);
@@ -122,12 +123,12 @@ export async function processCarImageWithAI(formData) {
             continue;
           }
         }
-        
+
         // If it's not a 503 or last retry, throw the error
         throw error;
       }
     }
-    
+
     // If all retries failed
     if (!carDetails) {
       throw lastError;
@@ -157,18 +158,18 @@ export async function processCarImageWithAI(formData) {
         `AI response missing required fields : ${missingFields.join(",")}`
       );
     }
-    
+
     return {
       success: true,
       data: carDetails,
     };
-    
+
   } catch (error) {
     console.error("AI Car Image Processing Error:", error);
-    
+
     // Provide user-friendly error messages
     let errorMessage = "فشل تحليل الصورة. ";
-    
+
     if (error.message?.includes("503") || error.message?.includes("overloaded")) {
       errorMessage += "الخدمة مزدحمة حالياً. يرجى المحاولة مرة أخرى بعد قليل.";
     } else if (error.message?.includes("API key")) {
@@ -180,7 +181,7 @@ export async function processCarImageWithAI(formData) {
     } else {
       errorMessage += "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.";
     }
-    
+
     return {
       success: false,
       error: errorMessage,
@@ -191,15 +192,11 @@ export async function processCarImageWithAI(formData) {
 // adding the cars data to the db
 export async function addCarToDB({ carData, images }) {
   try {
-    const { userId } = await auth(); // check if user is loggedin
+    const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-      // check if user exists in db
-      where: { clerkUserId: userId },
-    });
-
-    if (!user) throw new Error("User not found");
+    const hasPermission = await checkPermission(userId, "cars");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     const carId = uuidv4(); //unique id for cars
     const folderPath = `cars/${carId}`; //intialize a carfolder path in superbase storage
@@ -289,12 +286,8 @@ export async function getCars(search = "") {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-      // check if user exists in db
-      where: { clerkUserId: userId },
-    });
-
-    if (!user) throw new Error("User not found");
+    const hasPermission = await checkPermission(userId, "cars");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     let where = {};
 
@@ -333,12 +326,8 @@ export async function deleteCars(carId) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-      // check if user exists in db
-      where: { clerkUserId: userId },
-    });
-
-    if (!user) throw new Error("User not found");
+    const hasPermission = await checkPermission(userId, "cars");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     // check if the car is present in db
     const car = await db.car.findUnique({
@@ -405,12 +394,8 @@ export async function updateCarStatus(id, { status, featured, testDriveAvailable
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-      // check if user exists in db
-      where: { clerkUserId: userId },
-    });
-
-    if (!user) throw new Error("User not found");
+    const hasPermission = await checkPermission(userId, "cars");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     const updatedData = {};
     if (status !== undefined) updatedData.status = status;
@@ -442,12 +427,8 @@ export async function updateCar(id, carData, newImages = []) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-      // check if user exists in db
-      where: { clerkUserId: userId },
-    });
-
-    if (!user) throw new Error("User not found");
+    const hasPermission = await checkPermission(userId, "cars");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     // check if the car exists
     const existingCar = await db.car.findUnique({
@@ -553,12 +534,8 @@ export async function getCarForEdit(carId) {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    const user = await db.user.findUnique({
-      // check if user exists in db
-      where: { clerkUserId: userId },
-    });
-
-    if (!user) throw new Error("User not found");
+    const hasPermission = await checkPermission(userId, "cars");
+    if (!hasPermission) throw new Error("Unauthorized access");
 
     const car = await db.car.findUnique({
       where: { id: carId },
@@ -668,15 +645,15 @@ export async function getCarById(carId) {
           userTestDrive,
           dealership: dealership
             ? {
-                ...dealership,
-                createdAt: dealership.createdAt.toISOString(),
-                updatedAt: dealership.updatedAt.toISOString(),
-                workingHours: dealership.workingHours.map((hour) => ({
-                  ...hour,
-                  createdAt: hour.createdAt.toISOString(),
-                  updatedAt: hour.updatedAt.toISOString(),
-                })),
-              }
+              ...dealership,
+              createdAt: dealership.createdAt.toISOString(),
+              updatedAt: dealership.updatedAt.toISOString(),
+              workingHours: dealership.workingHours.map((hour) => ({
+                ...hour,
+                createdAt: hour.createdAt.toISOString(),
+                updatedAt: hour.updatedAt.toISOString(),
+              })),
+            }
             : null,
           existingBookings: existingBookings.map((booking) => ({
             date: booking.bookingDate.toISOString().split("T")[0], // Format as YYYY-MM-DD

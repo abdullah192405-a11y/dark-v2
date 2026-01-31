@@ -130,7 +130,8 @@ exports.Prisma.UserScalarFieldEnum = {
   phone: 'phone',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  role: 'role'
+  role: 'role',
+  permissions: 'permissions'
 };
 
 exports.Prisma.CarScalarFieldEnum = {
@@ -396,19 +397,20 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
 exports.UserRole = exports.$Enums.UserRole = {
   USER: 'USER',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR'
 };
 
 exports.CarStatus = exports.$Enums.CarStatus = {

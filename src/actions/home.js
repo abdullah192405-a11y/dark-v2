@@ -13,39 +13,44 @@ async function fileToBase64(file) {
   return buffer.toString("base64");
 }
 
-export async function getFeaturedCars(limit = 4) {
-  try {
-    const cars = await db.Car.findMany({
-      where: {
-        featured: true,
-        status: "AVAILABLE",
-      },
-      take: limit,
-      orderBy: { createdAt: "desc" },
-    });
+import { unstable_cache } from "next/cache";
 
-    // Return empty array if no cars found instead of throwing error
-    if (!cars || cars.length === 0) {
+export const getFeaturedCars = unstable_cache(
+  async (limit = 4) => {
+    try {
+      const cars = await db.Car.findMany({
+        where: {
+          featured: true,
+          status: "AVAILABLE",
+        },
+        take: limit,
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (!cars || cars.length === 0) {
+        return {
+          success: true,
+          data: [],
+        };
+      }
+
+      const serializedCars = cars.map(serializedCarsData);
+
       return {
         success: true,
+        data: serializedCars,
+      };
+    } catch (error) {
+      console.error(`Error in getFeaturedCars server action -> ${error.message}`);
+      return {
+        success: false,
         data: [],
       };
     }
-    
-    const serializedCars = cars.map(serializedCarsData);
-
-    return {
-      success: true,
-      data: serializedCars,
-    };
-  } catch (error) {
-    console.error(`Error in getFeaturedCars server action -> ${error.message}`);
-    return {
-      success: false,
-      data: [],
-    };
-  }
-}
+  },
+  ["featured-cars"],
+  { revalidate: 3600, tags: ["cars"] }
+);
 
 export async function processAiImageSearch(formData) {
   try {
@@ -81,9 +86,9 @@ export async function processAiImageSearch(formData) {
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    
+
     // Using gemini-2.5-flash with retry logic for 503 errors
-    const model = genAI.getGenerativeModel({ 
+    const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.4,
@@ -128,7 +133,7 @@ export async function processAiImageSearch(formData) {
     // Retry logic for handling 503 errors
     let retries = 3;
     let lastError;
-    
+
     for (let i = 0; i < retries; i++) {
       try {
         const result = await model.generateContent([imagePart, prompt]); // generate a result
@@ -143,7 +148,7 @@ export async function processAiImageSearch(formData) {
         };
       } catch (error) {
         lastError = error;
-        
+
         // Check if it's a 503 error and retry
         if (error.message?.includes("503") || error.message?.includes("overloaded")) {
           console.log(`Retry attempt ${i + 1}/${retries} after model overload...`);
@@ -153,21 +158,21 @@ export async function processAiImageSearch(formData) {
             continue;
           }
         }
-        
+
         // If it's not a 503 or last retry, throw the error
         throw error;
       }
     }
-    
+
     // If all retries failed
     throw lastError;
-    
+
   } catch (error) {
     console.error("AI Image Search Error:", error);
-    
+
     // Provide user-friendly error messages
     let errorMessage = "فشل تحليل الصورة. ";
-    
+
     if (error.message?.includes("503") || error.message?.includes("overloaded")) {
       errorMessage += "الخدمة مزدحمة حالياً. يرجى المحاولة مرة أخرى بعد قليل.";
     } else if (error.message?.includes("API key")) {
@@ -177,7 +182,7 @@ export async function processAiImageSearch(formData) {
     } else {
       errorMessage += "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.";
     }
-    
+
     return {
       success: false,
       error: errorMessage,

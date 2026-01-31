@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { ArrowLeft, CarFront, Heart, Layout, Menu, Loader2 } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "./ui/sheet";
 import { getLogoByType } from "@/actions/site-management";
 
 
@@ -20,21 +20,30 @@ const navItems = [
   { name: "اراء العملاء", href: "/reviews" },
   { name: "مقالات", href: "/articles" },
   { name: "تواصل معنا", href: "/contact" },
-   { name:"", href: "" }
-  
+  { name: "", href: "" }
+
 ];
 
 
-const Header = ({ isAdminPage = false }) => {
+const Header = ({ isAdminPage = false, navLogo: initialNavLogo }) => {
   const [open, setOpen] = useState(false);
-  const [navLogo, setNavLogo] = useState(null);
+  const [navLogo, setNavLogo] = useState(initialNavLogo);
   const router = useRouter();
   const { user: clerkUser, isLoaded } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [roleLoading, setRoleLoading] = useState(true);
 
-  // Fetch navigation logo
+  // Update navLogo if prop changes
   useEffect(() => {
+    if (initialNavLogo) {
+      setNavLogo(initialNavLogo);
+    }
+  }, [initialNavLogo]);
+
+  // Fetch navigation logo if not provided
+  useEffect(() => {
+    if (navLogo) return;
+
     const fetchNavLogo = async () => {
       try {
         const result = await getLogoByType("navbar");
@@ -46,7 +55,7 @@ const Header = ({ isAdminPage = false }) => {
       }
     };
     fetchNavLogo();
-  }, []);
+  }, [navLogo]);
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -80,18 +89,18 @@ const Header = ({ isAdminPage = false }) => {
         if (response.ok) {
           const data = await response.json();
           console.log("✅ Role from API:", data.role);
-          setIsAdmin(data.role === "ADMIN");
+          setIsAdmin(data.role === "ADMIN" || data.role === "EDITOR");
         } else {
           console.log("⚠️ API call failed, checking Clerk metadata");
           // Fallback to Clerk metadata
           const clerkRole = clerkUser.publicMetadata?.role;
-          setIsAdmin(clerkRole === "ADMIN");
+          setIsAdmin(clerkRole === "ADMIN" || clerkRole === "EDITOR");
         }
       } catch (error) {
         console.error("❌ Error fetching role:", error);
         // Fallback to Clerk metadata
         const clerkRole = clerkUser.publicMetadata?.role;
-        setIsAdmin(clerkRole === "ADMIN");
+        setIsAdmin(clerkRole === "ADMIN" || clerkRole === "EDITOR");
       } finally {
         setRoleLoading(false);
       }
@@ -126,19 +135,19 @@ const Header = ({ isAdminPage = false }) => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 rtl:space-x-reverse">
-          {navItems.map((item) => (
-            <button
+        <nav className="hidden md:flex items-center space-x-8 rtl:space-x-reverse">
+          {navItems.filter(item => item.name).map((item) => (
+            <Link
               key={item.href}
+              href={item.href}
               onClick={() => {
-                // Dispatch custom event to show loading immediately
                 window.dispatchEvent(new CustomEvent('startLoading'));
-                router.push(item.href);
               }}
-              className="text-white hover:text-yellow-600 transition-colors text-sm font-medium"
+              className={`text-white hover:text-yellow-600 transition-colors text-sm font-medium ${item.name === "تواصل معنا" ? "mr-6" : ""
+                }`}
             >
               {item.name}
-            </button>
+            </Link>
           ))}
         </nav>
 
@@ -152,54 +161,67 @@ const Header = ({ isAdminPage = false }) => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px]" suppressHydrationWarning>
+                <div className="sr-only">
+                  <SheetTitle>قائمة التنقل</SheetTitle>
+                  <SheetDescription>تصفح أقسام الموقع</SheetDescription>
+                </div>
                 <div className="flex flex-col space-y-4 mt-8">
                   <div className="mt-4"></div>
-                  {navItems.map((item) => (
-                    <Button key={item.href} variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
-                      setOpen(false);
-                      // Dispatch custom event to show loading immediately
-                      window.dispatchEvent(new CustomEvent('startLoading'));
-                      router.push(item.href);
-                    }}>
+                  {navItems.filter(item => item.name).map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="inline-flex items-center justify-start h-10 px-4 py-2 text-lg font-medium hover:bg-zinc-800 rounded-md transition-colors"
+                      onClick={() => {
+                        setOpen(false);
+                        window.dispatchEvent(new CustomEvent('startLoading'));
+                      }}
+                    >
                       {item.name}
-                    </Button>
+                    </Link>
                   ))}
-                  
+
                   <SignedIn>
                     {roleLoading ? (
                       <div className="flex justify-center py-2">
                         <Loader2 className="animate-spin" size={20} />
                       </div>
                     ) : isAdmin ? (
-                      <Button variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
-                        setOpen(false);
-                        // Dispatch custom event to show loading immediately
-                        window.dispatchEvent(new CustomEvent('startLoading'));
-                        router.push('/admin');
-                      }}>
+                      <Link
+                        href="/admin"
+                        className="inline-flex items-center justify-start h-10 px-4 py-2 text-lg font-medium hover:bg-zinc-800 rounded-md transition-colors"
+                        onClick={() => {
+                          setOpen(false);
+                          window.dispatchEvent(new CustomEvent('startLoading'));
+                        }}
+                      >
                         <Layout size={18} className="ml-2" />
                         لوحة الإدارة
-                      </Button>
+                      </Link>
                     ) : (
                       <>
-                        <Button variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
-                          setOpen(false);
-                          // Dispatch custom event to show loading immediately
-                          window.dispatchEvent(new CustomEvent('startLoading'));
-                          router.push('/saved-cars');
-                        }}>
+                        <Link
+                          href="/saved-cars"
+                          className="inline-flex items-center justify-start h-10 px-4 py-2 text-lg font-medium hover:bg-zinc-800 rounded-md transition-colors"
+                          onClick={() => {
+                            setOpen(false);
+                            window.dispatchEvent(new CustomEvent('startLoading'));
+                          }}
+                        >
                           <CarFront size={18} className="ml-2" />
                           السيارات المحفوظة
-                        </Button>
-                        <Button variant="ghost" className="justify-start text-lg font-medium" onClick={() => {
-                          setOpen(false);
-                          // Dispatch custom event to show loading immediately
-                          window.dispatchEvent(new CustomEvent('startLoading'));
-                          router.push('/reservations');
-                        }}>
+                        </Link>
+                        <Link
+                          href="/reservations"
+                          className="inline-flex items-center justify-start h-10 px-4 py-2 text-lg font-medium hover:bg-zinc-800 rounded-md transition-colors"
+                          onClick={() => {
+                            setOpen(false);
+                            window.dispatchEvent(new CustomEvent('startLoading'));
+                          }}
+                        >
                           <Heart size={18} className="ml-2" />
                           حجوزاتي
-                        </Button>
+                        </Link>
                       </>
                     )}
                   </SignedIn>
@@ -209,22 +231,17 @@ const Header = ({ isAdminPage = false }) => {
           </div>
 
           <SignedIn>
-            {/* Debug display
-            {isLoaded && !roleLoading && (
-              <div className="hidden md:flex items-center gap-2 text-xs bg-yellow-500 text-black px-2 py-1 rounded">
-                <span>isAdmin: {isAdmin ? "TRUE" : "FALSE"}</span>
-              </div>
-            )} */}
-
             {isAdminPage ? (
-              <Button variant="outline" className="flex items-center gap-2" onClick={() => {
-                // Dispatch custom event to show loading immediately
-                window.dispatchEvent(new CustomEvent('startLoading'));
-                router.push('/');
-              }}>
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 border border-zinc-700 hover:bg-zinc-800 transition-colors gap-2"
+                onClick={() => {
+                  window.dispatchEvent(new CustomEvent('startLoading'));
+                }}
+              >
                 <span className="hidden md:inline">العودة للتطبيق</span>
                 <ArrowLeft size={18} />
-              </Button>
+              </Link>
             ) : roleLoading ? (
               <div className="hidden md:flex items-center gap-2">
                 <Loader2 className="animate-spin text-white" size={20} />
@@ -232,26 +249,38 @@ const Header = ({ isAdminPage = false }) => {
             ) : (
               <>
                 {isAdmin ? (
-                  <Link href="/admin" className="hidden md:block ml-4">
-                    <Button variant="outline" className="cursor-pointer flex items-center gap-2 bg-green-600 hover:bg-green-700 pl-4">
-                      <Layout size={18} />
-                      <span>لوحة الإدارة</span>
-                    </Button>
+                  <Link
+                    href="/admin"
+                    className="hidden md:flex items-center gap-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-md font-medium text-sm transition-colors ml-4"
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('startLoading'));
+                    }}
+                  >
+                    <Layout size={18} />
+                    <span>لوحة الإدارة</span>
                   </Link>
                 ) : (
                   <>
-                    <Link href="/saved-cars" className="hidden md:block">
-                      <Button className="cursor-pointer flex items-center gap-2">
-                        <CarFront size={18} />
-                        <span>السيارات المحفوظة</span>
-                      </Button>
+                    <Link
+                      href="/saved-cars"
+                      className="hidden md:flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-md font-medium text-sm transition-colors"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('startLoading'));
+                      }}
+                    >
+                      <CarFront size={18} />
+                      <span>السيارات المحفوظة</span>
                     </Link>
 
-                    <Link href="/reservations" className="hidden md:block ml-4">
-                      <Button variant="outline" className="flex items-center gap-2 pl-4">
-                        <Heart size={18} />
-                        <span>حجوزاتي</span>
-                      </Button>
+                    <Link
+                      href="/reservations"
+                      className="hidden md:flex items-center gap-2 border border-zinc-700 hover:bg-zinc-800 px-4 py-2 rounded-md font-medium text-sm transition-colors ml-4"
+                      onClick={() => {
+                        window.dispatchEvent(new CustomEvent('startLoading'));
+                      }}
+                    >
+                      <Heart size={18} />
+                      <span>حجوزاتي</span>
                     </Link>
                   </>
                 )}

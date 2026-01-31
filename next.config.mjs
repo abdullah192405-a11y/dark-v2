@@ -44,14 +44,19 @@ const nextConfig = {
   },
 
   // Custom webpack config (keeps your project working)
-  webpack(config, { isServer }) {
+  webpack(config, { isServer, dev }) {
+    // Disable persistent cache in development if it's causing ENOENT errors
+    if (dev) {
+      config.cache = false;
+    }
+
     // Prevent webpack/glob from scanning system directories
     config.watchOptions = {
-      ignored: /node_modules|\.next|\.git|dist|build/,
-      poll: false,
+      ignored: ["**/node_modules", "**/.next", "**/.git"],
+      poll: 1000, // Check for changes every second (more stable on Windows)
       aggregateTimeout: 300,
     };
-    
+
     // Disable glob pattern scanning that causes permission issues
     if (config.module && config.module.rules) {
       config.module.rules = config.module.rules.map(rule => {
@@ -94,10 +99,10 @@ const nextConfig = {
   // Middleware body size limit - MUST match server actions limit
   // This is critical for allowing large uploads through middleware
   middlewareClientMaxBodySize: '150mb',
-  
+
   // Also set at the builder level
   httpMaxRequestSize: '150mb',
-  
+
   // Allow streaming uploads
   onDemandEntries: {
     maxInactiveAge: 60 * 1000,

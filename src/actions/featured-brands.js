@@ -7,6 +7,8 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 
+import { unstable_cache } from "next/cache";
+
 // Get unique car makes from database
 export async function getCarMakes() {
   try {
@@ -36,25 +38,29 @@ export async function getCarMakes() {
 }
 
 // Get all featured brands (public - no auth required)
-export async function getFeaturedBrands() {
-  try {
-    const brands = await db.featuredBrand.findMany({
-      where: { isActive: true },
-      orderBy: { order: "asc" },
-    });
+export const getFeaturedBrands = unstable_cache(
+  async () => {
+    try {
+      const brands = await db.featuredBrand.findMany({
+        where: { isActive: true },
+        orderBy: { order: "asc" },
+      });
 
-    return {
-      success: true,
-      data: brands,
-    };
-  } catch (error) {
-    console.error("Error fetching featured brands:", error);
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-}
+      return {
+        success: true,
+        data: brands,
+      };
+    } catch (error) {
+      console.error("Error fetching featured brands:", error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  },
+  ["featured-brands"],
+  { revalidate: 3600, tags: ["brands"] }
+);
 
 // Get all featured brands for admin (includes inactive)
 export async function getAllFeaturedBrandsAdmin(search = "") {

@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
 import useFetch from "../../hooks/use-fetch";
 import { processAiImageSearch } from "@/actions/home";
-import LoadingBar from "./LoadingBar";
+// import LoadingBar from "./LoadingBar"; (Removed to use global LoadingBar)
 
 const HomeSearch = () => {
   const [serachTerm, setSerachTerm] = useState("");
@@ -24,7 +24,7 @@ const HomeSearch = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
-  
+
   const searchRef = useRef(null);
   const router = useRouter();
 
@@ -45,7 +45,7 @@ const HomeSearch = () => {
           // Replace this URL with your actual API endpoint
           const response = await fetch(`/api/search-suggestions?q=${encodeURIComponent(serachTerm)}`);
           const data = await response.json();
-          
+
           // Assuming API returns { suggestions: [...] }
           setSuggestions(data.suggestions || []);
           setShowSuggestions(data.suggestions && data.suggestions.length > 0);
@@ -100,7 +100,7 @@ const HomeSearch = () => {
         toast.error(aiImageSearchData.error || "فشل تحليل الصورة");
         return;
       }
-      
+
       // Handle success
       if (aiImageSearchData.success && aiImageSearchData.data) {
         const params = new URLSearchParams();
@@ -168,24 +168,25 @@ const HomeSearch = () => {
   };
 
   const handleSuggestionClick = async (suggestion) => {
-  setSerachTerm(suggestion);
-  setShowSuggestions(false);
+    setSerachTerm(suggestion);
+    setShowSuggestions(false);
 
-  // Parse the suggestion to extract make and model
-  // Assuming suggestion format is like "Toyota Camry" or just "Toyota"
-  const parts = suggestion.trim().split(/\s+/);
+    // Parse the suggestion to extract make and model
+    // Assuming suggestion format is like "Toyota Camry" or just "Toyota"
+    const parts = suggestion.trim().split(/\s+/);
 
-  // Only proceed if both make AND model are present
-  if (parts.length > 1) {
-    const params = new URLSearchParams();
-    params.set("make", parts[0]); // First word is the make
-    params.set("model", parts.slice(1).join(" ")); // Rest is the model
+    // Only proceed if both make AND model are present
+    if (parts.length > 1) {
+      const params = new URLSearchParams();
+      params.set("make", parts[0]); // First word is the make
+      params.set("model", parts.slice(1).join(" ")); // Rest is the model
 
-    setIsSearching(true);
-    router.push(`/cars?${params.toString()}`);
-  }
-  // If only make exists (parts.length === 1), do nothing - just update search term
-};
+      setIsSearching(true);
+      window.dispatchEvent(new CustomEvent('startLoading'));
+      router.push(`/cars?${params.toString()}`);
+    }
+    // If only make exists (parts.length === 1), do nothing - just update search term
+  };
 
   const handleKeyDown = (e) => {
     if (!showSuggestions || suggestions.length === 0) return;
@@ -241,12 +242,11 @@ const HomeSearch = () => {
             onKeyDown={handleKeyDown}
             type="text"
             placeholder="أدخل الماركة، الموديل، أو استخدم البحث بالصورة"
-            className={`pr-8 pl-8 py-6 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm text-white ${
-              isInputFocused ? "focus-visible:border-white focus-visible:ring-white/50" : ""
-            }`}
+            className={`pr-8 pl-8 py-6 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm text-white ${isInputFocused ? "focus-visible:border-white focus-visible:ring-white/50" : ""
+              }`}
             suppressHydrationWarning
           />
-          
+
           {/* Desktop Suggestions Dropdown */}
           {showSuggestions && (
             <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-gray-200 max-h-80 overflow-y-auto z-50">
@@ -258,13 +258,11 @@ const HomeSearch = () => {
                 suggestions.map((suggestion, index) => (
                   <div
                     key={index}
-                    className={`px-6 py-3 cursor-pointer transition-colors flex items-center gap-3 ${
-                      index === activeSuggestionIndex
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-50"
-                    } ${index === 0 ? "rounded-t-2xl" : ""} ${
-                      index === suggestions.length - 1 ? "rounded-b-2xl" : ""
-                    }`}
+                    className={`px-6 py-3 cursor-pointer transition-colors flex items-center gap-3 ${index === activeSuggestionIndex
+                      ? "bg-gray-100"
+                      : "hover:bg-gray-50"
+                      } ${index === 0 ? "rounded-t-2xl" : ""} ${index === suggestions.length - 1 ? "rounded-b-2xl" : ""
+                      }`}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       handleSuggestionClick(suggestion);
@@ -313,9 +311,8 @@ const HomeSearch = () => {
               onKeyDown={handleKeyDown}
               type="text"
               placeholder="أدخل الماركة، الموديل، أو استخدم البحث بالصورة"
-              className={`pr-4 pl-4 py-4 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm text-sm text-center placeholder:text-center text-white ${
-                isInputFocused ? "focus-visible:border-white focus-visible:ring-white/50" : ""
-              }`}
+              className={`pr-4 pl-4 py-4 w-full rounded-full border-gray-300 bg-white/95 backdrop-blur-sm text-sm text-center placeholder:text-center text-white ${isInputFocused ? "focus-visible:border-white focus-visible:ring-white/50" : ""
+                }`}
               suppressHydrationWarning
             />
 
@@ -330,13 +327,11 @@ const HomeSearch = () => {
                   suggestions.map((suggestion, index) => (
                     <div
                       key={index}
-                      className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-2 text-sm ${
-                        index === activeSuggestionIndex
-                          ? "bg-gray-100"
-                          : "hover:bg-gray-50"
-                      } ${index === 0 ? "rounded-t-2xl" : ""} ${
-                        index === suggestions.length - 1 ? "rounded-b-2xl" : ""
-                      }`}
+                      className={`px-4 py-3 cursor-pointer transition-colors flex items-center gap-2 text-sm ${index === activeSuggestionIndex
+                        ? "bg-gray-100"
+                        : "hover:bg-gray-50"
+                        } ${index === 0 ? "rounded-t-2xl" : ""} ${index === suggestions.length - 1 ? "rounded-b-2xl" : ""
+                        }`}
                       onMouseDown={(e) => {
                         e.preventDefault();
                         handleSuggestionClick(suggestion);
@@ -439,7 +434,6 @@ const HomeSearch = () => {
           </form>
         </div>
       )}
-      {isSearching && <LoadingBar />}
     </div>
   );
 };

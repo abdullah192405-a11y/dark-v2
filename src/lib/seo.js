@@ -92,9 +92,7 @@ export const generateMetadata = ({
       title: SITE_CONFIG.name,
     },
     applicationName: SITE_CONFIG.name,
-    viewport,
     robots,
-    charset,
     metadataBase: new URL(SITE_CONFIG.url),
     alternates: {
       canonical: canonicalUrl,
