@@ -5,8 +5,10 @@ import HomeSearch from "@/components/HomeSearch";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Car, Calendar, Shield, Search, Brain, Zap } from "lucide-react";
 import Image from "next/image";
+import Script from "next/script";
 
 import { bodyTypes, faqItems } from "@/lib/data";
+import { generateMetadata, generateJsonLd, SITE_CONFIG } from "@/lib/seo";
 import CarCard from "@/components/CarCard";
 import Link from "next/link";
 import FeaturedBrandCard from "@/components/FeaturedBrandCard";
@@ -23,6 +25,7 @@ import { getFeaturedCars } from "@/actions/home";
 import { getFeaturedBrands } from "@/actions/featured-brands";
 import { getFeaturedModels } from "@/actions/featured-models";
 import { getBanks } from "@/actions/banks";
+import { getWhatsAppNumber } from "@/actions/site-management";
 import { useEffect, useState, useRef } from "react";
 import ChatBot from "@/components/ChatBot";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -69,6 +72,8 @@ export default function Home() {
   const [isModelsLoading, setIsModelsLoading] = useState(true);
   const [isBanksLoading, setIsBanksLoading] = useState(true);
   const [heroVideoSrc, setHeroVideoSrc] = useState("/hero1.mp4");
+  const [heroSection, setHeroSection] = useState(null);
+  const [isHeroLoading, setIsHeroLoading] = useState(true);
   const [sectionVideoSrc, setSectionVideoSrc] = useState("/sectionBG4.mp4");
   const [featuredVideoSrc, setFeaturedVideoSrc] = useState("/featured.mp4");
   const [brandsVideoSrc, setBrandsVideoSrc] = useState("/");
@@ -77,6 +82,8 @@ export default function Home() {
   const [reviews, setReviews] = useState([]);
   const [isReviewsLoading, setIsReviewsLoading] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [mainLogo, setMainLogo] = useState(null);
+  const [whatsappNumber, setWhatsappNumber] = useState(null);
 
   // Refs for sections to observe
   const sectionRefs = useRef([]);
@@ -155,25 +162,111 @@ export default function Home() {
       }
     };
 
+    const fetchHeroSection = async () => {
+      try {
+        setIsHeroLoading(true);
+        console.log("[HomePage] Fetching hero section from API...");
+        
+        const response = await fetch('/api/hero-section', {
+          method: 'GET',
+          cache: 'no-store',
+        });
+        
+        console.log("[HomePage] Hero API Response status:", response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log("[HomePage] Hero API Data received:", result?.data);
+        
+        if (result?.data) {
+          console.log("[HomePage] Setting hero section with videoUrl:", result.data.videoUrl);
+          setHeroSection(result.data);
+          setHeroVideoSrc(result.data.videoUrl || "/hero1.mp4");
+        } else {
+          console.log("[HomePage] No data from API, using fallback");
+          // Use fallback if no data
+          setHeroSection({
+            videoUrl: "/hero1.mp4",
+            title: "مرحباً بك",
+            subtitle: "بحث ذكي عن السيارات واختبار القيادة من بين مئات المركبات.",
+            posterImage: null,
+            isActive: true,
+            autoplay: true,
+            loop: true,
+            muted: true,
+          });
+          setHeroVideoSrc("/hero1.mp4");
+        }
+      } catch (error) {
+        console.error("[HomePage] Error fetching hero section:", error);
+        // Use fallback on error
+        setHeroSection({
+          videoUrl: "/hero1.mp4",
+          title: "مرحباً بك",
+          subtitle: "بحث ذكي عن السيارات واختبار القيادة من بين مئات المركبات.",
+          posterImage: null,
+          isActive: true,
+          autoplay: true,
+          loop: true,
+          muted: true,
+        });
+        setHeroVideoSrc("/hero1.mp4");
+      } finally {
+        setIsHeroLoading(false);
+      }
+    };
+
     fetchFeaturedCars();
     fetchFeaturedBrands();
     fetchFeaturedModels();
     fetchBanks();
     fetchReviews();
+    fetchHeroSection();
+    fetchMainLogo();
+    fetchWhatsAppNumber();
   }, []);
 
-  // Handle hero video src based on screen size
+  // Fetch main/about logo
+  const fetchMainLogo = async () => {
+    try {
+      const response = await fetch('/api/logos/main');
+      const result = await response.json();
+      if (result.success && result.data) {
+        setMainLogo(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching main logo:", error);
+    }
+  };
+
+  // Fetch WhatsApp number from database
+  const fetchWhatsAppNumber = async () => {
+    try {
+      const result = await getWhatsAppNumber();
+      if (result.success && result.data) {
+        setWhatsappNumber(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching WhatsApp number:", error);
+    }
+  };
+
+  // Log hero section data when it changes
   useEffect(() => {
-    const updateVideoSrc = () => {
-      const isMobile = window.innerWidth <= 768;
-      setHeroVideoSrc(isMobile ? "/hero1.mp4" : "/hero1.mp4");
-    };
+    if (heroSection) {
+      console.log("[HomePage] Hero Section Updated:", {
+        title: heroSection.title,
+        subtitle: heroSection.subtitle,
+        videoUrl: heroSection.videoUrl,
+      });
+    }
+  }, [heroSection]);
 
-    updateVideoSrc(); // Set initial src
-
-    window.addEventListener("resize", updateVideoSrc);
-    return () => window.removeEventListener("resize", updateVideoSrc);
-  }, []);
+  // Hero video is now loaded from database via fetchHeroSection
+  // No need to set hardcoded values
 
   // Handle CTA video src based on screen size
   useEffect(() => {
@@ -298,29 +391,34 @@ export default function Home() {
           key={heroVideoSrc} // Force re-render on src change
           className="absolute inset-0 w-full h-full object-cover z-0"
           src={heroVideoSrc}
-          autoPlay
-          muted
-          loop
+          poster={heroSection?.posterImage || undefined}
+          autoPlay={heroSection?.autoplay !== false}
+          muted={heroSection?.muted !== false}
+          loop={heroSection?.loop !== false}
           playsInline
         ></video>
         {/* Gradient overlay at bottom */}
         <div className="absolute bottom-0 left-0 w-full h-48 gradient-fade-to-black z-20 pointer-events-none"></div>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
          <div className="mb-24 mt-8">
-  <h1 className="text-5xl md:text-6xl lg:text-7xl mb-4 text-white font-bold leading-tight mx-4 md:mx-0">
-    <LetterByLetterText
-      text="ابحث عن سيارة أحلامك مع كراون أوتو "
-      delay={50}
-      startDelay={100}
-    />
-  </h1>
-  <p className="text-xl text-white mb-4 max-w-2xl mx-auto">
-    <LetterByLetterText 
-      text="بحث ذكي عن السيارات واختبار القيادة من بين مئات المركبات." 
-      delay={30}
-      startDelay={100}
-    />
-  </p>
+  {heroSection?.title && (
+    <h1 className="text-5xl md:text-6xl lg:text-7xl mb-4 text-white font-bold leading-tight mx-4 md:mx-0">
+      <LetterByLetterText
+        text={heroSection.title}
+        delay={50}
+        startDelay={100}
+      />
+    </h1>
+  )}
+  {heroSection?.subtitle && (
+    <p className="text-xl text-white mb-4 max-w-2xl mx-auto">
+      <LetterByLetterText 
+        text={heroSection.subtitle}
+        delay={30}
+        startDelay={100}
+      />
+    </p>
+  )}
 </div>
 
           {/* Search */}
@@ -381,8 +479,8 @@ export default function Home() {
                 <div className="relative rounded-3xl">
                 
                   <img
-                    src="/logo.jpg"
-                    alt="About Click Car AI"
+                    src={mainLogo?.imageUrl || "/logo.jpg"}
+                    alt={mainLogo?.altText || "About Click Car AI"}
                     className="w-full h-auto object-cover"
                   />
                 </div>
@@ -728,13 +826,36 @@ export default function Home() {
       </section>
 
       {/* WhatsApp Button */}
-      <WhatsAppButton />
+      <WhatsAppButton phoneNumber={whatsappNumber} />
 
       {/* ChatBot Component */}
       <ChatBot onOpenChange={setIsChatBotOpen} />
 
       {/* Ad Popup */}
       {/* <AdPopup /> */}
+
+      {/* JSON-LD Structured Data */}
+      <Script
+        id="json-ld-organization"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateJsonLd("organization")),
+        }}
+      />
+      <Script
+        id="json-ld-local-business"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateJsonLd("localBusiness")),
+        }}
+      />
+      <Script
+        id="json-ld-search"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateJsonLd("searchAction")),
+        }}
+      />
     </div>
   );
 }

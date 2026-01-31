@@ -328,3 +328,80 @@ model LoanRequest {
   @@index([status])
   @@index([createdAt])
 }
+
+model SocialMedia {
+  id        String   @id @default(uuid())
+  platform  String   // facebook, instagram, twitter, youtube, tiktok, snapchat, whatsapp, etc
+  url       String   // The link/URL for the social media platform
+  icon      String?  // Icon name or identifier
+  order     Int      @default(0) // Display order
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([platform])
+  @@index([platform])
+  @@index([isActive])
+  @@index([order])
+}
+
+model StoreInfo {
+  id           String   @id @default(uuid())
+  name         String   @default("Click Car Motors") // Store name
+  description  String?  @db.Text // Store description/about short
+  address      String?  // Store location/address
+  city         String?  // City
+  country      String?  // Country
+  phone        String?  // Main phone number
+  whatsapp     String?  // WhatsApp number
+  email        String?  // Main email
+  latitude     String?  // GPS latitude for maps
+  longitude    String?  // GPS longitude for maps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([id]) // Only one store info record
+}
+
+model Logo {
+  id        String   @id @default(uuid())
+  imageUrl  String   // Logo image URL/path
+  altText   String   @default("Company Logo")
+  type      String   @default("main") // main, favicon, etc
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+}
+
+model AboutPage {
+  id             String   @id @default(uuid())
+  title          String   @default("عن المتجر") // Page title
+  content        String   @db.Text // Rich HTML content
+  heroImage      String?  // Hero image URL
+  isPublished    Boolean  @default(true)
+  metaDescription String? // SEO meta description
+  metaKeywords   String?  // SEO meta keywords
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([id]) // Only one about page
+}
+
+model HeroSection {
+  id             String   @id @default(uuid())
+  videoUrl       String   // Hero video URL/path
+  title          String   @default("مرحباً بك") // Hero title
+  subtitle       String?  // Hero subtitle
+  posterImage    String?  // Video poster/thumbnail image
+  isActive       Boolean  @default(true)
+  autoplay       Boolean  @default(true)
+  loop           Boolean  @default(true)
+  muted          Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([id]) // Only one hero section
+}

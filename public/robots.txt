@@ -1,0 +1,41 @@
+# Crown Auto - كراون أوتو - SEO Configuration
+# Market: Saudi Arabia
+
+# All search engines
+User-agent: *
+Allow: /
+Allow: /cars
+Allow: /api/sitemap.xml
+Disallow: /api/
+Disallow: /admin
+Disallow: /_next
+Disallow: /private
+Disallow: /search?*
+Crawl-delay: 1
+
+# Google-specific rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing-specific rules
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block low-quality crawlers
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Sitemaps
+Sitemap: https://crownauto.sa/api/sitemap.xml
+Sitemap: https://crownauto.sa/sitemap.xml
+
+# Additional sitemap for mobile
+Sitemap: https://crownauto.sa/api/sitemap.xml?type=mobile

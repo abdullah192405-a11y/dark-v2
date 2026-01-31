@@ -1,5 +1,7 @@
 import ReviewCard from "@/components/ReviewCard";
 
+export const dynamic = 'force-dynamic';
+
 async function getReviews() {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';

@@ -1,9 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Facebook, Instagram, Mail, Phone, Video, Youtube } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, Video, Youtube, Twitter, Linkedin } from "lucide-react";
 import { SiTiktok, SiWhatsapp, SiSnapchat } from "react-icons/si";
+import { getActiveLogo, getSocialMediaLinks, getStoreInfo, getLogoByType } from "@/actions/site-management";
 
 const navItems = [
   { name: "الصفحة الرئيسية", href: "/" },
@@ -16,51 +19,150 @@ const navItems = [
   { name: "تواصل معنا", href: "/contact" },
 ];
 
+// Icon mapping for social media platforms
+const getIconComponent = (platform) => {
+  const platformLower = platform.toLowerCase();
+  const iconProps = { size: 24 };
+
+  switch (platformLower) {
+    case "facebook":
+      return <Facebook {...iconProps} />;
+    case "instagram":
+      return <Instagram {...iconProps} />;
+    case "youtube":
+      return <Youtube {...iconProps} />;
+    case "tiktok":
+      return <SiTiktok {...iconProps} />;
+    case "whatsapp":
+      return <SiWhatsapp {...iconProps} />;
+    case "snapchat":
+      return <SiSnapchat {...iconProps} />;
+    case "twitter":
+      return <Twitter {...iconProps} />;
+    case "linkedin":
+      return <Linkedin {...iconProps} />;
+    default:
+      return null;
+  }
+};
+
 const Footer = () => {
   const router = useRouter();
+  const [logo, setLogo] = useState(null);
+  const [socialLinks, setSocialLinks] = useState([]);
+  const [storeInfo, setStoreInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadFooterData();
+  }, []);
+
+  const loadFooterData = async () => {
+    try {
+      const [logoResult, socialResult, storeResult] = await Promise.all([
+        getLogoByType("footer"),
+        getSocialMediaLinks(),
+        getStoreInfo(),
+      ]);
+
+      if (logoResult.success && logoResult.data) {
+        setLogo(logoResult.data);
+      }
+
+      if (socialResult.success) {
+        const activeSocial = socialResult.data.filter((s) => s.isActive);
+        setSocialLinks(activeSocial);
+      }
+
+      if (storeResult.success) {
+        setStoreInfo(storeResult.data);
+      }
+    } catch (error) {
+      console.error("Error loading footer data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <footer className="bg-black py-12" dir="rtl">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo or Brand */}
-          <div className="pt-4 text-center md:text-right">
-            <Link href="/" className="flex justify-center md:justify-start items-center gap-2 mb-4">
-              <Image
-                src="/logo33.png"
-                alt="click_car_logo"
-                width={100}
-                height={60}
-                className="object-contain h-12 w-auto"
-              />
+          <div className="pt-4 text-center">
+            <Link href="/" className="flex justify-center items-center gap-2 mb-4">
+              {logo ? (
+                <Image
+                  src={logo.imageUrl}
+                  alt={logo.altText || "Logo"}
+                  width={100}
+                  height={100}
+                  className="object-contain h-24 w-auto"
+                />
+              ) : (
+                <Image
+                  src="/logo1.png"
+                  alt="Default Logo"
+                  width={100}
+                  height={100}
+                  className="object-contain h-24 w-auto"
+                />
+              )}
             </Link>
             <p className="text-gray-300 text-sm">
-              ابحث عن سيارتك المثالية مع كراون أوتو
+              {storeInfo?.description || "ابحث عن سيارتك المثالية"}
             </p>
           </div>
 
           {/* Social Media */}
           <div className="pt-4 text-center md:text-right">
             <h3 className="text-lg font-semibold text-white mb-4">تابعنا</h3>
-            <div className="flex justify-center md:justify-start space-x-4">
-              <a href="https://www.facebook.com/ClickCar0" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                <Facebook size={24} />
-              </a>
-              <a href="https://www.snapchat.com/add/clickcar.sa" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                <SiSnapchat size={24} />
-              </a>
-              <a href="https://www.instagram.com/clickcar_sa/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                <Instagram size={24} />
-              </a>
-              <a href="https://www.tiktok.com/@clickcars.sa" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                <SiTiktok size={24} />
-              </a>
-              <a href="https://www.youtube.com/@Clickcar-sa" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                <Youtube size={24} />
-              </a>
-              <a href="https://wa.me/966123456789" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
-                <SiWhatsapp size={24} />
-              </a>
+            <div className="flex justify-center md:justify-start space-x-4 flex-wrap gap-2">
+              {!loading && socialLinks.length > 0 ? (
+                socialLinks.map((social) => (
+                  <a
+                    key={social.id}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={social.platform}
+                    className="text-gray-300 hover:text-white transition-colors"
+                  >
+                    {social.icon ? (
+                      <Image
+                        src={social.icon}
+                        alt={social.platform}
+                        width={24}
+                        height={24}
+                      />
+                    ) : (
+                      getIconComponent(social.platform)
+                    )}
+                  </a>
+                ))
+              ) : (
+                // Fallback to default social media
+                <>
+                  <a href="https://www.facebook.com/ClickCar0" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    <Facebook size={24} />
+                  </a>
+                  <a href="https://www.snapchat.com/add/clickcar.sa" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    <SiSnapchat size={24} />
+                  </a>
+                  <a href="https://www.instagram.com/clickcar_sa/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    <Instagram size={24} />
+                  </a>
+                  <a href="https://www.tiktok.com/@clickcars.sa" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    <SiTiktok size={24} />
+                  </a>
+                  <a href="https://www.youtube.com/@Clickcar-sa" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    <Youtube size={24} />
+                  </a>
+                  <a href="https://wa.me/966123456789" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    <SiWhatsapp size={24} />
+                  </a>
+                </>
+              )}
             </div>
           </div>
 
@@ -68,14 +170,36 @@ const Footer = () => {
           <div className="pt-4 text-center md:text-right">
             <h3 className="text-lg font-semibold text-white mb-4">تواصل معنا</h3>
             <div className="space-y-2 flex flex-col items-center md:items-start">
-              <div className="flex items-center space-x-2">
-                <Mail size={18} className="text-gray-300" />
-                <span className="text-gray-300">info@crownauto.com</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Phone size={18} className="text-gray-300" />
-                <span className="text-gray-300">+966 123 456 789</span>
-              </div>
+              {storeInfo?.email && (
+                <div className="flex items-center space-x-2">
+                  <Mail size={18} className="text-gray-300" />
+                  <a href={`mailto:${storeInfo.email}`} className="text-gray-300 hover:text-white transition-colors">
+                    {storeInfo.email}
+                  </a>
+                </div>
+              )}
+              {storeInfo?.phone && (
+                <div className="flex items-center space-x-2">
+                  <Phone size={18} className="text-gray-300" />
+                  <a href={`tel:${storeInfo.phone}`} className="text-gray-300 hover:text-white transition-colors">
+                    {storeInfo.phone}
+                  </a>
+                </div>
+              )}
+              {storeInfo?.whatsapp && (
+                <div className="flex items-center space-x-2">
+                  <SiWhatsapp size={18} className="text-gray-300" />
+                  <a href={`https://wa.me/${storeInfo.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
+                    {storeInfo.whatsapp}
+                  </a>
+                </div>
+              )}
+              {storeInfo?.address && (
+                <div className="text-gray-300 text-sm">
+                  <p>{storeInfo.address}</p>
+                  {storeInfo.city && <p>{storeInfo.city}</p>}
+                </div>
+              )}
             </div>
           </div>
 
@@ -100,14 +224,13 @@ const Footer = () => {
           </div>
         </div>
 
-
         {/* Call to Action Section */}
         <div className="pt-4 bg-black mt-2 pb-2">
          
         </div>
         {/* Copyright */}
         <div className="pt-4 border-t border-gray-700 text-center text-gray-300">
-          <p>جميع الحقوق محفوظة لدى كراون أوتو 2025</p>
+          <p>جميع الحقوق محفوظة {storeInfo?.name || "كراون أوتو"} © 2025</p>
         </div>
       </div>
     </footer>

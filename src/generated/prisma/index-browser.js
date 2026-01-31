@@ -318,6 +318,69 @@ exports.Prisma.LoanRequestScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SocialMediaScalarFieldEnum = {
+  id: 'id',
+  platform: 'platform',
+  url: 'url',
+  icon: 'icon',
+  order: 'order',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StoreInfoScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  address: 'address',
+  city: 'city',
+  country: 'country',
+  phone: 'phone',
+  whatsapp: 'whatsapp',
+  email: 'email',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LogoScalarFieldEnum = {
+  id: 'id',
+  imageUrl: 'imageUrl',
+  altText: 'altText',
+  type: 'type',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AboutPageScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  heroImage: 'heroImage',
+  isPublished: 'isPublished',
+  metaDescription: 'metaDescription',
+  metaKeywords: 'metaKeywords',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.HeroSectionScalarFieldEnum = {
+  id: 'id',
+  videoUrl: 'videoUrl',
+  title: 'title',
+  subtitle: 'subtitle',
+  posterImage: 'posterImage',
+  isActive: 'isActive',
+  autoplay: 'autoplay',
+  loop: 'loop',
+  muted: 'muted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -393,7 +456,12 @@ exports.Prisma.ModelName = {
   Article: 'Article',
   Review: 'Review',
   Contact: 'Contact',
-  LoanRequest: 'LoanRequest'
+  LoanRequest: 'LoanRequest',
+  SocialMedia: 'SocialMedia',
+  StoreInfo: 'StoreInfo',
+  Logo: 'Logo',
+  AboutPage: 'AboutPage',
+  HeroSection: 'HeroSection'
 };
 
 /**

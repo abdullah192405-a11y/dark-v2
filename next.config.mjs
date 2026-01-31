@@ -29,6 +29,11 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "jbpsuxpvazcchafiqnrf.supabase.co",
+        pathname: "/storage/v1/object/public/**", // allow Supabase storage path
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {
@@ -73,9 +78,30 @@ const nextConfig = {
   experimental: {
     webpackBuildWorker: true,
     serverActions: {
-      bodySizeLimit: '50mb',
+      bodySizeLimit: '150mb',
+      allowedOrigins: ['*'],
     },
-    proxyClientMaxBodySize: '50mb',
+  },
+
+  // Increase payload size limits
+  api: {
+    bodyParser: {
+      sizeLimit: '150mb',
+    },
+    responseLimit: '150mb',
+  },
+
+  // Middleware body size limit - MUST match server actions limit
+  // This is critical for allowing large uploads through middleware
+  middlewareClientMaxBodySize: '150mb',
+  
+  // Also set at the builder level
+  httpMaxRequestSize: '150mb',
+  
+  // Allow streaming uploads
+  onDemandEntries: {
+    maxInactiveAge: 60 * 1000,
+    pagesBufferLength: 5,
   },
 
   typescript: {

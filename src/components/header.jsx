@@ -8,6 +8,7 @@ import { Button } from "./ui/button";
 import { ArrowLeft, CarFront, Heart, Layout, Menu, Loader2 } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { getLogoByType } from "@/actions/site-management";
 
 
 const navItems = [
@@ -26,10 +27,26 @@ const navItems = [
 
 const Header = ({ isAdminPage = false }) => {
   const [open, setOpen] = useState(false);
+  const [navLogo, setNavLogo] = useState(null);
   const router = useRouter();
   const { user: clerkUser, isLoaded } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [roleLoading, setRoleLoading] = useState(true);
+
+  // Fetch navigation logo
+  useEffect(() => {
+    const fetchNavLogo = async () => {
+      try {
+        const result = await getLogoByType("navbar");
+        if (result.success && result.data) {
+          setNavLogo(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching nav logo:", error);
+      }
+    };
+    fetchNavLogo();
+  }, []);
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -94,11 +111,11 @@ const Header = ({ isAdminPage = false }) => {
   return (
     <header className="fixed top-0 w-full bg-[#000000] backdrop-blur-none z-50 border-b">
       <nav className="mx-auto px-4 md:px-12 py-4 flex items-center justify-between">
-        {/* CarLogo */}
+        {/* NavBar Logo */}
         <Link href={isAdminPage ? "/admin" : "/"} className="flex items-center gap-2 md:mr-12">
           <Image
-            src={"/logo1.png"}
-            alt="click_car_logo"
+            src={navLogo?.imageUrl || "/logo1.png"}
+            alt={navLogo?.altText || "click_car_logo"}
             width={100}
             height={60}
             className="object-contain h-12 w-auto"

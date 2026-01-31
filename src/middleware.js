@@ -1,34 +1,17 @@
-import arcjet, { createMiddleware, detectBot, shield, ip } from "@arcjet/next";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// protected routes
+// protected routes (but NOT /api/upload)
 const isProtectedRoute = createRouteMatcher([
   "/admin(.*)",
   "/saved-cars(.*)",
   "/reservations(.*)",
 ]);
 
-const aj = arcjet({
-  key: process.env.ARCJET_KEY,
-  ip: ip(["CF-Connecting-IP", "X-Forwarded-For", "X-Real-IP", "Forwarded"]),
-  characteristics: ["ip.src"],
-  rules: [
-    // sheild protection for content and security
-    shield({
-      mode: "LIVE",
-    }),
-    detectBot({
-      mode: "LIVE",
-      allow: ["CATEGORY:SEARCH_ENGINE"],
-    }),
-  ],
-});
-
-const clerk = clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth();
 
-  // If userid is not found on a protected page ,user will return to sign in page
+  // If userid is not found on a protected page, user will return to sign in page
   if (!userId && isProtectedRoute(req)) {
     const { redirectToSignIn } = await auth();
     return redirectToSignIn();
@@ -37,13 +20,12 @@ const clerk = clerkMiddleware(async (auth, req) => {
   return NextResponse.next();
 });
 
-export default createMiddleware(aj, clerk);
-
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
+    // Skip Next.js internals, static files, AND upload API routes
+    "/((?!_next|api/upload|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Run for API routes EXCEPT /api/upload to avoid body size limitations
+    "/((?!api/upload)api|trpc)(.*)",
   ],
 };
+

@@ -1,0 +1,65 @@
+{
+  "name": "كراون أوتو - Crown Auto",
+  "short_name": "كراون أوتو",
+  "description": "كراون أوتو - أفضل منصة لشراء وبيع السيارات في السعودية. تصفح آلاف السيارات الجديدة والمستعملة بأفضل الأسعار.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "dir": "rtl",
+  "lang": "ar-SA",
+  "categories": ["automotive", "shopping"],
+  "screenshots": [
+    {
+      "src": "/logo1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo1.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/logo1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo1.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo1.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "تصفح السيارات",
+      "short_name": "السيارات",
+      "description": "تصفح جميع السيارات المتاحة",
+      "url": "/cars",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "طلب اختبار القيادة",
+      "short_name": "اختبار القيادة",
+      "description": "اطلب اختبار قيادة لسيارة",
+      "url": "/test-drive",
+      "icons": [{ "src": "/logo.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}

@@ -1,0 +1,53 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { getAboutPage } from "@/actions/site-management";
+import AboutPageForm from "./_components/AboutPageForm";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+const AboutPageManagementPage = () => {
+  const [aboutPage, setAboutPage] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAboutPage();
+  }, []);
+
+  const fetchAboutPage = async () => {
+    setLoading(true);
+    const result = await getAboutPage();
+    if (result.success) {
+      setAboutPage(result.data);
+    }
+    setLoading(false);
+  };
+
+  const handleFormSubmit = () => {
+    fetchAboutPage();
+  };
+
+  return (
+    <div className="p-6" dir="rtl">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold">صفحة عن المتجر</h1>
+        <p className="text-gray-600 mt-2">إدارة محتوى وتكوين صفحة عن المتجر</p>
+      </div>
+
+      {loading ? (
+        <div className="text-center py-8">جاري التحميل...</div>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>محتوى الصفحة</CardTitle>
+            <CardDescription>قم بتحديث محتوى صفحة عن المتجر</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AboutPageForm aboutPage={aboutPage} onSubmit={handleFormSubmit} />
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+};
+
+export default AboutPageManagementPage;

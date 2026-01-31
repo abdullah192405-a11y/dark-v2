@@ -2,12 +2,22 @@ import { getCarFilters } from "@/actions/car-listing";
 import React, { Suspense } from "react";
 import CarFilters from "./_components/CarFilters";
 import CarListings from "./_components/CarListings";
-import WhatsAppButton from "@/components/WhatsAppButton";
+import CarsPageWrapper from "./_components/CarsPageWrapper";
+import { generateMetadata, SAUDI_MARKET_KEYWORDS } from "@/lib/seo";
 
-export const metadata = {
-  title: "السيارات | Click Car",
-  description: "تصفح وابحث عن سيارة أحلامك",
-};
+export const metadata = generateMetadata({
+  title: "تصفح وشراء السيارات في السعودية | كراون أوتو",
+  description: "اكتشف آلاف السيارات الجديدة والمستعملة بأفضل الأسعار في السعودية. اختر من تويوتا، هيونداي، نيسان وغيرها. توفير وتمويل متاح.",
+  keywords: [
+    "سيارات للبيع السعودية",
+    "شراء سيارة مستعملة",
+    "سيارات جديدة الرياض",
+    "أسعار السيارات",
+    ...SAUDI_MARKET_KEYWORDS.brands,
+  ],
+  canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://crown-auto.sa'}/cars`,
+  ogType: "website",
+});
 
 export const dynamic = "force-dynamic"; // prevent prerender errors
 
@@ -35,13 +45,7 @@ const CarsPage = async () => {
       </div>
 
       {/* WhatsApp Button for Cars Page */}
-      <WhatsAppButton 
-        phoneNumber="+201000000000" 
-        label="لم تجد سياراتك؟"
-        text="السلام عليكم%0Aلقد بحثت عن سيارة ولم أجدها%0Aهل يمكنكم مساعدتي؟"
-        bottomOffset="bottom-4 md:bottom-6"
-        leftOffset="left-4 md:left-6"
-      />
+      <CarsPageWrapper />
     </>
   );
 };

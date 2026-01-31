@@ -17,6 +17,8 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search") || "";
 
+    console.log("DEBUG: API called, DB URL:", process.env.DATABASE_URL?.substring(0, 50) + "...");
+
     let where = {};
 
     if (search) {
@@ -32,6 +34,8 @@ export async function GET(request) {
       where,
       orderBy: { createdAt: "desc" },
     });
+
+    console.log("DEBUG: Found", reviews.length, "reviews");
 
     return NextResponse.json({
       success: true,

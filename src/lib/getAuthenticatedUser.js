@@ -4,13 +4,13 @@ import { db } from "./prisma";
 export async function getAuthenticatedUser() {
   try {
     const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorised User");
+    if (!userId) return null;
 
     const user = await db.User.findUnique({
       where: { clerkUserId: userId },
     });
 
-    if (!user) throw new Error("User not found");
+    if (!user) return null;
 
     return user;
   } catch (error) {

@@ -36,10 +36,19 @@ export async function GET() {
       return NextResponse.json({ role: loggedInUser.role });
     }
 
-    // user not found so create a newUser
-    console.log("Creating new user...");
-    const newUser = await db.user.create({
-      data: {
+    // user not found so create or update user
+    console.log("Creating or updating user...");
+    const newUser = await db.user.upsert({
+      where: {
+        email: user.emailAddresses?.[0]?.emailAddress,
+      },
+      update: {
+        clerkUserId: user.id,
+        name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+        imageUrl: user.imageUrl,
+        phone: user.phoneNumbers?.[0]?.phoneNumber ?? null,
+      },
+      create: {
         clerkUserId: user.id,
         name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
         imageUrl: user.imageUrl,
@@ -47,7 +56,7 @@ export async function GET() {
         phone: user.phoneNumbers?.[0]?.phoneNumber ?? null,
       },
     });
-    console.log("New user created:", newUser.id);
+    console.log("User created/updated:", newUser.id);
     return NextResponse.json({ role: newUser.role });
   } catch (error) {
     console.error("GetUserRole error:", error.message || error, error.stack);

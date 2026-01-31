@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Calendar, Car, Cog, Heart, LayoutDashboard, MessageSquare, Award, Home, FileText, Mail, DollarSign } from "lucide-react";
+import { Calendar, Car, Cog, Heart, LayoutDashboard, MessageSquare, Award, Home, FileText, Mail, DollarSign, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -13,12 +13,13 @@ const routes = [
   { label: "اختبارات القيادة", icon: Calendar, href: "/admin/test-drives" },
   { label: "تحليلات الدردشة", icon: MessageSquare, href: "/admin/chat-analytics" },
   { label: "طلبات القروض", icon: DollarSign, href: "/admin/loan-requests" },
+  { label: "إدارة بيانات الموقع", icon: Settings2, href: "/admin/site-data" },
   { label: "الإعدادات", icon: Cog, href: "/admin/settings" },
   { label: "البنك", icon: Home, href: "/admin/bank" },
   { label: "المقالات", icon: FileText, href: "/admin/articles" },
   { label: "التقييمات", icon: MessageSquare, href: "/admin/reviews" },
   { label: "الرسائل", icon: Mail, href: "/admin/contacts" },
-  { label: "السيارات المحفوظة", icon: Heart, href: "/saved-cars" },
+  // { label: "السيارات المحفوظة", icon: Heart, href: "/saved-cars" },
 ];
 
 const Sidebar = () => {
