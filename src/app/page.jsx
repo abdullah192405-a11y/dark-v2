@@ -45,7 +45,7 @@ const LetterByLetterText = ({ text, delay = 50, startDelay = 0, className = "" }
           setDisplayedText(prev => prev + text[currentIndex]);
           setCurrentIndex(prev => prev + 1);
         }, delay);
-        
+
         return () => clearTimeout(timeout);
       }
     }, startDelay);
@@ -166,21 +166,21 @@ export default function Home() {
       try {
         setIsHeroLoading(true);
         console.log("[HomePage] Fetching hero section from API...");
-        
+
         const response = await fetch('/api/hero-section', {
           method: 'GET',
           cache: 'no-store',
         });
-        
+
         console.log("[HomePage] Hero API Response status:", response.status);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const result = await response.json();
         console.log("[HomePage] Hero API Data received:", result?.data);
-        
+
         if (result?.data) {
           console.log("[HomePage] Setting hero section with videoUrl:", result.data.videoUrl);
           setHeroSection(result.data);
@@ -340,7 +340,7 @@ export default function Home() {
     };
   }, []);
 
-  
+
 
   // Intersection Observer for About video autoplay
   useEffect(() => {
@@ -400,26 +400,26 @@ export default function Home() {
         {/* Gradient overlay at bottom */}
         <div className="absolute bottom-0 left-0 w-full h-48 gradient-fade-to-black z-20 pointer-events-none"></div>
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-         <div className="mb-24 mt-8">
-  {heroSection?.title && (
-    <h1 className="text-5xl md:text-6xl lg:text-7xl mb-4 text-white font-bold leading-tight mx-4 md:mx-0">
-      <LetterByLetterText
-        text={heroSection.title}
-        delay={50}
-        startDelay={100}
-      />
-    </h1>
-  )}
-  {heroSection?.subtitle && (
-    <p className="text-xl text-white mb-4 max-w-2xl mx-auto">
-      <LetterByLetterText 
-        text={heroSection.subtitle}
-        delay={30}
-        startDelay={100}
-      />
-    </p>
-  )}
-</div>
+          <div className="mb-24 mt-8">
+            {heroSection?.title && (
+              <h1 className="text-5xl md:text-6xl lg:text-7xl mb-4 text-white font-bold leading-tight mx-4 md:mx-0">
+                <LetterByLetterText
+                  text={heroSection.title}
+                  delay={50}
+                  startDelay={100}
+                />
+              </h1>
+            )}
+            {heroSection?.subtitle && (
+              <p className="text-xl text-white mb-4 max-w-2xl mx-auto">
+                <LetterByLetterText
+                  text={heroSection.subtitle}
+                  delay={30}
+                  startDelay={100}
+                />
+              </p>
+            )}
+          </div>
 
           {/* Search */}
           <div className="md:animate-none animate-fade-in-up animation-delay-400">
@@ -429,7 +429,7 @@ export default function Home() {
       </section>
 
 
-        {/* About Section - Enhanced with Glassmorphism and Interactivity */}
+      {/* About Section - Enhanced with Glassmorphism and Interactivity */}
       <section ref={addToRefs} className="py-20 px-6 md:px-12 scroll-animate relative">
         {/* Background video */}
         {/* Background gradient overlay */}
@@ -449,7 +449,7 @@ export default function Home() {
                     نحن منصة رائدة في مجال البحث عن السيارات وحجز اختبارات القيادة في المنطقة.
                     نوفر لك تجربة سلسة وآمنة للعثور على سيارة أحلامك من بين مئات الخيارات المتاحة.
                   </p>
-                  
+
                 </div>
 
                 <div className="flex items-start justify-end space-x-4 space-x-reverse">
@@ -457,7 +457,7 @@ export default function Home() {
                     مع تقنيات الذكاء الاصطناعي المتقدمة، نساعدك على اتخاذ القرار الصحيح
                     من خلال توفير معلومات دقيقة ومقارنات شاملة بين المركبات المختلفة.
                   </p>
-                 
+
                 </div>
               </div>
 
@@ -477,7 +477,7 @@ export default function Home() {
             <div className="relative order-1 md:order-2 animate-fade-in-up animation-delay-400">
               <div className="relative w-full max-w-lg mx-auto group">
                 <div className="relative rounded-3xl">
-                
+
                   <img
                     src={mainLogo?.imageUrl || "/logo.jpg"}
                     alt={mainLogo?.altText || "About Click Car AI"}
@@ -493,57 +493,57 @@ export default function Home() {
 
 
 
-    {/* Featured Cars */}
-<section ref={addToRefs} className="py-12 px-6 md:px-12 scroll-animate relative">
-  {/* Background video */}
-  <video
-    key={featuredVideoSrc} // Force re-render on src change
-    className="absolute inset-0 w-full h-full object-cover z-0"
-    src={featuredVideoSrc}
-    autoPlay
-    muted
-    loop
-    playsInline
-  ></video>
-  {/* Gradient overlay top */}
-  <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent z-5"></div>
-  {/* Gradient overlay bottom */}
-  <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent z-5"></div>
-  {/* Headings */}
-  <div className="container mx-auto relative z-10">
-    <div className="flex justify-between items-center mb-8">
-      <h2 className="text-2xl font-bold text-white">السيارات المميزة</h2>
-      <Button variant="ghost" className="flex items-center" onClick={() => handleNavigation('/cars')}>
-        عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
-      </Button>
-    </div>
-    {/* Featured Cars Car-card*/}
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {isLoading ? (
-        // Loading skeleton
-        Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="group relative rounded-lg shadow-md p-4 animate-pulse overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-amber-300/50 backdrop-blur-md bg-white/70 hover:bg-gradient-to-t hover:from-amber-400/40 hover:to-white/70">
-            <div className="h-48 bg-gray-200 rounded-md mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      {/* Featured Cars */}
+      <section ref={addToRefs} className="py-12 px-6 md:px-12 scroll-animate relative">
+        {/* Background video */}
+        <video
+          key={featuredVideoSrc} // Force re-render on src change
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          src={featuredVideoSrc}
+          autoPlay
+          muted
+          loop
+          playsInline
+        ></video>
+        {/* Gradient overlay top */}
+        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black to-transparent z-5"></div>
+        {/* Gradient overlay bottom */}
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black to-transparent z-5"></div>
+        {/* Headings */}
+        <div className="container mx-auto relative z-10">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold text-white">السيارات المميزة</h2>
+            <Button variant="ghost" className="flex items-center" onClick={() => handleNavigation('/cars')}>
+              عرض الكل <ChevronLeft className="ml-1 h-4 w-4" />
+            </Button>
           </div>
-        ))
-      ) : featuredCars?.length > 0 ? (
-        featuredCars.map((car) => {
-          return <CarCard key={car.id} car={car} isFeatured={true} />;
-        })
-      ) : (
-        <div className="col-span-full text-center py-8 text-white">
-          لا توجد سيارات مميزة متاحة حالياً
+          {/* Featured Cars Car-card*/}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {isLoading ? (
+              // Loading skeleton
+              Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="group relative rounded-lg shadow-md p-4 animate-pulse overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-amber-300/50 backdrop-blur-md bg-white/70 hover:bg-gradient-to-t hover:from-amber-400/40 hover:to-white/70">
+                  <div className="h-48 bg-gray-200 rounded-md mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              ))
+            ) : featuredCars?.length > 0 ? (
+              featuredCars.map((car) => {
+                return <CarCard key={car.id} car={car} isFeatured={true} />;
+              })
+            ) : (
+              <div className="col-span-full text-center py-8 text-white">
+                لا توجد سيارات مميزة متاحة حالياً
+              </div>
+            )}
+          </div>
+          {isNavigating && <LoadingBar />}
         </div>
-      )}
-    </div>
-    {isNavigating && <LoadingBar />}
-  </div>
-</section>
+      </section>
 
-      
-{/* Banks Section */}
+
+      {/* Banks Section */}
       <section ref={addToRefs} className="py-6 px-6 md:px-12 scroll-animate">
         <div className="container mx-auto ">
           <div className="flex justify-between items-center mb-8">
@@ -606,7 +606,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {isBrandsLoading ? (
               // Loading skeleton
-             Array.from({ length: 6 }).map((_, index) => (
+              Array.from({ length: 6 }).map((_, index) => (
                 <div key={index} className="bg-white/10 backdrop-blur-md border border-white/20 rounded-md shadow-xl p-4 animate-pulse">
                   <div className="h-16 bg-gray-200/20 rounded"></div>
                 </div>
@@ -736,7 +736,7 @@ export default function Home() {
           ) : featuredModels?.length > 0 ? (
             featuredModels.map((model) => {
               return (
-                       <Link key={model.id} href={`/cars?bodyType=${model.name}`}>
+                <Link key={model.id} href={`/cars?bodyType=${model.name}`}>
                   <Card className="relative group cursor-pointer rounded-2xl overflow-hidden h-48 md:h-64 border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 p-0">
                     <div className="relative h-full w-full">
                       <Image
@@ -748,7 +748,7 @@ export default function Home() {
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
                     </div>
-    
+
                     <div className="absolute inset-x-0 bottom-0 p-6">
                       <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">
                         {model.nameAr}
@@ -770,7 +770,7 @@ export default function Home() {
         </div>
       </section>
 
-      
+
       {/* FAQs */}
       <section ref={addToRefs} className="py-12 px-12 bg-black text-white scroll-animate">
         <div className="container mx-auto px-4 text-right">
