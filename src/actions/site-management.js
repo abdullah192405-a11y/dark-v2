@@ -2,7 +2,7 @@
 
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { db } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { createClient } from "@/lib/superbase";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
@@ -543,3 +543,78 @@ export const getWhatsAppNumber = unstable_cache(
   ["whatsapp-number"],
   { revalidate: 3600, tags: ["site-settings"] }
 );
+
+// ==================== PIXEL & ANALYTICS MANAGEMENT ====================
+
+export const getPixelSettings = unstable_cache(
+  async () => {
+    try {
+      let pixelSettings = await db.pixelSettings.findFirst();
+
+      if (!pixelSettings) {
+        pixelSettings = await db.pixelSettings.create({
+          data: {},
+        });
+      }
+
+      return { success: true, data: pixelSettings };
+    } catch (error) {
+      console.error("Error fetching pixel settings:", error);
+      return { success: false, error: error.message };
+    }
+  },
+  ["pixel-settings"],
+  { revalidate: 3600, tags: ["site-settings", "pixels"] }
+);
+
+export async function updatePixelSettings(data) {
+  try {
+    const user = await getAuthenticatedUser();
+
+    // Safety check for admin role
+    if (!user || user.role !== "ADMIN") {
+      console.warn(`[updatePixelSettings] Unauthorized attempt by user: ${user?.email || 'Anonymous'}`);
+      return { success: false, error: "غير مصرح لك بالقيام بهذا الإجراء" };
+    }
+
+    console.log("[updatePixelSettings] Updating with data:", data);
+
+    let pixelSettings = await db.pixelSettings.findFirst();
+
+    const updateData = {
+      facebookPixel: data.facebookPixel,
+      googleAnalytics: data.googleAnalytics,
+      googleAdsId: data.googleAdsId,
+      tiktokPixel: data.tiktokPixel,
+      snapchatPixel: data.snapchatPixel,
+      microsoftClarity: data.microsoftClarity,
+    };
+
+    // Remove undefined values to avoid overwriting with null if a field wasn't provided
+    Object.keys(updateData).forEach(key =>
+      updateData[key] === undefined && delete updateData[key]
+    );
+
+    if (!pixelSettings) {
+      pixelSettings = await db.pixelSettings.create({
+        data: updateData,
+      });
+    } else {
+      pixelSettings = await db.pixelSettings.update({
+        where: { id: pixelSettings.id },
+        data: updateData,
+      });
+    }
+
+    console.log("[updatePixelSettings] Successfully updated record:", pixelSettings.id);
+
+    revalidateTag("pixels");
+    revalidateTag("site-settings");
+    revalidatePath("/", "layout");
+    revalidatePath("/admin/settings");
+    return { success: true, data: pixelSettings };
+  } catch (error) {
+    console.error("[updatePixelSettings] Error:", error);
+    return { success: false, error: `فشل الحفظ: ${error.message}` };
+  }
+}

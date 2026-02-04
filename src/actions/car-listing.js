@@ -69,10 +69,10 @@ export const getCarFilters = unstable_cache(
       return {
         success: true,
         data: {
-          makes: makesList.length >= 2 ? makesList : [],
-          bodyTypes: availableBodyTypes.length >= 2 ? availableBodyTypes : [],
-          fuelTypes: availableFuelTypes.length >= 2 ? availableFuelTypes : [],
-          transmissions: availableTransmissions.length >= 2 ? availableTransmissions : [],
+          makes: makesList.length >= 1 ? makesList : [],
+          bodyTypes: availableBodyTypes.length >= 1 ? availableBodyTypes : [],
+          fuelTypes: availableFuelTypes.length >= 1 ? availableFuelTypes : [],
+          transmissions: availableTransmissions.length >= 1 ? availableTransmissions : [],
           priceRange: {
             min: priceAggregations._min.price
               ? parseFloat(priceAggregations._min.price.toString())

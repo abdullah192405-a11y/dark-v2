@@ -155,7 +155,7 @@ const StoreInfoManager = ({ data, onRefresh }) => {
               />
             </div>
 
-            {/* <div className="p-4 bg-gray-50 rounded grid grid-cols-2 gap-4">
+            <div className="p-4 bg-gray-50 rounded grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="latitude">خط العرض (GPS)</Label>
                 <Input
@@ -177,7 +177,7 @@ const StoreInfoManager = ({ data, onRefresh }) => {
                   placeholder="46.6753"
                 />
               </div>
-            </div> */}
+            </div>
 
             <div className="flex gap-2">
               <Button type="submit" disabled={loading}>

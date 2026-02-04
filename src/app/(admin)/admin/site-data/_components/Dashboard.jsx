@@ -17,6 +17,7 @@ import StoreInfoManager from "./StoreInfoManager";
 import LogoManager from "./LogoManager";
 import AboutPageManager from "./AboutPageManager";
 import HeroSectionManager from "./HeroSectionManager";
+import PixelSettingsCard from "./PixelSettingsCard";
 
 const SiteDataDashboard = () => {
   const [data, setData] = useState({
@@ -182,10 +183,10 @@ const SiteDataDashboard = () => {
         <div className="flex justify-end">
           <TabsList className="flex-row-reverse">
             <TabsTrigger value="hero-section">قسم البطل</TabsTrigger>
-            {/* <TabsTrigger value="about-page">صفحة عن المتجر</TabsTrigger> */}
             <TabsTrigger value="logos">الشعارات</TabsTrigger>
             <TabsTrigger value="store-info">بيانات المتجر</TabsTrigger>
             <TabsTrigger value="social-media">وسائل التواصل</TabsTrigger>
+            <TabsTrigger value="pixels">البيكسل والتحليلات</TabsTrigger>
           </TabsList>
         </div>
 
@@ -210,6 +211,10 @@ const SiteDataDashboard = () => {
 
         <TabsContent value="hero-section">
           <HeroSectionManager initialData={data.heroSection} onRefresh={loadAllData} />
+        </TabsContent>
+
+        <TabsContent value="pixels">
+          <PixelSettingsCard />
         </TabsContent>
       </Tabs>
     </div>

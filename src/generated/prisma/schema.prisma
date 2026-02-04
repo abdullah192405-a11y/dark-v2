@@ -407,3 +407,16 @@ model HeroSection {
 
   @@unique([id]) // Only one hero section
 }
+
+model PixelSettings {
+  id               String   @id @default(uuid())
+  facebookPixel    String?
+  googleAnalytics  String?
+  googleAdsId      String?
+  tiktokPixel      String?
+  snapchatPixel    String?
+  microsoftClarity String?
+  updatedAt        DateTime @updatedAt
+
+  @@unique([id])
+}

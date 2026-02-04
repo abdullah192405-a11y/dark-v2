@@ -19,6 +19,7 @@ const routes = [
   { id: "articles", label: "المقالات", icon: FileText, href: "/admin/articles" },
   { id: "reviews", label: "التقييمات", icon: MessageSquare, href: "/admin/reviews" },
   { id: "contacts", label: "الرسائل", icon: Mail, href: "/admin/contacts" },
+  { id: "mandebs", label: "المناديب", icon: Users, href: "/admin/mandebs" },
 ];
 
 const Sidebar = ({ user }) => {
@@ -37,7 +38,7 @@ const Sidebar = ({ user }) => {
   return (
     <>
       {/* Sidebar for bigger screens */}
-      <div className="hidden md:flex h-full flex-col overflow-y-auto bg-black shadow-sm border-r border-gray-800 ">
+      <div className="hidden md:flex h-full flex-col overflow-y-auto bg-black shadow-sm border-r border-gray-800 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
         {filteredRoutes.map((route) => {
           return (
             <Link

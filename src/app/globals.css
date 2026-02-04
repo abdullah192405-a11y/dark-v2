@@ -160,14 +160,6 @@
   [dir="rtl"] {
     direction: rtl;
   }
-
-  [dir="rtl"] .text-left {
-    text-align: right;
-  }
-
-  [dir="rtl"] .text-right {
-    text-align: left;
-  }
 }
 
 @layer utilities {
@@ -183,6 +175,26 @@
     box-shadow: none !important;
     backdrop-filter: none !important;
     color: #000000 !important;
+  }
+
+  /* Custom Scrollbar Styles */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #27272a;
+    /* zinc-800 */
+    border-radius: 10px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+    /* zinc-700 */
   }
 }
 

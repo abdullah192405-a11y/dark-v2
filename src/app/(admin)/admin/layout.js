@@ -25,7 +25,7 @@ const AdminLayout = async ({ children }) => {
       {/* Overlapping header page here to avoid making it a client component */}
       <Header isAdminPage={true} navLogo={navLogo} />
 
-      <div className="flex h-full w-56 flex-col top-20 fixed inset-y-0 z-50 right-0">
+      <div className="w-56 fixed top-20 bottom-0 z-50 right-0 flex flex-col">
         <Sidebar user={admin.user} />
       </div>
       <main className="md:pr-56 pt-[80px] h-full">

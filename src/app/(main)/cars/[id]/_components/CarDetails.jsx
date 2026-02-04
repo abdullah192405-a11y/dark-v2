@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import EmiCalculator from "./EmiCalculator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { format } from "date-fns";
+import MandebSelector from "./MandebSelector";
 
 const CarDetails = ({ car, testDriveInfo, user }) => {
   const router = useRouter();
@@ -44,6 +45,7 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [mediaType, setMediaType] = useState('image'); // 'image' or 'video'
   const [carUrl, setCarUrl] = useState('');
+  const [isMandebDialogOpen, setIsMandebDialogOpen] = useState(false);
 
   // Helper function to extract YouTube video ID and generate embed URL
   const getYouTubeEmbedUrl = (url) => {
@@ -193,8 +195,8 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
                 <div
                   key={`image-${index}`}
                   className={`relative cursor-pointer rounded-md h-20 w-24 flex-shrink-0 transition ${mediaType === 'image' && index === currentImageIndex
-                      ? "border-2 border-yellow-600"
-                      : "opacity-70 hover:opacity-100"
+                    ? "border-2 border-yellow-600"
+                    : "opacity-70 hover:opacity-100"
                     }`}
                   onClick={() => {
                     setCurrentImageIndex(index);
@@ -213,8 +215,8 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
               {car.videoUrl && (
                 <div
                   className={`relative cursor-pointer rounded-md h-20 w-24 flex-shrink-0 transition ${mediaType === 'video'
-                      ? "border-2 border-yellow-600"
-                      : "opacity-70 hover:opacity-100"
+                    ? "border-2 border-yellow-600"
+                    : "opacity-70 hover:opacity-100"
                     }`}
                   onClick={() => setMediaType('video')}
                 >
@@ -233,40 +235,49 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
           ) : null}
 
           {/* Secondary Actions */}
-          <div className="flex mt-4 gap-4">
+          <div className="grid grid-cols-2 md:flex mt-4 gap-2 md:gap-4">
             {/* Saved */}
             <Button
               variant="outline"
-              className={`flex items-center gap-2 flex-1 ${isWishlisted ? "text-yellow-500" : ""
+              className={`flex items-center justify-center gap-2 flex-1 ${isWishlisted ? "text-yellow-500" : ""
                 }`}
               onClick={handleSaveCar}
               disabled={savingCarLoading}
             >
               <Heart
-                className={`h-5 w-5 ${isWishlisted ? "fill-yellow-500" : ""}`}
+                className={`h-4 w-4 md:h-5 md:w-5 ${isWishlisted ? "fill-yellow-500" : ""}`}
               />
-              {isWishlisted ? "محفوظة" : "حفظ"}
+              <span className="text-xs md:text-sm">{isWishlisted ? "محفوظة" : "حفظ"}</span>
             </Button>
             {/* Share */}
             <Button
               variant="outline"
-              className="flex items-center gap-2 flex-1"
+              className="flex items-center justify-center gap-2 flex-1"
               onClick={handleShare}
             >
-              <Share2 className="h-5 w-5" />
-              مشاركة
+              <Share2 className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm">مشاركة</span>
             </Button>
             {/* Loan Request */}
             <Button
               variant="default"
-              className="w-full flex items-center gap-2 bg-yellow-700 text-white flex-1 hover:bg-yellow-700"
+              className="flex items-center justify-center gap-2 bg-yellow-700 text-white hover:bg-yellow-800 font-bold flex-1"
               onClick={() => {
                 window.dispatchEvent(new CustomEvent('startLoading'));
                 router.push(`/loan-request/${car.id}`);
               }}
             >
-              <Currency className="h-5 w-5" />
-              طلب قرض
+              <Currency className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm">طلب قرض</span>
+            </Button>
+            {/* Order Car (Mandeb selection) */}
+            <Button
+              variant="default"
+              className="flex items-center justify-center gap-2 bg-yellow-700 text-white hover:bg-yellow-800 font-bold flex-1"
+              onClick={() => setIsMandebDialogOpen(true)}
+            >
+              <Car className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-xs md:text-sm">طلب السيارة</span>
             </Button>
           </div>
         </div>
@@ -343,19 +354,13 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
               <p className="text-sm text-gray-600 mb-3">
                 ممثلونا متاحون للإجابة على جميع استفساراتك حول هذه السيارة.
               </p>
-              <a
-                href={`https://wa.me/6282227015893?text=${encodeURIComponent(
-                  `السلام عليكم ورحمة الله وبركاته،\n` +
-                  `مرحباً، أنا مهتم بـ ${car.year} ${car.make} ${car.model}\n` +
-                  `رابط السيارة: ${carUrl}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Button
+                variant="outline"
+                className="w-full cursor-pointer"
+                onClick={() => setIsMandebDialogOpen(true)}
               >
-                <Button variant="outline" className="w-full cursor-pointer">
-                  طلب معلومات
-                </Button>
-              </a>
+                طلب معلومات
+              </Button>
             </CardContent>
           </Card>
 
@@ -570,6 +575,12 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
           </div>
         </div>
       </div>
+
+      <MandebSelector
+        isOpen={isMandebDialogOpen}
+        onOpenChange={setIsMandebDialogOpen}
+        car={car}
+      />
     </div>
   );
 };

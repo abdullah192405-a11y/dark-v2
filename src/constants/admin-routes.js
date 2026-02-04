@@ -12,5 +12,6 @@ export const ADMIN_ROUTES = [
     { id: "articles", label: "المقالات", href: "/admin/articles" },
     { id: "reviews", label: "التقييمات", href: "/admin/reviews" },
     { id: "contacts", label: "الرسائل", href: "/admin/contacts" },
+    { id: "mandebs", label: "المناديب", href: "/admin/mandebs" },
     { id: "users", label: "تحكم وصول الصفحات", href: "/admin/users", isAdminOnly: true },
 ];

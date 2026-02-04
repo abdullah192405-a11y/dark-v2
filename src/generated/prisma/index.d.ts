@@ -108,6 +108,16 @@ export type AboutPage = $Result.DefaultSelection<Prisma.$AboutPagePayload>
  * 
  */
 export type HeroSection = $Result.DefaultSelection<Prisma.$HeroSectionPayload>
+/**
+ * Model PixelSettings
+ * 
+ */
+export type PixelSettings = $Result.DefaultSelection<Prisma.$PixelSettingsPayload>
+/**
+ * Model Mandeb
+ * 
+ */
+export type Mandeb = $Result.DefaultSelection<Prisma.$MandebPayload>
 
 /**
  * Enums
@@ -493,6 +503,26 @@ export class PrismaClient<
     * ```
     */
   get heroSection(): Prisma.HeroSectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pixelSettings`: Exposes CRUD operations for the **PixelSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PixelSettings
+    * const pixelSettings = await prisma.pixelSettings.findMany()
+    * ```
+    */
+  get pixelSettings(): Prisma.PixelSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.mandeb`: Exposes CRUD operations for the **Mandeb** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Mandebs
+    * const mandebs = await prisma.mandeb.findMany()
+    * ```
+    */
+  get mandeb(): Prisma.MandebDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -952,7 +982,9 @@ export namespace Prisma {
     StoreInfo: 'StoreInfo',
     Logo: 'Logo',
     AboutPage: 'AboutPage',
-    HeroSection: 'HeroSection'
+    HeroSection: 'HeroSection',
+    PixelSettings: 'PixelSettings',
+    Mandeb: 'Mandeb'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -971,7 +1003,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "car" | "dealershipInfo" | "workingHour" | "userSavedCar" | "testDriveBooking" | "chatLog" | "featuredBrand" | "featuredModel" | "bank" | "article" | "review" | "contact" | "loanRequest" | "socialMedia" | "storeInfo" | "logo" | "aboutPage" | "heroSection"
+      modelProps: "user" | "car" | "dealershipInfo" | "workingHour" | "userSavedCar" | "testDriveBooking" | "chatLog" | "featuredBrand" | "featuredModel" | "bank" | "article" | "review" | "contact" | "loanRequest" | "socialMedia" | "storeInfo" | "logo" | "aboutPage" | "heroSection" | "pixelSettings" | "mandeb"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2381,6 +2413,154 @@ export namespace Prisma {
           }
         }
       }
+      PixelSettings: {
+        payload: Prisma.$PixelSettingsPayload<ExtArgs>
+        fields: Prisma.PixelSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PixelSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PixelSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.PixelSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PixelSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.PixelSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.PixelSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.PixelSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PixelSettingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>[]
+          }
+          delete: {
+            args: Prisma.PixelSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>
+          }
+          update: {
+            args: Prisma.PixelSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.PixelSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PixelSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PixelSettingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.PixelSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PixelSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.PixelSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePixelSettings>
+          }
+          groupBy: {
+            args: Prisma.PixelSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PixelSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PixelSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<PixelSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      Mandeb: {
+        payload: Prisma.$MandebPayload<ExtArgs>
+        fields: Prisma.MandebFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MandebFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MandebFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>
+          }
+          findFirst: {
+            args: Prisma.MandebFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MandebFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>
+          }
+          findMany: {
+            args: Prisma.MandebFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>[]
+          }
+          create: {
+            args: Prisma.MandebCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>
+          }
+          createMany: {
+            args: Prisma.MandebCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MandebCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>[]
+          }
+          delete: {
+            args: Prisma.MandebDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>
+          }
+          update: {
+            args: Prisma.MandebUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>
+          }
+          deleteMany: {
+            args: Prisma.MandebDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MandebUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MandebUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>[]
+          }
+          upsert: {
+            args: Prisma.MandebUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MandebPayload>
+          }
+          aggregate: {
+            args: Prisma.MandebAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMandeb>
+          }
+          groupBy: {
+            args: Prisma.MandebGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MandebGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MandebCountArgs<ExtArgs>
+            result: $Utils.Optional<MandebCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2496,6 +2676,8 @@ export namespace Prisma {
     logo?: LogoOmit
     aboutPage?: AboutPageOmit
     heroSection?: HeroSectionOmit
+    pixelSettings?: PixelSettingsOmit
+    mandeb?: MandebOmit
   }
 
   /* Types for Logging */
@@ -24147,6 +24329,2048 @@ export namespace Prisma {
 
 
   /**
+   * Model PixelSettings
+   */
+
+  export type AggregatePixelSettings = {
+    _count: PixelSettingsCountAggregateOutputType | null
+    _min: PixelSettingsMinAggregateOutputType | null
+    _max: PixelSettingsMaxAggregateOutputType | null
+  }
+
+  export type PixelSettingsMinAggregateOutputType = {
+    id: string | null
+    facebookPixel: string | null
+    googleAnalytics: string | null
+    googleAdsId: string | null
+    tiktokPixel: string | null
+    snapchatPixel: string | null
+    microsoftClarity: string | null
+    updatedAt: Date | null
+  }
+
+  export type PixelSettingsMaxAggregateOutputType = {
+    id: string | null
+    facebookPixel: string | null
+    googleAnalytics: string | null
+    googleAdsId: string | null
+    tiktokPixel: string | null
+    snapchatPixel: string | null
+    microsoftClarity: string | null
+    updatedAt: Date | null
+  }
+
+  export type PixelSettingsCountAggregateOutputType = {
+    id: number
+    facebookPixel: number
+    googleAnalytics: number
+    googleAdsId: number
+    tiktokPixel: number
+    snapchatPixel: number
+    microsoftClarity: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PixelSettingsMinAggregateInputType = {
+    id?: true
+    facebookPixel?: true
+    googleAnalytics?: true
+    googleAdsId?: true
+    tiktokPixel?: true
+    snapchatPixel?: true
+    microsoftClarity?: true
+    updatedAt?: true
+  }
+
+  export type PixelSettingsMaxAggregateInputType = {
+    id?: true
+    facebookPixel?: true
+    googleAnalytics?: true
+    googleAdsId?: true
+    tiktokPixel?: true
+    snapchatPixel?: true
+    microsoftClarity?: true
+    updatedAt?: true
+  }
+
+  export type PixelSettingsCountAggregateInputType = {
+    id?: true
+    facebookPixel?: true
+    googleAnalytics?: true
+    googleAdsId?: true
+    tiktokPixel?: true
+    snapchatPixel?: true
+    microsoftClarity?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PixelSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PixelSettings to aggregate.
+     */
+    where?: PixelSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PixelSettings to fetch.
+     */
+    orderBy?: PixelSettingsOrderByWithRelationInput | PixelSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PixelSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PixelSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PixelSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PixelSettings
+    **/
+    _count?: true | PixelSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PixelSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PixelSettingsMaxAggregateInputType
+  }
+
+  export type GetPixelSettingsAggregateType<T extends PixelSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregatePixelSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePixelSettings[P]>
+      : GetScalarType<T[P], AggregatePixelSettings[P]>
+  }
+
+
+
+
+  export type PixelSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PixelSettingsWhereInput
+    orderBy?: PixelSettingsOrderByWithAggregationInput | PixelSettingsOrderByWithAggregationInput[]
+    by: PixelSettingsScalarFieldEnum[] | PixelSettingsScalarFieldEnum
+    having?: PixelSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PixelSettingsCountAggregateInputType | true
+    _min?: PixelSettingsMinAggregateInputType
+    _max?: PixelSettingsMaxAggregateInputType
+  }
+
+  export type PixelSettingsGroupByOutputType = {
+    id: string
+    facebookPixel: string | null
+    googleAnalytics: string | null
+    googleAdsId: string | null
+    tiktokPixel: string | null
+    snapchatPixel: string | null
+    microsoftClarity: string | null
+    updatedAt: Date
+    _count: PixelSettingsCountAggregateOutputType | null
+    _min: PixelSettingsMinAggregateOutputType | null
+    _max: PixelSettingsMaxAggregateOutputType | null
+  }
+
+  type GetPixelSettingsGroupByPayload<T extends PixelSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PixelSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PixelSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PixelSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], PixelSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PixelSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    facebookPixel?: boolean
+    googleAnalytics?: boolean
+    googleAdsId?: boolean
+    tiktokPixel?: boolean
+    snapchatPixel?: boolean
+    microsoftClarity?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pixelSettings"]>
+
+  export type PixelSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    facebookPixel?: boolean
+    googleAnalytics?: boolean
+    googleAdsId?: boolean
+    tiktokPixel?: boolean
+    snapchatPixel?: boolean
+    microsoftClarity?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pixelSettings"]>
+
+  export type PixelSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    facebookPixel?: boolean
+    googleAnalytics?: boolean
+    googleAdsId?: boolean
+    tiktokPixel?: boolean
+    snapchatPixel?: boolean
+    microsoftClarity?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["pixelSettings"]>
+
+  export type PixelSettingsSelectScalar = {
+    id?: boolean
+    facebookPixel?: boolean
+    googleAnalytics?: boolean
+    googleAdsId?: boolean
+    tiktokPixel?: boolean
+    snapchatPixel?: boolean
+    microsoftClarity?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PixelSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "facebookPixel" | "googleAnalytics" | "googleAdsId" | "tiktokPixel" | "snapchatPixel" | "microsoftClarity" | "updatedAt", ExtArgs["result"]["pixelSettings"]>
+
+  export type $PixelSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PixelSettings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      facebookPixel: string | null
+      googleAnalytics: string | null
+      googleAdsId: string | null
+      tiktokPixel: string | null
+      snapchatPixel: string | null
+      microsoftClarity: string | null
+      updatedAt: Date
+    }, ExtArgs["result"]["pixelSettings"]>
+    composites: {}
+  }
+
+  type PixelSettingsGetPayload<S extends boolean | null | undefined | PixelSettingsDefaultArgs> = $Result.GetResult<Prisma.$PixelSettingsPayload, S>
+
+  type PixelSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PixelSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PixelSettingsCountAggregateInputType | true
+    }
+
+  export interface PixelSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PixelSettings'], meta: { name: 'PixelSettings' } }
+    /**
+     * Find zero or one PixelSettings that matches the filter.
+     * @param {PixelSettingsFindUniqueArgs} args - Arguments to find a PixelSettings
+     * @example
+     * // Get one PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PixelSettingsFindUniqueArgs>(args: SelectSubset<T, PixelSettingsFindUniqueArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PixelSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PixelSettingsFindUniqueOrThrowArgs} args - Arguments to find a PixelSettings
+     * @example
+     * // Get one PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PixelSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, PixelSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PixelSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PixelSettingsFindFirstArgs} args - Arguments to find a PixelSettings
+     * @example
+     * // Get one PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PixelSettingsFindFirstArgs>(args?: SelectSubset<T, PixelSettingsFindFirstArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PixelSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PixelSettingsFindFirstOrThrowArgs} args - Arguments to find a PixelSettings
+     * @example
+     * // Get one PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PixelSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, PixelSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PixelSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PixelSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.findMany()
+     * 
+     * // Get first 10 PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pixelSettingsWithIdOnly = await prisma.pixelSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PixelSettingsFindManyArgs>(args?: SelectSubset<T, PixelSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PixelSettings.
+     * @param {PixelSettingsCreateArgs} args - Arguments to create a PixelSettings.
+     * @example
+     * // Create one PixelSettings
+     * const PixelSettings = await prisma.pixelSettings.create({
+     *   data: {
+     *     // ... data to create a PixelSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends PixelSettingsCreateArgs>(args: SelectSubset<T, PixelSettingsCreateArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PixelSettings.
+     * @param {PixelSettingsCreateManyArgs} args - Arguments to create many PixelSettings.
+     * @example
+     * // Create many PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PixelSettingsCreateManyArgs>(args?: SelectSubset<T, PixelSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PixelSettings and returns the data saved in the database.
+     * @param {PixelSettingsCreateManyAndReturnArgs} args - Arguments to create many PixelSettings.
+     * @example
+     * // Create many PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PixelSettings and only return the `id`
+     * const pixelSettingsWithIdOnly = await prisma.pixelSettings.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PixelSettingsCreateManyAndReturnArgs>(args?: SelectSubset<T, PixelSettingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PixelSettings.
+     * @param {PixelSettingsDeleteArgs} args - Arguments to delete one PixelSettings.
+     * @example
+     * // Delete one PixelSettings
+     * const PixelSettings = await prisma.pixelSettings.delete({
+     *   where: {
+     *     // ... filter to delete one PixelSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PixelSettingsDeleteArgs>(args: SelectSubset<T, PixelSettingsDeleteArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PixelSettings.
+     * @param {PixelSettingsUpdateArgs} args - Arguments to update one PixelSettings.
+     * @example
+     * // Update one PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PixelSettingsUpdateArgs>(args: SelectSubset<T, PixelSettingsUpdateArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PixelSettings.
+     * @param {PixelSettingsDeleteManyArgs} args - Arguments to filter PixelSettings to delete.
+     * @example
+     * // Delete a few PixelSettings
+     * const { count } = await prisma.pixelSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PixelSettingsDeleteManyArgs>(args?: SelectSubset<T, PixelSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PixelSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PixelSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PixelSettingsUpdateManyArgs>(args: SelectSubset<T, PixelSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PixelSettings and returns the data updated in the database.
+     * @param {PixelSettingsUpdateManyAndReturnArgs} args - Arguments to update many PixelSettings.
+     * @example
+     * // Update many PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PixelSettings and only return the `id`
+     * const pixelSettingsWithIdOnly = await prisma.pixelSettings.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PixelSettingsUpdateManyAndReturnArgs>(args: SelectSubset<T, PixelSettingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PixelSettings.
+     * @param {PixelSettingsUpsertArgs} args - Arguments to update or create a PixelSettings.
+     * @example
+     * // Update or create a PixelSettings
+     * const pixelSettings = await prisma.pixelSettings.upsert({
+     *   create: {
+     *     // ... data to create a PixelSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PixelSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PixelSettingsUpsertArgs>(args: SelectSubset<T, PixelSettingsUpsertArgs<ExtArgs>>): Prisma__PixelSettingsClient<$Result.GetResult<Prisma.$PixelSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PixelSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PixelSettingsCountArgs} args - Arguments to filter PixelSettings to count.
+     * @example
+     * // Count the number of PixelSettings
+     * const count = await prisma.pixelSettings.count({
+     *   where: {
+     *     // ... the filter for the PixelSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends PixelSettingsCountArgs>(
+      args?: Subset<T, PixelSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PixelSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PixelSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PixelSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PixelSettingsAggregateArgs>(args: Subset<T, PixelSettingsAggregateArgs>): Prisma.PrismaPromise<GetPixelSettingsAggregateType<T>>
+
+    /**
+     * Group by PixelSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PixelSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PixelSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PixelSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: PixelSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PixelSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPixelSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PixelSettings model
+   */
+  readonly fields: PixelSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PixelSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PixelSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PixelSettings model
+   */
+  interface PixelSettingsFieldRefs {
+    readonly id: FieldRef<"PixelSettings", 'String'>
+    readonly facebookPixel: FieldRef<"PixelSettings", 'String'>
+    readonly googleAnalytics: FieldRef<"PixelSettings", 'String'>
+    readonly googleAdsId: FieldRef<"PixelSettings", 'String'>
+    readonly tiktokPixel: FieldRef<"PixelSettings", 'String'>
+    readonly snapchatPixel: FieldRef<"PixelSettings", 'String'>
+    readonly microsoftClarity: FieldRef<"PixelSettings", 'String'>
+    readonly updatedAt: FieldRef<"PixelSettings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PixelSettings findUnique
+   */
+  export type PixelSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PixelSettings to fetch.
+     */
+    where: PixelSettingsWhereUniqueInput
+  }
+
+  /**
+   * PixelSettings findUniqueOrThrow
+   */
+  export type PixelSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PixelSettings to fetch.
+     */
+    where: PixelSettingsWhereUniqueInput
+  }
+
+  /**
+   * PixelSettings findFirst
+   */
+  export type PixelSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PixelSettings to fetch.
+     */
+    where?: PixelSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PixelSettings to fetch.
+     */
+    orderBy?: PixelSettingsOrderByWithRelationInput | PixelSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PixelSettings.
+     */
+    cursor?: PixelSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PixelSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PixelSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PixelSettings.
+     */
+    distinct?: PixelSettingsScalarFieldEnum | PixelSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * PixelSettings findFirstOrThrow
+   */
+  export type PixelSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PixelSettings to fetch.
+     */
+    where?: PixelSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PixelSettings to fetch.
+     */
+    orderBy?: PixelSettingsOrderByWithRelationInput | PixelSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PixelSettings.
+     */
+    cursor?: PixelSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PixelSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PixelSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PixelSettings.
+     */
+    distinct?: PixelSettingsScalarFieldEnum | PixelSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * PixelSettings findMany
+   */
+  export type PixelSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * Filter, which PixelSettings to fetch.
+     */
+    where?: PixelSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PixelSettings to fetch.
+     */
+    orderBy?: PixelSettingsOrderByWithRelationInput | PixelSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PixelSettings.
+     */
+    cursor?: PixelSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PixelSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PixelSettings.
+     */
+    skip?: number
+    distinct?: PixelSettingsScalarFieldEnum | PixelSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * PixelSettings create
+   */
+  export type PixelSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a PixelSettings.
+     */
+    data: XOR<PixelSettingsCreateInput, PixelSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * PixelSettings createMany
+   */
+  export type PixelSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PixelSettings.
+     */
+    data: PixelSettingsCreateManyInput | PixelSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PixelSettings createManyAndReturn
+   */
+  export type PixelSettingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many PixelSettings.
+     */
+    data: PixelSettingsCreateManyInput | PixelSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PixelSettings update
+   */
+  export type PixelSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a PixelSettings.
+     */
+    data: XOR<PixelSettingsUpdateInput, PixelSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which PixelSettings to update.
+     */
+    where: PixelSettingsWhereUniqueInput
+  }
+
+  /**
+   * PixelSettings updateMany
+   */
+  export type PixelSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PixelSettings.
+     */
+    data: XOR<PixelSettingsUpdateManyMutationInput, PixelSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which PixelSettings to update
+     */
+    where?: PixelSettingsWhereInput
+    /**
+     * Limit how many PixelSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PixelSettings updateManyAndReturn
+   */
+  export type PixelSettingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * The data used to update PixelSettings.
+     */
+    data: XOR<PixelSettingsUpdateManyMutationInput, PixelSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which PixelSettings to update
+     */
+    where?: PixelSettingsWhereInput
+    /**
+     * Limit how many PixelSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PixelSettings upsert
+   */
+  export type PixelSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the PixelSettings to update in case it exists.
+     */
+    where: PixelSettingsWhereUniqueInput
+    /**
+     * In case the PixelSettings found by the `where` argument doesn't exist, create a new PixelSettings with this data.
+     */
+    create: XOR<PixelSettingsCreateInput, PixelSettingsUncheckedCreateInput>
+    /**
+     * In case the PixelSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PixelSettingsUpdateInput, PixelSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * PixelSettings delete
+   */
+  export type PixelSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+    /**
+     * Filter which PixelSettings to delete.
+     */
+    where: PixelSettingsWhereUniqueInput
+  }
+
+  /**
+   * PixelSettings deleteMany
+   */
+  export type PixelSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PixelSettings to delete
+     */
+    where?: PixelSettingsWhereInput
+    /**
+     * Limit how many PixelSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PixelSettings without action
+   */
+  export type PixelSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PixelSettings
+     */
+    select?: PixelSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PixelSettings
+     */
+    omit?: PixelSettingsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Mandeb
+   */
+
+  export type AggregateMandeb = {
+    _count: MandebCountAggregateOutputType | null
+    _min: MandebMinAggregateOutputType | null
+    _max: MandebMaxAggregateOutputType | null
+  }
+
+  export type MandebMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phone: string | null
+    city: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MandebMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    phone: string | null
+    city: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type MandebCountAggregateOutputType = {
+    id: number
+    name: number
+    phone: number
+    city: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type MandebMinAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    city?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MandebMaxAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    city?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type MandebCountAggregateInputType = {
+    id?: true
+    name?: true
+    phone?: true
+    city?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type MandebAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Mandeb to aggregate.
+     */
+    where?: MandebWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Mandebs to fetch.
+     */
+    orderBy?: MandebOrderByWithRelationInput | MandebOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MandebWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Mandebs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Mandebs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Mandebs
+    **/
+    _count?: true | MandebCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MandebMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MandebMaxAggregateInputType
+  }
+
+  export type GetMandebAggregateType<T extends MandebAggregateArgs> = {
+        [P in keyof T & keyof AggregateMandeb]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMandeb[P]>
+      : GetScalarType<T[P], AggregateMandeb[P]>
+  }
+
+
+
+
+  export type MandebGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MandebWhereInput
+    orderBy?: MandebOrderByWithAggregationInput | MandebOrderByWithAggregationInput[]
+    by: MandebScalarFieldEnum[] | MandebScalarFieldEnum
+    having?: MandebScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MandebCountAggregateInputType | true
+    _min?: MandebMinAggregateInputType
+    _max?: MandebMaxAggregateInputType
+  }
+
+  export type MandebGroupByOutputType = {
+    id: string
+    name: string
+    phone: string
+    city: string
+    createdAt: Date
+    updatedAt: Date
+    _count: MandebCountAggregateOutputType | null
+    _min: MandebMinAggregateOutputType | null
+    _max: MandebMaxAggregateOutputType | null
+  }
+
+  type GetMandebGroupByPayload<T extends MandebGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MandebGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MandebGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MandebGroupByOutputType[P]>
+            : GetScalarType<T[P], MandebGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MandebSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    city?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["mandeb"]>
+
+  export type MandebSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    city?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["mandeb"]>
+
+  export type MandebSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    city?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["mandeb"]>
+
+  export type MandebSelectScalar = {
+    id?: boolean
+    name?: boolean
+    phone?: boolean
+    city?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type MandebOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "phone" | "city" | "createdAt" | "updatedAt", ExtArgs["result"]["mandeb"]>
+
+  export type $MandebPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Mandeb"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      phone: string
+      city: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["mandeb"]>
+    composites: {}
+  }
+
+  type MandebGetPayload<S extends boolean | null | undefined | MandebDefaultArgs> = $Result.GetResult<Prisma.$MandebPayload, S>
+
+  type MandebCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MandebFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MandebCountAggregateInputType | true
+    }
+
+  export interface MandebDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Mandeb'], meta: { name: 'Mandeb' } }
+    /**
+     * Find zero or one Mandeb that matches the filter.
+     * @param {MandebFindUniqueArgs} args - Arguments to find a Mandeb
+     * @example
+     * // Get one Mandeb
+     * const mandeb = await prisma.mandeb.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MandebFindUniqueArgs>(args: SelectSubset<T, MandebFindUniqueArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Mandeb that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MandebFindUniqueOrThrowArgs} args - Arguments to find a Mandeb
+     * @example
+     * // Get one Mandeb
+     * const mandeb = await prisma.mandeb.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MandebFindUniqueOrThrowArgs>(args: SelectSubset<T, MandebFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Mandeb that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MandebFindFirstArgs} args - Arguments to find a Mandeb
+     * @example
+     * // Get one Mandeb
+     * const mandeb = await prisma.mandeb.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MandebFindFirstArgs>(args?: SelectSubset<T, MandebFindFirstArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Mandeb that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MandebFindFirstOrThrowArgs} args - Arguments to find a Mandeb
+     * @example
+     * // Get one Mandeb
+     * const mandeb = await prisma.mandeb.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MandebFindFirstOrThrowArgs>(args?: SelectSubset<T, MandebFindFirstOrThrowArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Mandebs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MandebFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Mandebs
+     * const mandebs = await prisma.mandeb.findMany()
+     * 
+     * // Get first 10 Mandebs
+     * const mandebs = await prisma.mandeb.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const mandebWithIdOnly = await prisma.mandeb.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MandebFindManyArgs>(args?: SelectSubset<T, MandebFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Mandeb.
+     * @param {MandebCreateArgs} args - Arguments to create a Mandeb.
+     * @example
+     * // Create one Mandeb
+     * const Mandeb = await prisma.mandeb.create({
+     *   data: {
+     *     // ... data to create a Mandeb
+     *   }
+     * })
+     * 
+     */
+    create<T extends MandebCreateArgs>(args: SelectSubset<T, MandebCreateArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Mandebs.
+     * @param {MandebCreateManyArgs} args - Arguments to create many Mandebs.
+     * @example
+     * // Create many Mandebs
+     * const mandeb = await prisma.mandeb.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MandebCreateManyArgs>(args?: SelectSubset<T, MandebCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Mandebs and returns the data saved in the database.
+     * @param {MandebCreateManyAndReturnArgs} args - Arguments to create many Mandebs.
+     * @example
+     * // Create many Mandebs
+     * const mandeb = await prisma.mandeb.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Mandebs and only return the `id`
+     * const mandebWithIdOnly = await prisma.mandeb.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MandebCreateManyAndReturnArgs>(args?: SelectSubset<T, MandebCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Mandeb.
+     * @param {MandebDeleteArgs} args - Arguments to delete one Mandeb.
+     * @example
+     * // Delete one Mandeb
+     * const Mandeb = await prisma.mandeb.delete({
+     *   where: {
+     *     // ... filter to delete one Mandeb
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MandebDeleteArgs>(args: SelectSubset<T, MandebDeleteArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Mandeb.
+     * @param {MandebUpdateArgs} args - Arguments to update one Mandeb.
+     * @example
+     * // Update one Mandeb
+     * const mandeb = await prisma.mandeb.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MandebUpdateArgs>(args: SelectSubset<T, MandebUpdateArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Mandebs.
+     * @param {MandebDeleteManyArgs} args - Arguments to filter Mandebs to delete.
+     * @example
+     * // Delete a few Mandebs
+     * const { count } = await prisma.mandeb.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MandebDeleteManyArgs>(args?: SelectSubset<T, MandebDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Mandebs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MandebUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Mandebs
+     * const mandeb = await prisma.mandeb.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MandebUpdateManyArgs>(args: SelectSubset<T, MandebUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Mandebs and returns the data updated in the database.
+     * @param {MandebUpdateManyAndReturnArgs} args - Arguments to update many Mandebs.
+     * @example
+     * // Update many Mandebs
+     * const mandeb = await prisma.mandeb.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Mandebs and only return the `id`
+     * const mandebWithIdOnly = await prisma.mandeb.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MandebUpdateManyAndReturnArgs>(args: SelectSubset<T, MandebUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Mandeb.
+     * @param {MandebUpsertArgs} args - Arguments to update or create a Mandeb.
+     * @example
+     * // Update or create a Mandeb
+     * const mandeb = await prisma.mandeb.upsert({
+     *   create: {
+     *     // ... data to create a Mandeb
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Mandeb we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MandebUpsertArgs>(args: SelectSubset<T, MandebUpsertArgs<ExtArgs>>): Prisma__MandebClient<$Result.GetResult<Prisma.$MandebPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Mandebs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MandebCountArgs} args - Arguments to filter Mandebs to count.
+     * @example
+     * // Count the number of Mandebs
+     * const count = await prisma.mandeb.count({
+     *   where: {
+     *     // ... the filter for the Mandebs we want to count
+     *   }
+     * })
+    **/
+    count<T extends MandebCountArgs>(
+      args?: Subset<T, MandebCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MandebCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Mandeb.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MandebAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MandebAggregateArgs>(args: Subset<T, MandebAggregateArgs>): Prisma.PrismaPromise<GetMandebAggregateType<T>>
+
+    /**
+     * Group by Mandeb.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MandebGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MandebGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MandebGroupByArgs['orderBy'] }
+        : { orderBy?: MandebGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MandebGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMandebGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Mandeb model
+   */
+  readonly fields: MandebFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Mandeb.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MandebClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Mandeb model
+   */
+  interface MandebFieldRefs {
+    readonly id: FieldRef<"Mandeb", 'String'>
+    readonly name: FieldRef<"Mandeb", 'String'>
+    readonly phone: FieldRef<"Mandeb", 'String'>
+    readonly city: FieldRef<"Mandeb", 'String'>
+    readonly createdAt: FieldRef<"Mandeb", 'DateTime'>
+    readonly updatedAt: FieldRef<"Mandeb", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Mandeb findUnique
+   */
+  export type MandebFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * Filter, which Mandeb to fetch.
+     */
+    where: MandebWhereUniqueInput
+  }
+
+  /**
+   * Mandeb findUniqueOrThrow
+   */
+  export type MandebFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * Filter, which Mandeb to fetch.
+     */
+    where: MandebWhereUniqueInput
+  }
+
+  /**
+   * Mandeb findFirst
+   */
+  export type MandebFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * Filter, which Mandeb to fetch.
+     */
+    where?: MandebWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Mandebs to fetch.
+     */
+    orderBy?: MandebOrderByWithRelationInput | MandebOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Mandebs.
+     */
+    cursor?: MandebWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Mandebs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Mandebs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Mandebs.
+     */
+    distinct?: MandebScalarFieldEnum | MandebScalarFieldEnum[]
+  }
+
+  /**
+   * Mandeb findFirstOrThrow
+   */
+  export type MandebFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * Filter, which Mandeb to fetch.
+     */
+    where?: MandebWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Mandebs to fetch.
+     */
+    orderBy?: MandebOrderByWithRelationInput | MandebOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Mandebs.
+     */
+    cursor?: MandebWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Mandebs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Mandebs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Mandebs.
+     */
+    distinct?: MandebScalarFieldEnum | MandebScalarFieldEnum[]
+  }
+
+  /**
+   * Mandeb findMany
+   */
+  export type MandebFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * Filter, which Mandebs to fetch.
+     */
+    where?: MandebWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Mandebs to fetch.
+     */
+    orderBy?: MandebOrderByWithRelationInput | MandebOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Mandebs.
+     */
+    cursor?: MandebWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Mandebs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Mandebs.
+     */
+    skip?: number
+    distinct?: MandebScalarFieldEnum | MandebScalarFieldEnum[]
+  }
+
+  /**
+   * Mandeb create
+   */
+  export type MandebCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Mandeb.
+     */
+    data: XOR<MandebCreateInput, MandebUncheckedCreateInput>
+  }
+
+  /**
+   * Mandeb createMany
+   */
+  export type MandebCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Mandebs.
+     */
+    data: MandebCreateManyInput | MandebCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Mandeb createManyAndReturn
+   */
+  export type MandebCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * The data used to create many Mandebs.
+     */
+    data: MandebCreateManyInput | MandebCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Mandeb update
+   */
+  export type MandebUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Mandeb.
+     */
+    data: XOR<MandebUpdateInput, MandebUncheckedUpdateInput>
+    /**
+     * Choose, which Mandeb to update.
+     */
+    where: MandebWhereUniqueInput
+  }
+
+  /**
+   * Mandeb updateMany
+   */
+  export type MandebUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Mandebs.
+     */
+    data: XOR<MandebUpdateManyMutationInput, MandebUncheckedUpdateManyInput>
+    /**
+     * Filter which Mandebs to update
+     */
+    where?: MandebWhereInput
+    /**
+     * Limit how many Mandebs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Mandeb updateManyAndReturn
+   */
+  export type MandebUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * The data used to update Mandebs.
+     */
+    data: XOR<MandebUpdateManyMutationInput, MandebUncheckedUpdateManyInput>
+    /**
+     * Filter which Mandebs to update
+     */
+    where?: MandebWhereInput
+    /**
+     * Limit how many Mandebs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Mandeb upsert
+   */
+  export type MandebUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Mandeb to update in case it exists.
+     */
+    where: MandebWhereUniqueInput
+    /**
+     * In case the Mandeb found by the `where` argument doesn't exist, create a new Mandeb with this data.
+     */
+    create: XOR<MandebCreateInput, MandebUncheckedCreateInput>
+    /**
+     * In case the Mandeb was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MandebUpdateInput, MandebUncheckedUpdateInput>
+  }
+
+  /**
+   * Mandeb delete
+   */
+  export type MandebDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+    /**
+     * Filter which Mandeb to delete.
+     */
+    where: MandebWhereUniqueInput
+  }
+
+  /**
+   * Mandeb deleteMany
+   */
+  export type MandebDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Mandebs to delete
+     */
+    where?: MandebWhereInput
+    /**
+     * Limit how many Mandebs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Mandeb without action
+   */
+  export type MandebDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Mandeb
+     */
+    select?: MandebSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Mandeb
+     */
+    omit?: MandebOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -24476,6 +26700,32 @@ export namespace Prisma {
   };
 
   export type HeroSectionScalarFieldEnum = (typeof HeroSectionScalarFieldEnum)[keyof typeof HeroSectionScalarFieldEnum]
+
+
+  export const PixelSettingsScalarFieldEnum: {
+    id: 'id',
+    facebookPixel: 'facebookPixel',
+    googleAnalytics: 'googleAnalytics',
+    googleAdsId: 'googleAdsId',
+    tiktokPixel: 'tiktokPixel',
+    snapchatPixel: 'snapchatPixel',
+    microsoftClarity: 'microsoftClarity',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PixelSettingsScalarFieldEnum = (typeof PixelSettingsScalarFieldEnum)[keyof typeof PixelSettingsScalarFieldEnum]
+
+
+  export const MandebScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    phone: 'phone',
+    city: 'city',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type MandebScalarFieldEnum = (typeof MandebScalarFieldEnum)[keyof typeof MandebScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -26285,6 +28535,130 @@ export namespace Prisma {
     muted?: BoolWithAggregatesFilter<"HeroSection"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"HeroSection"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"HeroSection"> | Date | string
+  }
+
+  export type PixelSettingsWhereInput = {
+    AND?: PixelSettingsWhereInput | PixelSettingsWhereInput[]
+    OR?: PixelSettingsWhereInput[]
+    NOT?: PixelSettingsWhereInput | PixelSettingsWhereInput[]
+    id?: StringFilter<"PixelSettings"> | string
+    facebookPixel?: StringNullableFilter<"PixelSettings"> | string | null
+    googleAnalytics?: StringNullableFilter<"PixelSettings"> | string | null
+    googleAdsId?: StringNullableFilter<"PixelSettings"> | string | null
+    tiktokPixel?: StringNullableFilter<"PixelSettings"> | string | null
+    snapchatPixel?: StringNullableFilter<"PixelSettings"> | string | null
+    microsoftClarity?: StringNullableFilter<"PixelSettings"> | string | null
+    updatedAt?: DateTimeFilter<"PixelSettings"> | Date | string
+  }
+
+  export type PixelSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    facebookPixel?: SortOrderInput | SortOrder
+    googleAnalytics?: SortOrderInput | SortOrder
+    googleAdsId?: SortOrderInput | SortOrder
+    tiktokPixel?: SortOrderInput | SortOrder
+    snapchatPixel?: SortOrderInput | SortOrder
+    microsoftClarity?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PixelSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PixelSettingsWhereInput | PixelSettingsWhereInput[]
+    OR?: PixelSettingsWhereInput[]
+    NOT?: PixelSettingsWhereInput | PixelSettingsWhereInput[]
+    facebookPixel?: StringNullableFilter<"PixelSettings"> | string | null
+    googleAnalytics?: StringNullableFilter<"PixelSettings"> | string | null
+    googleAdsId?: StringNullableFilter<"PixelSettings"> | string | null
+    tiktokPixel?: StringNullableFilter<"PixelSettings"> | string | null
+    snapchatPixel?: StringNullableFilter<"PixelSettings"> | string | null
+    microsoftClarity?: StringNullableFilter<"PixelSettings"> | string | null
+    updatedAt?: DateTimeFilter<"PixelSettings"> | Date | string
+  }, "id" | "id">
+
+  export type PixelSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    facebookPixel?: SortOrderInput | SortOrder
+    googleAnalytics?: SortOrderInput | SortOrder
+    googleAdsId?: SortOrderInput | SortOrder
+    tiktokPixel?: SortOrderInput | SortOrder
+    snapchatPixel?: SortOrderInput | SortOrder
+    microsoftClarity?: SortOrderInput | SortOrder
+    updatedAt?: SortOrder
+    _count?: PixelSettingsCountOrderByAggregateInput
+    _max?: PixelSettingsMaxOrderByAggregateInput
+    _min?: PixelSettingsMinOrderByAggregateInput
+  }
+
+  export type PixelSettingsScalarWhereWithAggregatesInput = {
+    AND?: PixelSettingsScalarWhereWithAggregatesInput | PixelSettingsScalarWhereWithAggregatesInput[]
+    OR?: PixelSettingsScalarWhereWithAggregatesInput[]
+    NOT?: PixelSettingsScalarWhereWithAggregatesInput | PixelSettingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PixelSettings"> | string
+    facebookPixel?: StringNullableWithAggregatesFilter<"PixelSettings"> | string | null
+    googleAnalytics?: StringNullableWithAggregatesFilter<"PixelSettings"> | string | null
+    googleAdsId?: StringNullableWithAggregatesFilter<"PixelSettings"> | string | null
+    tiktokPixel?: StringNullableWithAggregatesFilter<"PixelSettings"> | string | null
+    snapchatPixel?: StringNullableWithAggregatesFilter<"PixelSettings"> | string | null
+    microsoftClarity?: StringNullableWithAggregatesFilter<"PixelSettings"> | string | null
+    updatedAt?: DateTimeWithAggregatesFilter<"PixelSettings"> | Date | string
+  }
+
+  export type MandebWhereInput = {
+    AND?: MandebWhereInput | MandebWhereInput[]
+    OR?: MandebWhereInput[]
+    NOT?: MandebWhereInput | MandebWhereInput[]
+    id?: StringFilter<"Mandeb"> | string
+    name?: StringFilter<"Mandeb"> | string
+    phone?: StringFilter<"Mandeb"> | string
+    city?: StringFilter<"Mandeb"> | string
+    createdAt?: DateTimeFilter<"Mandeb"> | Date | string
+    updatedAt?: DateTimeFilter<"Mandeb"> | Date | string
+  }
+
+  export type MandebOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    city?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MandebWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: MandebWhereInput | MandebWhereInput[]
+    OR?: MandebWhereInput[]
+    NOT?: MandebWhereInput | MandebWhereInput[]
+    name?: StringFilter<"Mandeb"> | string
+    phone?: StringFilter<"Mandeb"> | string
+    city?: StringFilter<"Mandeb"> | string
+    createdAt?: DateTimeFilter<"Mandeb"> | Date | string
+    updatedAt?: DateTimeFilter<"Mandeb"> | Date | string
+  }, "id">
+
+  export type MandebOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    city?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: MandebCountOrderByAggregateInput
+    _max?: MandebMaxOrderByAggregateInput
+    _min?: MandebMinOrderByAggregateInput
+  }
+
+  export type MandebScalarWhereWithAggregatesInput = {
+    AND?: MandebScalarWhereWithAggregatesInput | MandebScalarWhereWithAggregatesInput[]
+    OR?: MandebScalarWhereWithAggregatesInput[]
+    NOT?: MandebScalarWhereWithAggregatesInput | MandebScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Mandeb"> | string
+    name?: StringWithAggregatesFilter<"Mandeb"> | string
+    phone?: StringWithAggregatesFilter<"Mandeb"> | string
+    city?: StringWithAggregatesFilter<"Mandeb"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Mandeb"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Mandeb"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -28138,6 +30512,146 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PixelSettingsCreateInput = {
+    id?: string
+    facebookPixel?: string | null
+    googleAnalytics?: string | null
+    googleAdsId?: string | null
+    tiktokPixel?: string | null
+    snapchatPixel?: string | null
+    microsoftClarity?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PixelSettingsUncheckedCreateInput = {
+    id?: string
+    facebookPixel?: string | null
+    googleAnalytics?: string | null
+    googleAdsId?: string | null
+    tiktokPixel?: string | null
+    snapchatPixel?: string | null
+    microsoftClarity?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PixelSettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    facebookPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalytics?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsId?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    snapchatPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    microsoftClarity?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PixelSettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    facebookPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalytics?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsId?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    snapchatPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    microsoftClarity?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PixelSettingsCreateManyInput = {
+    id?: string
+    facebookPixel?: string | null
+    googleAnalytics?: string | null
+    googleAdsId?: string | null
+    tiktokPixel?: string | null
+    snapchatPixel?: string | null
+    microsoftClarity?: string | null
+    updatedAt?: Date | string
+  }
+
+  export type PixelSettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    facebookPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalytics?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsId?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    snapchatPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    microsoftClarity?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PixelSettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    facebookPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAnalytics?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsId?: NullableStringFieldUpdateOperationsInput | string | null
+    tiktokPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    snapchatPixel?: NullableStringFieldUpdateOperationsInput | string | null
+    microsoftClarity?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MandebCreateInput = {
+    id?: string
+    name: string
+    phone: string
+    city: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MandebUncheckedCreateInput = {
+    id?: string
+    name: string
+    phone: string
+    city: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MandebUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MandebUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MandebCreateManyInput = {
+    id?: string
+    name: string
+    phone: string
+    city: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MandebUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MandebUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29477,6 +31991,66 @@ export namespace Prisma {
     autoplay?: SortOrder
     loop?: SortOrder
     muted?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PixelSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    facebookPixel?: SortOrder
+    googleAnalytics?: SortOrder
+    googleAdsId?: SortOrder
+    tiktokPixel?: SortOrder
+    snapchatPixel?: SortOrder
+    microsoftClarity?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PixelSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    facebookPixel?: SortOrder
+    googleAnalytics?: SortOrder
+    googleAdsId?: SortOrder
+    tiktokPixel?: SortOrder
+    snapchatPixel?: SortOrder
+    microsoftClarity?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PixelSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    facebookPixel?: SortOrder
+    googleAnalytics?: SortOrder
+    googleAdsId?: SortOrder
+    tiktokPixel?: SortOrder
+    snapchatPixel?: SortOrder
+    microsoftClarity?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MandebCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    city?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MandebMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    city?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type MandebMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    city?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }

@@ -31,13 +31,29 @@ export async function GET() {
     });
     console.log("Database query result:", loggedInUser ? "user found" : "user not found");
 
-    // if a user is found return it otherwise create a new user
+    // Get role from Clerk metadata if available
+    const clerkRole = user.publicMetadata?.role;
+    const initialRole = (clerkRole === "ADMIN" || clerkRole === "EDITOR") ? clerkRole : "USER";
+
+    // if a user is found return it
     if (loggedInUser) {
+      console.log("Found existing user with role:", loggedInUser.role);
+
+      // If DB has USER but Clerk has ADMIN/EDITOR, sync to DB
+      if (loggedInUser.role === "USER" && initialRole !== "USER") {
+        console.log("Syncing role from Clerk to DB:", initialRole);
+        const updatedUser = await db.user.update({
+          where: { id: loggedInUser.id },
+          data: { role: initialRole }
+        });
+        return NextResponse.json({ role: updatedUser.role });
+      }
+
       return NextResponse.json({ role: loggedInUser.role });
     }
 
-    // user not found so create or update user
-    console.log("Creating or updating user...");
+    // user not found by clerkUserId, so create or update user by email
+    console.log("Creating or updating user with initial role:", initialRole);
     const newUser = await db.user.upsert({
       where: {
         email: user.emailAddresses?.[0]?.emailAddress,
@@ -47,6 +63,8 @@ export async function GET() {
         name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
         imageUrl: user.imageUrl,
         phone: user.phoneNumbers?.[0]?.phoneNumber ?? null,
+        // Update role if Clerk has a specific role (ADMIN/EDITOR)
+        ...(clerkRole === "ADMIN" || clerkRole === "EDITOR" ? { role: clerkRole } : {})
       },
       create: {
         clerkUserId: user.id,
@@ -54,9 +72,10 @@ export async function GET() {
         imageUrl: user.imageUrl,
         email: user.emailAddresses?.[0]?.emailAddress,
         phone: user.phoneNumbers?.[0]?.phoneNumber ?? null,
+        role: initialRole,
       },
     });
-    console.log("User created/updated:", newUser.id);
+    console.log("User created/updated with role:", newUser.role);
     return NextResponse.json({ role: newUser.role });
   } catch (error) {
     console.error("GetUserRole error:", error.message || error, error.stack);

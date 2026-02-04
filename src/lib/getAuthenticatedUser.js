@@ -6,7 +6,7 @@ export async function getAuthenticatedUser() {
     const { userId } = await auth();
     if (!userId) return null;
 
-    const user = await db.User.findUnique({
+    const user = await db.user.findUnique({
       where: { clerkUserId: userId },
     });
 

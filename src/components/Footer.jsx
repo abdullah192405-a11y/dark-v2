@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Facebook, Instagram, Mail, Phone, Video, Youtube, Twitter, Linkedin } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, Video, Youtube, Twitter, Linkedin, MapPin } from "lucide-react";
 import { SiTiktok, SiWhatsapp, SiSnapchat } from "react-icons/si";
 import { getActiveLogo, getSocialMediaLinks, getStoreInfo, getLogoByType } from "@/actions/site-management";
 
@@ -173,7 +173,7 @@ const Footer = ({ initialData }) => {
             <h3 className="text-lg font-semibold text-white mb-4">تواصل معنا</h3>
             <div className="space-y-2 flex flex-col items-center md:items-start">
               {storeInfo?.email && (
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <Mail size={18} className="text-gray-300" />
                   <a href={`mailto:${storeInfo.email}`} className="text-gray-300 hover:text-white transition-colors">
                     {storeInfo.email}
@@ -181,7 +181,7 @@ const Footer = ({ initialData }) => {
                 </div>
               )}
               {storeInfo?.phone && (
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <Phone size={18} className="text-gray-300" />
                   <a href={`tel:${storeInfo.phone}`} className="text-gray-300 hover:text-white transition-colors">
                     {storeInfo.phone}
@@ -189,7 +189,7 @@ const Footer = ({ initialData }) => {
                 </div>
               )}
               {storeInfo?.whatsapp && (
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <SiWhatsapp size={18} className="text-gray-300" />
                   <a href={`https://wa.me/${storeInfo.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors">
                     {storeInfo.whatsapp}
@@ -197,9 +197,35 @@ const Footer = ({ initialData }) => {
                 </div>
               )}
               {storeInfo?.address && (
-                <div className="text-gray-300 text-sm">
-                  <p>{storeInfo.address}</p>
-                  {storeInfo.city && <p>{storeInfo.city}</p>}
+                <div className="flex items-start gap-2">
+                  <MapPin size={18} className="text-gray-300 mt-1 flex-shrink-0" />
+                  <div className="text-gray-300 text-sm">
+                    <p>{storeInfo?.address || "الرسي للأشجار الصناعية"}</p>
+                    <p>{storeInfo?.city || "الرياض"}</p>
+                    <a
+                      href={storeInfo.latitude && storeInfo.longitude
+                        ? `https://www.google.com/maps/search/?api=1&query=${storeInfo.latitude},${storeInfo.longitude}`
+                        : `https://www.google.com/maps/search/?api=1&query=24.6367746,46.7726612`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-yellow-500 hover:text-yellow-400 text-xs font-semibold mt-1 block transition-colors"
+                    >
+                      عرض الموقع على الخارطة
+                    </a>
+                  </div>
+                </div>
+              )}
+              {storeInfo?.latitude && storeInfo?.longitude && (
+                <div className="mt-4 w-full h-32 rounded-lg overflow-hidden border border-gray-800 hidden md:block">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    src={`https://www.google.com/maps?q=${storeInfo.latitude},${storeInfo.longitude}&output=embed`}
+                    allowFullScreen
+                    loading="lazy"
+                  ></iframe>
                 </div>
               )}
             </div>

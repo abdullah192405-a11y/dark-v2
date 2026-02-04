@@ -316,38 +316,39 @@ const FeaturedBrandList = () => {
 
       {/* Delete Dialog box */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>تأكيد الحذف</DialogTitle>
-            <DialogDescription>
+        <DialogContent className="bg-[#0a0a0a] text-white border-zinc-800" dir="rtl">
+          <DialogHeader className="text-right">
+            <DialogTitle className="text-xl font-bold text-white">تأكيد الحذف</DialogTitle>
+            <DialogDescription className="text-zinc-400">
               <span>
                 هل أنت متأكد من حذف{" "}
-                <strong className="text-gray-700">
+                <strong className="text-white">
                   {brandToDelete?.nameAr}
                 </strong>{" "}
                 ؟ هذا الإجراء لا يمكن التراجع عنه.
               </span>
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeleteDialogOpen(false)}
-              disabled={deleteBrandLoading}
-            >
-              إلغاء
-            </Button>
-
+          <DialogFooter className="gap-2 sm:gap-0 sm:justify-start flex-row mt-6">
             <Button
               variant="destructive"
               onClick={handleDeleteBrand}
               disabled={deleteBrandLoading}
+              className="bg-red-600 hover:bg-red-700 font-semibold"
             >
               {deleteBrandLoading ? (
                 <Loader2 className="h-4 w-4 ml-2 animate-spin cursor-pointer" />
               ) : (
                 "حذف العلامة التجارية"
               )}
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setDeleteDialogOpen(false)}
+              disabled={deleteBrandLoading}
+              className="text-zinc-400 hover:text-white hover:bg-zinc-900"
+            >
+              إلغاء
             </Button>
           </DialogFooter>
         </DialogContent>

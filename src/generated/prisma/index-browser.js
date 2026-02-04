@@ -382,6 +382,26 @@ exports.Prisma.HeroSectionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PixelSettingsScalarFieldEnum = {
+  id: 'id',
+  facebookPixel: 'facebookPixel',
+  googleAnalytics: 'googleAnalytics',
+  googleAdsId: 'googleAdsId',
+  tiktokPixel: 'tiktokPixel',
+  snapchatPixel: 'snapchatPixel',
+  microsoftClarity: 'microsoftClarity',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MandebScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  city: 'city',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -463,7 +483,9 @@ exports.Prisma.ModelName = {
   StoreInfo: 'StoreInfo',
   Logo: 'Logo',
   AboutPage: 'AboutPage',
-  HeroSection: 'HeroSection'
+  HeroSection: 'HeroSection',
+  PixelSettings: 'PixelSettings',
+  Mandeb: 'Mandeb'
 };
 
 /**

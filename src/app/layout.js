@@ -7,8 +7,8 @@ import { SITE_CONFIG } from "@/lib/seo";
 import Script from "next/script";
 import ClientWrapper from "@/components/ClientWrapper";
 import { headers } from "next/headers";
-import { getLogoByType } from "@/actions/site-management";
 import { db } from "@/lib/prisma";
+import { getLogoByType, getPixelSettings } from "@/actions/site-management";
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -56,6 +56,12 @@ export const metadata = {
     capable: true,
     statusBarStyle: "black",
   },
+  icons: {
+    icon: "/logo1.png",
+    shortcut: "/logo1.png",
+    apple: "/logo1.png",
+  },
+  manifest: "/manifest.json",
 };
 
 export default async function RootLayout({ children }) {
@@ -64,12 +70,15 @@ export default async function RootLayout({ children }) {
   const isSignUpPage = pathname.includes("/sign-up");
 
   // Fetch all layout data on server in parallel
-  const [navLogoRes, footerLogoRes, socialLinks, storeInfo] = await Promise.all([
+  const [navLogoRes, footerLogoRes, socialLinks, storeInfo, pixelSettingsRes] = await Promise.all([
     getLogoByType("navbar"),
     getLogoByType("footer"),
     db.socialMedia.findMany({ where: { isActive: true }, orderBy: { order: "asc" } }),
-    db.storeInfo.findFirst()
+    db.storeInfo.findFirst(),
+    getPixelSettings()
   ]);
+
+  const pixels = pixelSettingsRes?.data || {};
 
   const navLogo = navLogoRes?.data;
   const footerData = {
@@ -89,10 +98,6 @@ export default async function RootLayout({ children }) {
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link rel="preconnect" href="https://zafndavpzgpcbqgvosbt.supabase.co" />
-          <link rel="manifest" href="/manifest.json" />
-          <link rel="apple-touch-icon" href="/logo1.png" sizes="180x180" />
-          <link rel="icon" href="/logo1.png" sizes="any" />
-          <link rel="icon" href="/logo1.png" type="image/png" sizes="32x32" />
         </head>
         <body
           className={cairo.className}
@@ -109,12 +114,14 @@ export default async function RootLayout({ children }) {
             {children}
           </ClientWrapper>
 
-          {/* Google Analytics */}
-          {process.env.NEXT_PUBLIC_GA_ID && (
+          {/* Tracking Pixels & Analytics */}
+
+          {/* Google Analytics & Ads */}
+          {(pixels.googleAnalytics || process.env.NEXT_PUBLIC_GA_ID) && (
             <>
               <Script
                 strategy="afterInteractive"
-                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+                src={`https://www.googletagmanager.com/gtag/js?id=${pixels.googleAnalytics || process.env.NEXT_PUBLIC_GA_ID}`}
               />
               <Script
                 id="gtag-init"
@@ -124,16 +131,123 @@ export default async function RootLayout({ children }) {
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                    gtag('config', '${pixels.googleAnalytics || process.env.NEXT_PUBLIC_GA_ID}', {
                       page_path: window.location.pathname,
                       page_title: document.title,
                       language: 'ar',
                       region: 'SA'
+                      ${pixels.googleAdsId ? `, 'send_to': '${pixels.googleAdsId}'` : ""}
                     });
                   `,
                 }}
               />
             </>
+          )}
+
+          {/* Facebook Pixel */}
+          {pixels.facebookPixel && (
+            <>
+              <Script
+                id="fb-pixel"
+                strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    !function(f,b,e,v,n,t,s)
+                    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                    n.queue=[];t=b.createElement(e);t.async=!0;
+                    t.src=v;s=b.getElementsByTagName(e)[0];
+                    s.parentNode.insertBefore(t,s)}(window, document,'script',
+                    'https://connect.facebook.net/en_US/fbevents.js');
+                    fbq('init', '${pixels.facebookPixel}');
+                    fbq('track', 'PageView');
+                  `,
+                }}
+              />
+              <noscript>
+                <img
+                  height="1"
+                  width="1"
+                  style={{ display: "none" }}
+                  src={`https://www.facebook.com/tr?id=${pixels.facebookPixel}&ev=PageView&noscript=1`}
+                />
+              </noscript>
+            </>
+          )}
+
+          {/* TikTok Pixel */}
+          {pixels.tiktokPixel && (
+            <Script
+              id="tiktok-pixel"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  !function (w, d, t) {
+                    w.Tawk_API = w.Tawk_API || {};
+                    w.ttq = w.ttq || [];
+                    w.ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "trackWithQuery", "click", "updateId"];
+                    w.ttq.setAndDefer = function (t, e) {
+                      t[e] = function () {
+                        t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+                      }
+                    };
+                    for (var i = 0; i < w.ttq.methods.length; i++) w.ttq.setAndDefer(w.ttq, w.ttq.methods[i]);
+                    w.ttq.instance = function (t) {
+                      for (var e = w.ttq._i[t] || [], n = 0; n < w.ttq.methods.length; n++) w.ttq.setAndDefer(e, w.ttq.methods[n]);
+                      return e
+                    };
+                    w.ttq.load = function (e, n) {
+                      var i = "https://analytics.tiktok.com/i18n/pixel/events.js";
+                      w.ttq._i = w.ttq._i || {}, w.ttq._i[e] = [], w.ttq._i[e]._u = i, w.ttq._t = w.ttq._t || {}, w.ttq._t[e] = +new Date, w.ttq._o = w.ttq._o || {}, w.ttq._o[e] = n || {};
+                      var o = d.createElement("script");
+                      o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t;
+                      var a = d.getElementsByTagName("script")[0];
+                      a.parentNode.insertBefore(o, a)
+                    };
+                    w.ttq.load('${pixels.tiktokPixel}');
+                    w.ttq.page();
+                  }(window, document, 'ttq');
+                `,
+              }}
+            />
+          )}
+
+          {/* Snapchat Pixel */}
+          {pixels.snapchatPixel && (
+            <Script
+              id="snapchat-pixel"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()
+                  {a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};
+                  a.queue=[];var r=t.createElement(n);r.async=!0;
+                  r.src="https://sc-static.net/scevent.min.js";
+                  var s=t.getElementsByTagName(n)[0];
+                  s.parentNode.insertBefore(r,s)})(window,document,"script");
+                  snaptr('init', '${pixels.snapchatPixel}');
+                  snaptr('track', 'PAGE_VIEW');
+                `,
+              }}
+            />
+          )}
+
+          {/* Microsoft Clarity */}
+          {pixels.microsoftClarity && (
+            <Script
+              id="microsoft-clarity"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function(c,l,a,r,i,t,y){
+                      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                  })(window, document, "clarity", "script", "${pixels.microsoftClarity}");
+                `,
+              }}
+            />
           )}
 
           {/* Klaviyo Script */}

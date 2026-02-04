@@ -200,12 +200,12 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]" dir="rtl">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="sm:max-w-[500px] bg-[#0a0a0a] text-white border-zinc-800" dir="rtl">
+        <DialogHeader className="text-right">
+          <DialogTitle className="text-xl font-bold text-white">
             {brand ? "تعديل العلامة التجارية" : "إضافة علامة تجارية جديدة"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-zinc-400">
             {brand
               ? "قم بتعديل بيانات العلامة التجارية"
               : "أضف علامة تجارية جديدة للقسم المميز"}
@@ -215,23 +215,23 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Brand Name - Select from existing car makes */}
           <div className="space-y-2">
-            <Label htmlFor="name">اسم العلامة التجارية *</Label>
+            <Label htmlFor="name" className="text-zinc-300">اسم العلامة التجارية *</Label>
             <Select
               value={formData.name}
               onValueChange={(value) => setFormData({ ...formData, name: value })}
               disabled={isLoading || makesLoading}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-zinc-900/50 border-zinc-800 text-white focus:ring-yellow-500/50">
                 <SelectValue placeholder="اختر العلامة التجارية" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#0a0a0a] border-zinc-800 text-white">
                 {makesLoading ? (
                   <SelectItem value="loading" disabled>
                     جاري التحميل...
                   </SelectItem>
                 ) : carMakes.length > 0 ? (
                   carMakes.map((make) => (
-                    <SelectItem key={make} value={make}>
+                    <SelectItem key={make} value={make} className="hover:bg-zinc-900 focus:bg-zinc-900">
                       {make}
                     </SelectItem>
                   ))
@@ -242,14 +242,14 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
                 )}
               </SelectContent>
             </Select>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-zinc-500">
               اختر من العلامات التجارية الموجودة في قاعدة البيانات
             </p>
           </div>
 
           {/* Arabic Name */}
           <div className="space-y-2">
-            <Label htmlFor="nameAr">الاسم بالعربية *</Label>
+            <Label htmlFor="nameAr" className="text-zinc-300">الاسم بالعربية *</Label>
             <Input
               id="nameAr"
               name="nameAr"
@@ -258,12 +258,13 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
               placeholder="مثال: هيونداي"
               required
               disabled={isLoading}
+              className="bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus-visible:ring-yellow-500/50"
             />
           </div>
 
           {/* Order */}
           <div className="space-y-2">
-            <Label htmlFor="order">ترتيب العرض</Label>
+            <Label htmlFor="order" className="text-zinc-300">ترتيب العرض</Label>
             <Input
               id="order"
               name="order"
@@ -273,17 +274,18 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
               placeholder="0"
               min="0"
               disabled={isLoading}
+              className="bg-zinc-900/50 border-zinc-800 text-white placeholder:text-zinc-600 focus-visible:ring-yellow-500/50"
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-zinc-500">
               يحدد ترتيب ظهور العلامة التجارية (الأصغر يظهر أولاً)
             </p>
           </div>
 
           {/* Image Upload */}
           <div className="space-y-2">
-            <Label htmlFor="image">صورة العلامة التجارية *</Label>
+            <Label htmlFor="image" className="text-zinc-300">صورة العلامة التجارية *</Label>
             {imagePreview ? (
-              <div className="relative w-full h-40 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
+              <div className="relative w-full h-40 border-2 border-dashed border-zinc-800 rounded-lg overflow-hidden bg-zinc-900/30">
                 <Image
                   src={imagePreview}
                   alt="Preview"
@@ -294,7 +296,7 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
                   type="button"
                   variant="destructive"
                   size="icon"
-                  className="absolute top-2 right-2"
+                  className="absolute top-2 right-2 bg-red-600 hover:bg-red-700"
                   onClick={handleRemoveImage}
                   disabled={isLoading}
                 >
@@ -305,14 +307,14 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
               <div className="flex items-center justify-center w-full">
                 <label
                   htmlFor="image"
-                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-zinc-800 rounded-lg cursor-pointer hover:bg-zinc-900/50 bg-zinc-900/20 transition-colors"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-10 h-10 mb-3 text-gray-400" />
-                    <p className="mb-2 text-sm text-gray-500">
-                      <span className="font-semibold">اضغط لرفع الصورة</span>
+                    <Upload className="w-10 h-10 mb-3 text-zinc-500" />
+                    <p className="mb-2 text-sm text-zinc-400">
+                      <span className="font-semibold text-yellow-500">اضغط لرفع الصورة</span>
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-zinc-500">
                       PNG, JPG, WEBP (حتى 5MB)
                     </p>
                   </div>
@@ -329,16 +331,12 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
             )}
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-0 sm:justify-start flex-row mt-6">
             <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
+              type="submit"
               disabled={isLoading}
+              className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
             >
-              إلغاء
-            </Button>
-            <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 ml-2 animate-spin" />
@@ -349,6 +347,15 @@ const FeaturedBrandDialog = ({ open, onClose, brand, onSuccess }) => {
               ) : (
                 "إضافة"
               )}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={onClose}
+              disabled={isLoading}
+              className="text-zinc-400 hover:text-white hover:bg-zinc-900"
+            >
+              إلغاء
             </Button>
           </DialogFooter>
         </form>

@@ -6,19 +6,48 @@
 import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { serializedCarsData } from "@/lib/helper";
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { checkPermission } from "@/lib/permissions";
 
 export async function getAdmin() {
   // check is a user is logged in
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  const clerkUser = await currentUser();
+  if (!clerkUser) throw new Error("Unauthorized");
+  const userId = clerkUser.id;
 
   // check is user exists in db
-  const user = await db.user.findUnique({
+  let user = await db.user.findUnique({
     where: { clerkUserId: userId },
   });
+
+  const clerkRole = clerkUser.publicMetadata?.role;
+  const isClerkAdmin = clerkRole === "ADMIN" || clerkRole === "EDITOR";
+
+  // If user is admin in Clerk but not in DB, sync it!
+  if (isClerkAdmin && (!user || user.role === "USER")) {
+    console.log("Syncing admin role from Clerk to DB in getAdmin action...");
+    if (user) {
+      user = await db.user.update({
+        where: { id: user.id },
+        data: { role: clerkRole }
+      });
+    } else {
+      // If user doesn't exist at all, they shouldn't really be accessing admin 
+      // without hitting the role API first, but let's handle it just in case.
+      // We don't want to create the full user record here blindly though.
+      // But we can return a temporary user object.
+      return {
+        authorized: true,
+        user: {
+          clerkUserId: userId,
+          role: clerkRole,
+          name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim(),
+          permissions: clerkRole === "ADMIN" ? ["dashboard", "cars", "test-drives", "site-data"] : [] // Default permissions for admin
+        }
+      };
+    }
+  }
 
   //   check if user does not exist in db or is not an admin/editor
   if (!user || (user.role !== "ADMIN" && user.role !== "EDITOR")) {
@@ -27,6 +56,7 @@ export async function getAdmin() {
       reason: "unauthorized",
     };
   }
+
   return {
     authorized: true,
     user,

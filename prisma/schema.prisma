@@ -407,3 +407,28 @@ model HeroSection {
 
   @@unique([id]) // Only one hero section
 }
+
+model PixelSettings {
+  id               String   @id @default(uuid())
+  facebookPixel    String?
+  googleAnalytics  String?
+  googleAdsId      String?
+  tiktokPixel      String?
+  snapchatPixel    String?
+  microsoftClarity String?
+  updatedAt        DateTime @updatedAt
+
+  @@unique([id])
+}
+
+model Mandeb {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  city      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([city])
+}

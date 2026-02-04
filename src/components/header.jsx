@@ -19,9 +19,8 @@ const navItems = [
   { name: "الشركات", href: "/companies" },
   { name: "اراء العملاء", href: "/reviews" },
   { name: "مقالات", href: "/articles" },
+  { name: "طلبات الشركات", href: "/company-requests" },
   { name: "تواصل معنا", href: "/contact" },
-  { name: "", href: "" }
-
 ];
 
 
@@ -84,17 +83,23 @@ const Header = ({ isAdminPage = false, navLogo: initialNavLogo }) => {
           headers: {
             'Content-Type': 'application/json',
           },
+          cache: 'no-store', // Prevent caching of role response
         });
+
+        // Always get role from Clerk metadata as well
+        const clerkRole = clerkUser.publicMetadata?.role;
+        const isClerkAdmin = clerkRole === "ADMIN" || clerkRole === "EDITOR";
 
         if (response.ok) {
           const data = await response.json();
           console.log("✅ Role from API:", data.role);
-          setIsAdmin(data.role === "ADMIN" || data.role === "EDITOR");
+          const isApiAdmin = data.role === "ADMIN" || data.role === "EDITOR";
+
+          // Trust BOTH sources - if either says Admin, they see the dashboard button
+          setIsAdmin(isApiAdmin || isClerkAdmin);
         } else {
           console.log("⚠️ API call failed, checking Clerk metadata");
-          // Fallback to Clerk metadata
-          const clerkRole = clerkUser.publicMetadata?.role;
-          setIsAdmin(clerkRole === "ADMIN" || clerkRole === "EDITOR");
+          setIsAdmin(isClerkAdmin);
         }
       } catch (error) {
         console.error("❌ Error fetching role:", error);
