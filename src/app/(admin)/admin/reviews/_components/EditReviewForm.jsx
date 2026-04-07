@@ -11,6 +11,7 @@ import Link from "next/link";
 import { getReviewForEdit, updateReview } from "@/actions/reviews";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import LoadingBar from "@/components/LoadingBar";
 
 const EditReviewForm = ({ reviewId }) => {
   const router = useRouter();
@@ -103,7 +104,7 @@ const EditReviewForm = ({ reviewId }) => {
   };
 
   if (fetchLoading) {
-    return <div className="text-center py-8">جاري التحميل...</div>;
+    return <LoadingBar fullScreen={false} className="py-20" />;
   }
 
   return (

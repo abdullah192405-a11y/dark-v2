@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getAboutPage } from "@/actions/site-management";
 import AboutPageForm from "./_components/AboutPageForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import LoadingBar from "@/components/LoadingBar";
 
 const AboutPageManagementPage = () => {
   const [aboutPage, setAboutPage] = useState(null);
@@ -34,7 +35,7 @@ const AboutPageManagementPage = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-8">جاري التحميل...</div>
+        <LoadingBar fullScreen={false} className="py-20" />
       ) : (
         <Card>
           <CardHeader>

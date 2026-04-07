@@ -420,3 +420,15 @@ model PixelSettings {
 
   @@unique([id])
 }
+
+model Mandeb {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  city      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([city])
+}

@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { faqItems } from "@/lib/data";
 
-// Custom Components
+import LinkWithLoader from "@/components/LinkWithLoader";
 import HomeSearch from "@/components/HomeSearch";
 import CarCard from "@/components/CarCard";
 import FeaturedBrandCard from "@/components/FeaturedBrandCard";
@@ -95,25 +95,25 @@ export default async function Home() {
         <div className="container mx-auto relative z-10">
           <ScrollAnimate className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div className="text-right space-y-6 order-2 md:order-1">
-              <h2 className="text-5xl md:text-6xl font-bold text-white leading-tight">عن كراون أوتو</h2>
+              <h2 className="text-5xl md:text-6xl font-bold text-white leading-tight">عن ماكس موتورز</h2>
               <div className="space-y-4 text-white/90 text-lg leading-relaxed">
                 <p>نحن منصة رائدة في مجال البحث عن السيارات وحجز اختبارات القيادة في المنطقة. نوفر لك تجربة سلسة وآمنة للعثور على سيارة أحلامك من بين مئات الخيارات المتاحة.</p>
                 <p>مع تقنيات الذكاء الاصطناعي المتقدمة، نساعدك على اتخاذ القرار الصحيح من خلال توفير معلومات دقيقة ومقارنات شاملة بين المركبات المختلفة.</p>
               </div>
               <div className="pt-4">
-                <Link href="/about">
+                <LinkWithLoader href="/about">
                   <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-black font-bold px-8 py-4 rounded-full shadow-2xl hover:shadow-yellow-500/25 transform hover:scale-105 transition-all duration-300 border-2 border-yellow-400/50">
                     اعرف المزيد
                   </Button>
-                </Link>
+                </LinkWithLoader>
               </div>
             </div>
             <div className="relative order-1 md:order-2">
               <div className="relative w-full max-w-lg mx-auto group">
                 <div className="relative rounded-3xl overflow-hidden aspect-square flex items-center justify-center">
                   <Image
-                    src={mainLogo?.imageUrl || "/logo.jpg"}
-                    alt={mainLogo?.altText || "About Crown Auto"}
+                    src={mainLogo?.imageUrl || "/logo.JPG"}
+                    alt={mainLogo?.altText || "About maxmotors"}
                     width={500}
                     height={500}
                     className="w-full h-auto object-contain"
@@ -139,9 +139,9 @@ export default async function Home() {
         <div className="container mx-auto relative z-10">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-white">السيارات المميزة</h2>
-            <Link href="/cars">
+            <LinkWithLoader href="/cars">
               <Button variant="ghost" className="text-white">عرض الكل <ChevronLeft className="mr-1 h-4 w-4" /></Button>
-            </Link>
+            </LinkWithLoader>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredCars.map((car) => (
@@ -157,9 +157,9 @@ export default async function Home() {
           <ScrollAnimate>
             <div className="flex justify-between items-center mb-12">
               <h2 className="text-3xl font-bold text-white">البنوك الشريكة</h2>
-              <Link href="/banks">
+              <LinkWithLoader href="/banks">
                 <Button variant="ghost" className="text-white">عرض الكل <ChevronLeft className="mr-1 h-4 w-4" /></Button>
-              </Link>
+              </LinkWithLoader>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
               {banks.slice(0, 6).map((bank) => (
@@ -175,9 +175,9 @@ export default async function Home() {
         <div className="container mx-auto relative z-10">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl font-bold text-white">الشركات المميزة</h2>
-            <Link href="/companies">
+            <LinkWithLoader href="/companies">
               <Button variant="ghost" className="text-white">عرض الكل <ChevronLeft className="mr-1 h-4 w-4" /></Button>
-            </Link>
+            </LinkWithLoader>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             {featuredBrands.map((brand) => (
@@ -222,13 +222,13 @@ export default async function Home() {
         <div className="container mx-auto">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl font-bold text-white">الموديلات المميزة</h2>
-            <Link href="/cars">
+            <LinkWithLoader href="/cars">
               <Button variant="ghost" className="text-white">عرض الكل <ChevronLeft className="mr-1 h-4 w-4" /></Button>
-            </Link>
+            </LinkWithLoader>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {featuredModels.map((model) => (
-              <Link key={model.id} href={`/cars?bodyType=${model.name}`}>
+              <LinkWithLoader key={model.id} href={`/cars?bodyType=${model.name}`}>
                 <Card className="relative group cursor-pointer rounded-2xl overflow-hidden h-48 md:h-64 border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 p-0">
                   <div className="relative h-full w-full">
                     <Image
@@ -247,7 +247,7 @@ export default async function Home() {
                     </div>
                   </div>
                 </Card>
-              </Link>
+              </LinkWithLoader>
             ))}
           </div>
         </div>
@@ -261,8 +261,19 @@ export default async function Home() {
             <Accordion type="single" collapsible className="w-full" dir="rtl">
               {faqItems.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className="text-lg hover:text-yellow-500 transition-colors">{faq.question}</AccordionTrigger>
-                  <AccordionContent className="text-white/70 text-base">{faq.answer}</AccordionContent>
+                  <AccordionTrigger 
+                    id={`faq-trigger-${index}`} 
+                    aria-controls={`faq-content-${index}`}
+                    className="text-lg hover:text-yellow-500 transition-colors"
+                  >
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent 
+                    id={`faq-content-${index}`}
+                    className="text-white/70 text-base"
+                  >
+                    {faq.answer}
+                  </AccordionContent>
                 </AccordionItem>
               ))}
             </Accordion>
@@ -283,11 +294,11 @@ export default async function Home() {
           <ScrollAnimate>
             <h2 className="text-5xl font-bold mb-8 text-white">ابدأ رحلتك اليوم</h2>
             <p className="text-xl text-white/80 mb-12">انضم إلى آلاف المستخدمين الذين وجدوا سيارة أحلامهم عبر منصتنا.</p>
-            <Link href="/cars">
+            <LinkWithLoader href="/cars">
               <Button size="lg" className="bg-yellow-500 text-black hover:bg-yellow-600 font-bold px-12 py-8 rounded-full text-xl shadow-2xl">
                 تصفح السيارات الآن
               </Button>
-            </Link>
+            </LinkWithLoader>
           </ScrollAnimate>
         </div>
       </section>

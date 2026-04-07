@@ -103,7 +103,7 @@ const Footer = ({ initialData }) => {
                 />
               ) : (
                 <Image
-                  src="/logo1.png"
+                  src="/logo.JPG"
                   alt="Default Logo"
                   width={100}
                   height={100}
@@ -258,7 +258,7 @@ const Footer = ({ initialData }) => {
         </div>
         {/* Copyright */}
         <div className="pt-4 border-t border-gray-700 text-center text-gray-300">
-          <p>جميع الحقوق محفوظة {storeInfo?.name || "كراون أوتو"} © 2025</p>
+          <p>جميع الحقوق محفوظة {storeInfo?.name || "ماكس موتورز"} © 2025</p>
         </div>
       </div>
     </footer>

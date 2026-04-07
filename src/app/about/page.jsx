@@ -46,7 +46,7 @@ export default function About() {
           <div className="text-center mb-12">
             <h1 className="text-5xl md:text-6xl font-bold mb-8 text-white">من نحن</h1>
             <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              <span className="text-yellow-500 font-bold">كراون أوتو</span> هي المنصة الرائدة في المنطقة للبحث عن السيارات باستخدام تقنية الذكاء الاصطناعي. نحن نجمع بين الخبرة العريقة في سوق السيارات والتكنولوجيا المتطورة لنوفر لعملائنا تجربة شراء فريدة، شفافة، وآمنة تماماً.
+              <span className="text-yellow-500 font-bold">ماكس موتورز</span> هي المنصة الرائدة في المنطقة للبحث عن السيارات باستخدام تقنية الذكاء الاصطناعي. نحن نجمع بين الخبرة العريقة في سوق السيارات والتكنولوجيا المتطورة لنوفر لعملائنا تجربة شراء فريدة، شفافة، وآمنة تماماً.
             </p>
           </div>
         </div>
@@ -116,7 +116,7 @@ export default function About() {
       <section ref={addToRefs} className="py-24 px-6 md:px-12 bg-zinc-950 scroll-animate">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center mb-16 text-white">
-            لماذا يختار العملاء <span className="text-yellow-500">كراون أوتو</span>؟
+            لماذا يختار العملاء <span className="text-yellow-500">ماكس موتورز</span>؟
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -148,7 +148,7 @@ export default function About() {
             هل أنت مستعد للعثور على سيارتك؟
           </h2>
           <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-            انضم إلى آلاف المستخدمين الذين يثقون في كراون أوتو للوصول إلى أفضل العروض المتاحة.
+            انضم إلى آلاف المستخدمين الذين يثقون في ماكس موتورز للوصول إلى أفضل العروض المتاحة.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Button size="lg" className="bg-yellow-500 text-black hover:bg-yellow-600 font-bold px-10 h-14 rounded-full" asChild>

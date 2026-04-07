@@ -9,6 +9,7 @@ import { Search, Plus, Edit, Trash2, Star } from "lucide-react";
 import Link from "next/link";
 import { getReviews, deleteReview } from "@/actions/reviews";
 import { toast } from "sonner";
+import LoadingBar from "@/components/LoadingBar";
 
 const ReviewList = () => {
   const [reviews, setReviews] = useState([]);
@@ -67,7 +68,7 @@ const ReviewList = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-8">جاري التحميل...</div>;
+    return <LoadingBar fullScreen={false} className="py-20" />;
   }
 
   return (

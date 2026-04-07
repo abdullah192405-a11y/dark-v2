@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trash2, Edit2, Plus } from "lucide-react";
 import Image from "next/image";
+import LoadingBar from "@/components/LoadingBar";
 
 const LogoPage = () => {
   const [logos, setLogos] = useState([]);
@@ -79,7 +80,7 @@ const LogoPage = () => {
       )}
 
       {loading ? (
-        <div className="text-center py-8">جاري التحميل...</div>
+        <LoadingBar fullScreen={false} className="py-12" />
       ) : logos.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center">

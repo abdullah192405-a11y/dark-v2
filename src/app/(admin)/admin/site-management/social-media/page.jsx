@@ -8,6 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Trash2, Edit2, Plus } from "lucide-react";
 import Link from "next/link";
 
+import LoadingBar from "@/components/LoadingBar";
+
 const SocialMediaPage = () => {
   const [socialLinks, setSocialLinks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -89,7 +91,7 @@ const SocialMediaPage = () => {
       )}
 
       {loading ? (
-        <div className="text-center py-8">جاري التحميل...</div>
+        <LoadingBar fullScreen={false} className="py-20" />
       ) : socialLinks.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center">

@@ -1,12 +1,13 @@
 import { getCarFilters } from "@/actions/car-listing";
 import React, { Suspense } from "react";
+import LoadingBar from "@/components/LoadingBar";
 import CarFilters from "./_components/CarFilters";
 import CarListings from "./_components/CarListings";
 import CarsPageWrapper from "./_components/CarsPageWrapper";
 import { generateMetadata, SAUDI_MARKET_KEYWORDS } from "@/lib/seo";
 
 export const metadata = generateMetadata({
-  title: "تصفح وشراء السيارات في السعودية | كراون أوتو",
+  title: "تصفح وشراء السيارات في السعودية | ماكس موتورز",
   description: "اكتشف آلاف السيارات الجديدة والمستعملة بأفضل الأسعار في السعودية. اختر من تويوتا، هيونداي، نيسان وغيرها. توفير وتمويل متاح.",
   keywords: [
     "سيارات للبيع السعودية",
@@ -15,7 +16,7 @@ export const metadata = generateMetadata({
     "أسعار السيارات",
     ...SAUDI_MARKET_KEYWORDS.brands,
   ],
-  canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://crown-auto.sa'}/cars`,
+  canonicalUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://maxmotors.sa'}/cars`,
   ogType: "website",
 });
 
@@ -42,7 +43,7 @@ const CarsPage = async () => {
 
           <div className="flex-1">
             {/* Listings MUST be wrapped in Suspense */}
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingBar />}>
               <CarListings />
             </Suspense>
           </div>

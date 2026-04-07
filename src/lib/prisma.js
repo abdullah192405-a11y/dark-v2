@@ -2,22 +2,47 @@
 
 import { PrismaClient } from "@/generated/prisma";
 
-export const db = globalThis.prisma || new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL,
-    },
-  },
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  // Override connection pool settings for development
-  ...(process.env.NODE_ENV === 'development' && {
+const prismaClientOptions = {
+  log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+};
+
+// Function to handle database URL with connection pooling settings
+const getDatabaseUrl = () => {
+  let url = process.env.DATABASE_URL || "";
+  
+  // If using Supabase pooler (port 6543), ensure pgbouncer=true is present
+  if (url.includes(':6543') && !url.includes('pgbouncer=true')) {
+    url += (url.includes('?') ? '&' : '?') + 'pgbouncer=true';
+  }
+  
+  // Explicitly set connection limits and timeouts to prevent pool exhaustion
+  // 5 is usually enough for a single dev machine, 20 is a safe default for production
+  const limit = process.env.NODE_ENV === 'development' ? 5 : 20;
+  const timeout = 30; // 30 seconds wait for a connection
+  
+  if (!url.includes('connection_limit=')) {
+    url += (url.includes('?') ? '&' : '?') + `connection_limit=${limit}`;
+  }
+  
+  if (!url.includes('pool_timeout=')) {
+    url += (url.includes('?') ? '&' : '?') + `pool_timeout=${timeout}`;
+  }
+  
+  return url;
+};
+
+const createPrismaClient = () => {
+  return new PrismaClient({
+    ...prismaClientOptions,
     datasources: {
       db: {
-        url: process.env.DATABASE_URL?.replace('connection_limit=1', 'connection_limit=5'),
+        url: getDatabaseUrl(),
       },
     },
-  }),
-});
+  });
+};
+
+export const db = globalThis.prisma || createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.prisma = db;

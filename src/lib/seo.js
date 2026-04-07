@@ -1,22 +1,22 @@
 /**
- * SEO Configuration and utilities for كراون أوتو - Crown Auto
+ * SEO Configuration and utilities for ماكس موتورز - MaxMotors
  * Market: Saudi Arabia
  */
 
 export const SITE_CONFIG = {
-  name: "كراون أوتو",
-  englishName: "Crown Auto",
-  description: "كراون أوتو - أفضل منصة لشراء وبيع السيارات في السعودية. تصفح آلاف السيارات الجديدة والمستعملة بأفضل الأسعار.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://crownauto.sa",
+  name: "ماكس موتورز",
+  englishName: "maxmotors",
+  description: "ماكس موتورز - أفضل منصة لشراء وبيع السيارات في السعودية. تصفح آلاف السيارات الجديدة والمستعملة بأفضل الأسعار.",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://maxmotors.sa",
   locale: "ar-SA",
   lang: "ar",
-  defaultOgImage: "/og-image.png",
-  twitterHandle: "@crown_auto_sa",
+  defaultOgImage: "/logo.JPG",
+  twitterHandle: "@maxmotors_sa",
 };
 
 export const SAUDI_MARKET_KEYWORDS = {
   primary: [
-    "كراون أوتو",
+    "ماكس موتورز",
     "شراء سيارات السعودية",
     "سيارات السعودية",
     "بيع سيارات السعودية",
@@ -154,12 +154,12 @@ export const generateJsonLd = (type, data = {}) => {
       name: SITE_CONFIG.name,
       alternateName: SITE_CONFIG.englishName,
       url: SITE_CONFIG.url,
-      logo: `${SITE_CONFIG.url}/logo.png`,
+      logo: `${SITE_CONFIG.url}/logo.JPG`,
       description: SITE_CONFIG.description,
       sameAs: [
-        "https://twitter.com/crown_auto_sa",
-        "https://www.instagram.com/crown_auto_sa",
-        "https://www.facebook.com/crown_auto_sa",
+        "https://twitter.com/maxmotors_sa",
+        "https://www.instagram.com/maxmotors_sa",
+        "https://www.facebook.com/maxmotors_sa",
       ],
       contactPoint: {
         "@type": "ContactPoint",
@@ -179,7 +179,7 @@ export const generateJsonLd = (type, data = {}) => {
       ...baseStructure,
       "@type": "LocalBusiness",
       name: SITE_CONFIG.name,
-      image: `${SITE_CONFIG.url}/logo.png`,
+      image: `${SITE_CONFIG.url}/logo.JPG`,
       description: SITE_CONFIG.description,
       url: SITE_CONFIG.url,
       telephone: "+966-XX-XXX-XXXX",
@@ -194,8 +194,8 @@ export const generateJsonLd = (type, data = {}) => {
       areaServed: SAUDI_MARKET_KEYWORDS.locations,
       priceRange: "$$",
       sameAs: [
-        "https://twitter.com/crown_auto_sa",
-        "https://www.instagram.com/crown_auto_sa",
+        "https://twitter.com/maxmotors_sa",
+        "https://www.instagram.com/maxmotors_sa",
       ],
     },
     product: {
@@ -274,8 +274,8 @@ export const generateCarMetadata = (car) => {
   ].filter(Boolean);
 
   return generateMetadata({
-    title: `${car.brand} ${car.model} ${car.year} | كراون أوتو`,
-    description: `${car.brand} ${car.model} ${car.year} - ${car.description || "سيارة"}. السعر: ${car.price} ريال سعودي. اشتر الآن من كراون أوتو.`,
+    title: `${car.brand} ${car.model} ${car.year} | ماكس موتورز`,
+    description: `${car.brand} ${car.model} ${car.year} - ${car.description || "سيارة"}. السعر: ${car.price} ريال سعودي. اشتر الآن من ماكس موتورز.`,
     keywords,
     ogImage: car.image,
     canonicalUrl: `${SITE_CONFIG.url}/cars/${car.id}`,

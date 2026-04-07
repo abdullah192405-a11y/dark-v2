@@ -9,6 +9,7 @@ import { ArrowLeft, CarFront, Heart, Layout, Menu, Loader2 } from "lucide-react"
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "./ui/sheet";
 import { getLogoByType } from "@/actions/site-management";
+import LoadingBar from "./LoadingBar";
 
 
 const navItems = [
@@ -31,6 +32,11 @@ const Header = ({ isAdminPage = false, navLogo: initialNavLogo }) => {
   const { user: clerkUser, isLoaded } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
   const [roleLoading, setRoleLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Update navLogo if prop changes
   useEffect(() => {
@@ -128,8 +134,8 @@ const Header = ({ isAdminPage = false, navLogo: initialNavLogo }) => {
         {/* NavBar Logo */}
         <Link href={isAdminPage ? "/admin" : "/"} className="flex items-center gap-2 md:mr-12">
           <Image
-            src={navLogo?.imageUrl || "/logo1.png"}
-            alt={navLogo?.altText || "click_car_logo"}
+            src={navLogo?.imageUrl || "/logo.JPG"}
+            alt={navLogo?.altText || "maxmotors_logo"}
             width={100}
             height={60}
             className="object-contain h-12 w-auto"
@@ -159,13 +165,23 @@ const Header = ({ isAdminPage = false, navLogo: initialNavLogo }) => {
         <div className="flex items-center space-x-2 md:space-x-4 rtl:space-x-reverse">
           {/* Mobile Menu */}
           <div className="md:hidden">
-            <Sheet open={open} onOpenChange={setOpen} suppressHydrationWarning>
+            <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  id="mobile-nav-trigger" 
+                  aria-controls="mobile-nav-content"
+                  suppressHydrationWarning
+                >
                   <Menu size={18} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px]" suppressHydrationWarning>
+              <SheetContent 
+                side="right" 
+                className="w-[300px]" 
+                id="mobile-nav-content"
+              >
                 <div className="sr-only">
                   <SheetTitle>قائمة التنقل</SheetTitle>
                   <SheetDescription>تصفح أقسام الموقع</SheetDescription>
@@ -189,7 +205,7 @@ const Header = ({ isAdminPage = false, navLogo: initialNavLogo }) => {
                   <SignedIn>
                     {roleLoading ? (
                       <div className="flex justify-center py-2">
-                        <Loader2 className="animate-spin" size={20} />
+                        <LoadingBar fullScreen={false} size="sm" />
                       </div>
                     ) : isAdmin ? (
                       <Link
@@ -249,7 +265,7 @@ const Header = ({ isAdminPage = false, navLogo: initialNavLogo }) => {
               </Link>
             ) : roleLoading ? (
               <div className="hidden md:flex items-center gap-2">
-                <Loader2 className="animate-spin text-white" size={20} />
+                <LoadingBar fullScreen={false} size="sm" />
               </div>
             ) : (
               <>

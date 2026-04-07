@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import LoadingBar from "@/components/LoadingBar";
 
 const BankCRUDPage = () => {
   const [banks, setBanks] = useState([]);
@@ -199,8 +200,8 @@ const BankCRUDPage = () => {
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8">
-                  جاري التحميل...
+                <TableCell colSpan={5} className="text-center py-20">
+                  <LoadingBar fullScreen={false} />
                 </TableCell>
               </TableRow>
             ) : banks.length === 0 ? (

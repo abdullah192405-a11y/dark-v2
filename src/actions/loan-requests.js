@@ -7,6 +7,7 @@ import { getAuthenticatedUser } from "@/lib/getAuthenticatedUser";
 import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { serializeLoanRequests } from "@/lib/helper";
 
 // fetch loan requests from db
 export async function getLoanRequests(search = "") {
@@ -45,7 +46,7 @@ export async function getLoanRequests(search = "") {
 
     return {
       success: true,
-      data: loanRequests,
+      data: serializeLoanRequests(loanRequests),
     };
   } catch (error) {
     console.error(`Error while getting loan requests from DB ${error}`);
@@ -170,16 +171,16 @@ export async function exportLoanRequests(ids = null, search = "") {
       "موديل السيارة": request.carModel,
       "سنة الصنع": request.carYear,
       "فئة السيارة": request.carCategory || "غير محدد",
-      "مبلغ القرض": request.loanAmount,
-      "الدفعة الأولى": request.downPayment,
+      "مبلغ القرض": request.loanAmount ? parseFloat(request.loanAmount.toString()) : 0,
+      "الدفعة الأولى": request.downPayment ? parseFloat(request.downPayment.toString()) : 0,
       "مدة القرض": `${request.loanTerm} سنة`,
-      "صافي الراتب": request.netSalary || "غير محدد",
+      "صافي الراتب": request.netSalary ? parseFloat(request.netSalary.toString()) : "غير محدد",
       "جهة العمل": request.employerSector || "غير محدد",
       "اسم جهة العمل": request.employer || "غير محدد",
       "جهة تحويل الراتب": request.salaryTransferBank?.name || "غير محدد",
       "هل لديك تمويل عقاري": request.hasRealEstateFinance === "yes" ? "نعم" : "لا",
       "هل لديك تعثر في سمة": request.hasCreditDefault === "yes" ? "نعم" : "لا",
-      "إجمالي الإلتزامات الشهرية": request.totalMonthlyObligations || "غير محدد",
+      "إجمالي الإلتزامات الشهرية": request.totalMonthlyObligations ? parseFloat(request.totalMonthlyObligations.toString()) : "غير محدد",
       "معلومات إضافية": request.additionalInfo || "",
       "الحالة": request.status === "PENDING" ? "معلق" : request.status === "APPROVED" ? "مقبول" : request.status === "REJECTED" ? "مرفوض" : request.status === "COMPLETED" ? "مكتمل" : request.status,
       "تاريخ الطلب": new Date(request.createdAt).toLocaleDateString("ar-SA"),

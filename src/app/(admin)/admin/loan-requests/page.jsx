@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import LoanRequestList from "./_components/LoanRequestList";
+import LoadingBar from "@/components/LoadingBar";
 
 const LoanRequestsPage = () => {
   return (
@@ -7,7 +8,7 @@ const LoanRequestsPage = () => {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">طلبات القروض</h2>
       </div>
-      <Suspense fallback={<div>جاري التحميل...</div>}>
+      <Suspense fallback={<LoadingBar fullScreen={false} className="py-20" />}>
         <LoanRequestList />
       </Suspense>
     </div>

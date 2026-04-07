@@ -15,32 +15,32 @@ export const metadata = {
   icons: {
     icon: [
       {
-        url: "/logo1.png",
+        url: "/logo.JPG",
         sizes: "any",
-        type: "image/png",
+        type: "image/jpeg",
       },
       {
-        url: "/logo1.png",
+        url: "/logo.JPG",
         sizes: "192x192",
-        type: "image/png",
+        type: "image/jpeg",
       },
     ],
     apple: [
       {
-        url: "/logo1.png",
+        url: "/logo.JPG",
         sizes: "180x180",
-        type: "image/png",
+        type: "image/jpeg",
       },
     ],
     other: [
       {
         rel: "icon",
-        url: "/logo1.png",
+        url: "/logo.JPG",
         sizes: "32x32",
       },
       {
         rel: "apple-touch-icon",
-        url: "/logo1.png",
+        url: "/logo.JPG",
       },
     ],
   },
@@ -56,7 +56,7 @@ export const metadata = {
     description: SITE_CONFIG.siteDescription,
     images: [
       {
-        url: `${SITE_CONFIG.siteUrl}/logo1.png`,
+        url: `${SITE_CONFIG.siteUrl}/logo.JPG`,
         width: 192,
         height: 192,
         alt: SITE_CONFIG.siteName,
@@ -68,6 +68,6 @@ export const metadata = {
     title: SITE_CONFIG.siteName,
     description: SITE_CONFIG.siteDescription,
     creator: "@clickcarmotors",
-    images: ["/logo1.png"],
+    images: ["/logo.JPG"],
   },
 };

@@ -57,9 +57,9 @@ export const metadata = {
     statusBarStyle: "black",
   },
   icons: {
-    icon: "/logo1.png",
-    shortcut: "/logo1.png",
-    apple: "/logo1.png",
+    icon: "/logo.JPG",
+    shortcut: "/logo.JPG",
+    apple: "/logo.JPG",
   },
   manifest: "/manifest.json",
 };

@@ -1,4 +1,4 @@
-# Crown Auto - كراون أوتو - SEO Configuration
+# MaxMotors - ماكس موتورز - SEO Configuration
 # Market: Saudi Arabia
 
 # All search engines
@@ -34,8 +34,8 @@ User-agent: SemrushBot
 Disallow: /
 
 # Sitemaps
-Sitemap: https://crownauto.sa/api/sitemap.xml
-Sitemap: https://crownauto.sa/sitemap.xml
+Sitemap: https://maxmotors.sa/api/sitemap.xml
+Sitemap: https://maxmotors.sa/sitemap.xml
 
 # Additional sitemap for mobile
-Sitemap: https://crownauto.sa/api/sitemap.xml?type=mobile
+Sitemap: https://maxmotors.sa/api/sitemap.xml?type=mobile

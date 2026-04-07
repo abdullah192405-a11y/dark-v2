@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
 import useFetch from "../../hooks/use-fetch";
 import { processAiImageSearch } from "@/actions/home";
-// import LoadingBar from "./LoadingBar"; (Removed to use global LoadingBar)
+import LoadingBar from "@/components/LoadingBar";
 
 const HomeSearch = () => {
   const [serachTerm, setSerachTerm] = useState("");
@@ -252,7 +252,7 @@ const HomeSearch = () => {
             <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-gray-200 max-h-80 overflow-y-auto z-50">
               {loadingSuggestions ? (
                 <div className="px-6 py-4 text-center text-gray-500">
-                  <Loader2 className="h-5 w-5 animate-spin mx-auto" />
+                  <LoadingBar fullScreen={false} size="sm" />
                 </div>
               ) : suggestions.length > 0 ? (
                 suggestions.map((suggestion, index) => (
@@ -321,7 +321,7 @@ const HomeSearch = () => {
               <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-gray-200 max-h-64 overflow-y-auto z-50">
                 {loadingSuggestions ? (
                   <div className="px-4 py-4 text-center text-gray-500">
-                    <Loader2 className="h-4 w-4 animate-spin mx-auto" />
+                    <LoadingBar fullScreen={false} size="sm" />
                   </div>
                 ) : suggestions.length > 0 ? (
                   suggestions.map((suggestion, index) => (
@@ -419,11 +419,11 @@ const HomeSearch = () => {
                 suppressHydrationWarning
               >
                 {isUploading ? (
-                  "جاري التحميل..."
+                  <LoadingBar fullScreen={false} size="sm" />
                 ) : (
                   <>
                     {aiImageSearchLoading ? (
-                      <Loader2 className="h-4 w-4 amimate-spin" />
+                      <LoadingBar fullScreen={false} size="sm" />
                     ) : (
                       "ابحث باستخدام هذه الصورة"
                     )}{" "}

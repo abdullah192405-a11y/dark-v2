@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getStoreInfo } from "@/actions/site-management";
 import StoreInfoForm from "./_components/StoreInfoForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import LoadingBar from "@/components/LoadingBar";
 
 const StoreInfoPage = () => {
   const [storeInfo, setStoreInfo] = useState(null);
@@ -34,7 +35,7 @@ const StoreInfoPage = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-8">جاري التحميل...</div>
+        <LoadingBar fullScreen={false} className="py-20" />
       ) : (
         <Card>
           <CardHeader>

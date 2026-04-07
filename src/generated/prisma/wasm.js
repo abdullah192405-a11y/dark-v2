@@ -470,7 +470,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "E:\\diskc\\OneDrive\\Desktop\\dark-v2\\src\\generated\\prisma",
+      "value": "/Users/abdullahmohammedahmedabdoalhwyj/dark-v2/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -479,12 +479,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "E:\\diskc\\OneDrive\\Desktop\\dark-v2\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/abdullahmohammedahmedabdoalhwyj/dark-v2/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Search, Trash2, Eye } from "lucide-react";
 import { toast } from "sonner";
+import LoadingBar from "@/components/LoadingBar";
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
@@ -68,7 +69,7 @@ const ContactList = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-8">جاري التحميل...</div>;
+    return <LoadingBar fullScreen={false} className="py-20" />;
   }
 
   return (

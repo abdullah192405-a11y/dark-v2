@@ -7,6 +7,7 @@ import { format, parseISO } from "date-fns";
 import { Calendar, Car, Clock, User, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import LoadingBar from "./LoadingBar";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -161,7 +162,7 @@ const TestDriveCard = ({
                   disabled={isCancelling}
                 >
                   {isCancelling ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <LoadingBar fullScreen={false} size="sm" />
                   ) : (
                     "إلغاء"
                   )}
@@ -221,7 +222,7 @@ const TestDriveCard = ({
               >
                 {isCancelling ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <LoadingBar fullScreen={false} size="sm" className="ml-2" />
                     جارٍ الإلغاء...
                   </>
                 ) : (

@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://crown-auto.sa";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://maxmotors.sa";
 
     // Fetch all published cars
     const cars = await prisma.car.findMany({

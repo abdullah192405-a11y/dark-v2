@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import useFetch from "../../../../../../hooks/use-fetch";
+import LoadingBar from "@/components/LoadingBar";
 import {
   createFeaturedModel,
   updateFeaturedModel,
@@ -227,7 +228,7 @@ const FeaturedModelDialog = ({ open, onClose, model, onSuccess }) => {
               <SelectContent>
                 {modelsLoading ? (
                   <SelectItem value="loading" disabled>
-                    جاري التحميل...
+                    <LoadingBar fullScreen={false} size="sm" />
                   </SelectItem>
                 ) : carModels.length > 0 ? (
                   carModels.map((modelName) => (
@@ -341,7 +342,7 @@ const FeaturedModelDialog = ({ open, onClose, model, onSuccess }) => {
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
-                  <Loader2 className="h-4 w-4 ml-2 animate-spin" />
+                  <LoadingBar fullScreen={false} size="sm" className="ml-2" />
                   جاري الحفظ...
                 </>
               ) : model ? (

@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, CheckCircle2, Loader2, Upload, X } from "lucide-react";
+import { AlertCircle, CheckCircle2, Upload, X } from "lucide-react";
 import { updateHeroSection } from "@/actions/site-management";
+import LoadingBar from "@/components/LoadingBar";
 
 export default function HeroSectionManager({ initialData }) {
   const [formData, setFormData] = useState(
@@ -480,7 +481,7 @@ export default function HeroSectionManager({ initialData }) {
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <LoadingBar fullScreen={false} size="sm" className="ml-2" />
                   جاري الحفظ...
                 </>
               ) : (

@@ -8,6 +8,7 @@ import { Calendar, User, ArrowRight, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ChatBot from "@/components/ChatBot";
+import LoadingBar from "@/components/LoadingBar";
 
 export default function ArticleDetailPage() {
   const params = useParams();
@@ -91,15 +92,10 @@ export default function ArticleDetailPage() {
     }
   };
 
+
+
   if (loading) {
-    return (
-      <div className="pt-20 flex justify-center items-center min-h-screen bg-black">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-white">جاري تحميل المقال...</p>
-        </div>
-      </div>
-    );
+    return <LoadingBar />;
   }
 
   if (error || !article) {

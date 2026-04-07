@@ -188,13 +188,13 @@ export const getStoreInfo = unstable_cache(
       if (!storeInfo) {
         storeInfo = await db.storeInfo.create({
           data: {
-            name: "Click Car Motors",
+            name: "maxmotors",
             description: "متخصصون في بيع السيارات",
             address: "الرياض، المملكة العربية السعودية",
             city: "الرياض",
             country: "السعودية",
             phone: "+966 123 456 789",
-            email: "info@clickcar.com",
+            email: "info@maxmotors.sa",
           },
         });
       }
