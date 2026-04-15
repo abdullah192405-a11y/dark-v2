@@ -82,7 +82,6 @@ export async function getDealershipInfo() {
       });
     }
 
-    // Format the data
     return {
       success: true,
       data: {
@@ -98,6 +97,65 @@ export async function getDealershipInfo() {
     return {
       success: false,
     };
+  }
+}
+
+export async function updateDealershipInfo(data) {
+  try {
+    const user = await getAuthenticatedUser();
+    if (user?.role !== "ADMIN") {
+      throw new Error("Unauthorized: Admin access required");
+    }
+
+    let dealership = await db.dealershipInfo.findFirst();
+
+    if (!dealership) {
+      dealership = await db.dealershipInfo.create({
+        data: {
+          name: data.name,
+          address: data.address,
+          phone: data.phone,
+          email: data.email,
+        },
+      });
+    } else {
+      dealership = await db.dealershipInfo.update({
+        where: { id: dealership.id },
+        data: {
+          name: data.name,
+          address: data.address,
+          phone: data.phone,
+          email: data.email,
+        },
+      });
+    }
+
+    // Also sync with StoreInfo to ensure Footer and other components are updated
+    const storeInfo = await db.storeInfo.findFirst();
+    if (storeInfo) {
+      await db.storeInfo.update({
+        where: { id: storeInfo.id },
+        data: {
+          name: data.name,
+          address: data.address,
+          phone: data.phone,
+          email: data.email,
+        },
+      });
+    }
+
+    revalidatePath("/admin/settings");
+    revalidatePath("/admin/site-data");
+    revalidatePath("/", "layout");
+    revalidatePath("/");
+
+    return {
+      success: true,
+      data: dealership,
+    };
+  } catch (error) {
+    console.error("Error updating dealership info:", error);
+    return { success: false, error: error.message };
   }
 }
 

@@ -508,7 +508,7 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
             <div className="flex items-start gap-3">
               <LocateFixed className="h-5 w-5 text-white-600 mt-1 flex-shrink-0" />
               <div>
-                <h4 className="font-medium">Click Car Motors</h4>
+                <h4 className="font-medium">{testDriveInfo.dealership?.name || "Click Car Motors"}</h4>
                 <p className="text-white-600">
                   {testDriveInfo.dealership?.address || "غير متاح"}
                 </p>

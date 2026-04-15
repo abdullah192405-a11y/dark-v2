@@ -200,8 +200,8 @@ const Footer = ({ initialData }) => {
                 <div className="flex items-start gap-2">
                   <MapPin size={18} className="text-gray-300 mt-1 flex-shrink-0" />
                   <div className="text-gray-300 text-sm">
-                    <p>{storeInfo?.address || "الرسي للأشجار الصناعية"}</p>
-                    <p>{storeInfo?.city || "الرياض"}</p>
+                    <p>{storeInfo?.address || "69 Car Street, Autoville, CA 69420"}</p>
+                    <p>{storeInfo?.city || "Autoville"}</p>
                     <a
                       href={storeInfo.latitude && storeInfo.longitude
                         ? `https://www.google.com/maps/search/?api=1&query=${storeInfo.latitude},${storeInfo.longitude}`
@@ -258,7 +258,7 @@ const Footer = ({ initialData }) => {
         </div>
         {/* Copyright */}
         <div className="pt-4 border-t border-gray-700 text-center text-gray-300">
-          <p>جميع الحقوق محفوظة {storeInfo?.name || "ماكس موتورز"} © 2025</p>
+          <p>جميع الحقوق محفوظة {storeInfo?.name || "Click Car Motors"} © 2025</p>
         </div>
       </div>
     </footer>

@@ -248,7 +248,22 @@ export async function updateStoreInfo(data) {
       });
     }
 
+    // Also sync with DealershipInfo
+    const dealership = await db.dealershipInfo.findFirst();
+    if (dealership) {
+      await db.dealershipInfo.update({
+        where: { id: dealership.id },
+        data: {
+          name: data.name,
+          address: data.address,
+          phone: data.phone,
+          email: data.email,
+        },
+      });
+    }
+
     revalidatePath("/admin/site-management/store-info");
+    revalidatePath("/admin/site-data");
     revalidatePath("/", "layout");
     return { success: true, data: storeInfo };
   } catch (error) {
