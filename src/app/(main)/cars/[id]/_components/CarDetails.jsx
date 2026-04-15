@@ -36,6 +36,7 @@ import EmiCalculator from "./EmiCalculator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { format } from "date-fns";
 import MandebSelector from "./MandebSelector";
+import ImageLightbox from "./ImageLightbox";
 
 const CarDetails = ({ car, testDriveInfo, user }) => {
   const router = useRouter();
@@ -46,6 +47,7 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
   const [mediaType, setMediaType] = useState('image'); // 'image' or 'video'
   const [carUrl, setCarUrl] = useState('');
   const [isMandebDialogOpen, setIsMandebDialogOpen] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Helper function to extract YouTube video ID and generate embed URL
   const getYouTubeEmbedUrl = (url) => {
@@ -174,13 +176,23 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
                 />
               )
             ) : car.images && car.images.length > 0 ? (
-              <Image
-                src={car.images[currentImageIndex]}
-                alt={`${car.year} ${car.make} ${car.model}`}
-                fill
-                className="object-cover"
-                priority
-              />
+              <div
+                className="w-full h-full cursor-pointer group"
+                onClick={() => setIsLightboxOpen(true)}
+              >
+                <Image
+                  src={car.images[currentImageIndex]}
+                  alt={`${car.year} ${car.make} ${car.model}`}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 text-white px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm">
+                    اضغط لعرض الصورة
+                  </span>
+                </div>
+              </div>
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                 <Car className="h-24 w-24 text-gray-400" />
@@ -580,6 +592,14 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
         isOpen={isMandebDialogOpen}
         onOpenChange={setIsMandebDialogOpen}
         car={car}
+      />
+
+      {/* Fullscreen Image Lightbox */}
+      <ImageLightbox
+        images={car.images}
+        initialIndex={currentImageIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
       />
     </div>
   );

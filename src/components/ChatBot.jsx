@@ -13,7 +13,7 @@ export default function ChatBot({ onOpenChange }) {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "مرحباً! أنا مساعد Crown Auto AI الذكي. كيف يمكنني مساعدتك اليوم؟ 🚗",
+      text: "مرحباً! أنا مساعد ماكس موتورز الذكي. كيف يمكنني مساعدتك اليوم؟ 🚗",
       sender: "bot",
       timestamp: new Date(),
       cars: [],
@@ -250,7 +250,7 @@ export default function ChatBot({ onOpenChange }) {
                 />
               </div>
               <div>
-                <h3 className="font-bold text-base md:text-lg">مساعد Crown Auto AI</h3>
+                <h3 className="font-bold text-base md:text-lg">مساعد ماكس موتورز</h3>
                 <p className="text-xs text-gray-300">متصل الآن</p>
               </div>
             </div>

@@ -1,4 +1,4 @@
-﻿"use server";
+"use server";
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "@/lib/prisma";
@@ -940,7 +940,7 @@ export async function getChatbotResponse(message, conversationHistory = []) {
     }
 
     // Create a context-aware prompt with car dealership information
-    const systemContext = `أنت مساعد ذكي لمنصة Crown Auto، منصة متخصصة في بيع وشراء السيارات في المملكة العربية السعودية.
+    const systemContext = `أنت مساعد ذكي لمنصة ماكس موتورز، منصة متخصصة في بيع وشراء السيارات في المملكة العربية السعودية.
 
 معلومات عن المنصة:
 - نوفر آلاف السيارات الجديدة والمستعملة المفحوصة

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { ArrowUp, ArrowDown, Save } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -28,6 +29,7 @@ import LoadingBar from "@/components/LoadingBar";
 const BankCRUDPage = () => {
   const [banks, setBanks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
 
   const [formState, setFormState] = useState({
     id: null,
@@ -40,6 +42,8 @@ const BankCRUDPage = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [bankToDelete, setBankToDelete] = useState(null);
 
   const fetchBanks = async () => {
     setLoading(true);
@@ -60,6 +64,46 @@ const BankCRUDPage = () => {
   useEffect(() => {
     fetchBanks();
   }, []);
+
+  const moveUp = (index) => {
+    if (index === 0) return;
+    const newBanks = [...banks];
+    const temp = newBanks[index];
+    newBanks[index] = newBanks[index - 1];
+    newBanks[index - 1] = temp;
+    setBanks(newBanks);
+  };
+
+  const moveDown = (index) => {
+    if (index === banks.length - 1) return;
+    const newBanks = [...banks];
+    const temp = newBanks[index];
+    newBanks[index] = newBanks[index + 1];
+    newBanks[index + 1] = temp;
+    setBanks(newBanks);
+  };
+
+  const saveOrder = async () => {
+    setIsSavingOrder(true);
+    try {
+      const orderData = banks.map((bank, index) => ({ id: bank.id, order: index }));
+      const res = await fetch("/api/bank", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+      const json = await res.json();
+      if (json.success) {
+        toast.success("تم حفظ الترتيب بنجاح!");
+        fetchBanks();
+      } else {
+        toast.error(json.error || "فشل حفظ الترتيب");
+      }
+    } catch (error) {
+      toast.error(error.message || "فشل حفظ الترتيب");
+    }
+    setIsSavingOrder(false);
+  };
 
   const handleInputChange = (e) => {
     setFormState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -105,8 +149,8 @@ const BankCRUDPage = () => {
     setDialogOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm("هل أنت متأكد من حذف البنك؟")) return;
+  const confirmDelete = async () => {
+    if (!bankToDelete) return;
 
     try {
       const res = await fetch("/api/bank", {
@@ -114,7 +158,7 @@ const BankCRUDPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id: bankToDelete.id }),
       });
       const json = await res.json();
       if (json.success) {
@@ -126,6 +170,8 @@ const BankCRUDPage = () => {
     } catch (error) {
       toast.error(error.message || "فشل حذف البنك");
     }
+    setDeleteDialogOpen(false);
+    setBankToDelete(null);
   };
 
   const handleSubmit = async (e) => {
@@ -181,9 +227,19 @@ const BankCRUDPage = () => {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">إدارة البنوك</h1>
-        <Button onClick={openNewDialog} size="lg">
-          + إضافة بنك جديد
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            onClick={saveOrder} 
+            size="lg" 
+            variant="outline"
+            disabled={isSavingOrder || banks.length === 0}
+          >
+            {isSavingOrder ? <LoadingBar fullScreen={false} /> : <><Save className="ml-2 w-4 h-4" /> حفظ الترتيب</>}
+          </Button>
+          <Button onClick={openNewDialog} size="lg">
+            + إضافة بنك جديد
+          </Button>
+        </div>
       </div>
 
       <div className="bg-black rounded-lg shadow overflow-hidden">
@@ -194,24 +250,25 @@ const BankCRUDPage = () => {
               <TableHead className="font-semibold text-center">الاسم</TableHead>
               <TableHead className="font-semibold text-center">سعر الفائدة</TableHead>
               <TableHead className="font-semibold text-center">سياسة القرض</TableHead>
+              <TableHead className="font-semibold text-center">الترتيب</TableHead>
               <TableHead className="font-semibold text-center">الإجراءات</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-20">
+                <TableCell colSpan={6} className="text-center py-20">
                   <LoadingBar fullScreen={false} />
                 </TableCell>
               </TableRow>
             ) : banks.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={6} className="text-center py-8 text-gray-500">
                   لا توجد بنوك للعرض
                 </TableCell>
               </TableRow>
             ) : (
-              banks.map((bank) => (
+              banks.map((bank, index) => (
                 <TableRow key={bank.id} className="hover:bg-black-50">
                   <TableCell className="text-center">
                     <div className="flex justify-center">
@@ -235,6 +292,28 @@ const BankCRUDPage = () => {
                         : bank.loanPolicy
                       : "غير محدد"}
                   </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={index === 0}
+                        onClick={() => moveUp(index)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <ArrowUp className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={index === banks.length - 1}
+                        onClick={() => moveDown(index)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <ArrowDown className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <div className="flex justify-center gap-2">
                       <Button
@@ -247,7 +326,7 @@ const BankCRUDPage = () => {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => handleDelete(bank.id)}
+                        onClick={() => { setBankToDelete(bank); setDeleteDialogOpen(true); }}
                       >
                         حذف
                       </Button>
@@ -361,6 +440,29 @@ const BankCRUDPage = () => {
               </Button>
             </DialogFooter>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="bg-black text-white max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-xl text-red-500">تأكيد الحذف</DialogTitle>
+            <DialogDescription>
+              هل أنت متأكد من حذف البنك "{bankToDelete?.name}"؟ لا يمكن التراجع عن هذا الإجراء.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 mt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => { setDeleteDialogOpen(false); setBankToDelete(null); }}
+            >
+              إلغاء
+            </Button>
+            <Button type="button" variant="destructive" onClick={confirmDelete}>
+              نعم، أحذف
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
