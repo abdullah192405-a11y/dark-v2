@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Camera, ImagePlus, Loader2, X, Upload, Loader } from "lucide-react";
+import { Loader2, Upload } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 
 import { Input } from "@/components/ui/input";
@@ -29,9 +29,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { updateCar, getCarForEdit } from "@/actions/cars";
-import { fuelTypes, transmissions, bodyTypeOptions, carStatuses } from "@/lib/data";
-
-import Image from "next/image";
+import { fuelTypes, transmissions, bodyTypeOptions, carStatuses, driveTypeOptions } from "@/lib/data";
+import CarImageGalleryEditor from "./CarImageGalleryEditor";
 import useFetch from "../../../../../../hooks/use-fetch";
 
 const EditCarForm = ({ carId }) => {
@@ -50,7 +49,18 @@ const EditCarForm = ({ carId }) => {
     color: z.string().min(1, "اللون مطلوب"),
     fuelType: z.string().min(1, "نوع الوقود مطلوب"),
     transmission: z.string().min(1, "ناقل الحركة مطلوب"),
-    bodyType: z.enum(["دفع رباعي", "سيدان", "هاتشباك", "كشف", "كوبيه", "ستيشن", "بيك أب"], {
+    bodyType: z.enum([
+      "إقتصادية",
+      "سيدان",
+      "مركبة تجارية",
+      "بيك اب",
+      "كروس أوفر",
+      "هاتشباك",
+      "suv",
+      "فان",
+      "ميني فان",
+      "رياضية",
+    ], {
       errorMap: () => ({ message: "نوع الهيكل مطلوب" }),
     }),
     seats: z.string().optional(),
@@ -61,6 +71,8 @@ const EditCarForm = ({ carId }) => {
     videoUrl: z.string().optional(),
     status: z.enum(["AVAILABLE", "UNAVAILABLE", "SOLD"]),
     featured: z.boolean().default(false),
+    isLuxury: z.boolean().default(false),
+    driveType: z.string().min(1, "نوع الدفع مطلوب"),
     testDriveAvailable: z.boolean().default(true),
     // Images are handled separately
   });
@@ -91,6 +103,8 @@ const EditCarForm = ({ carId }) => {
       videoUrl: "",
       status: "AVAILABLE",
       featured: false,
+      isLuxury: false,
+      driveType: "",
       testDriveAvailable: true,
     },
   });
@@ -142,6 +156,8 @@ const EditCarForm = ({ carId }) => {
       setValue("videoUrl", car.videoUrl || "");
       setValue("status", car.status);
       setValue("featured", car.featured);
+      setValue("isLuxury", car.isLuxury || false);
+      setValue("driveType", car.driveType || "");
       setValue("testDriveAvailable", car.testDriveAvailable);
 
       // Set existing images
@@ -226,11 +242,6 @@ const EditCarForm = ({ carId }) => {
     },
     multiple: true,
   });
-
-  // Removing the image from the uploaded images list
-  const removeImage = (index) => {
-    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
-  };
 
   if (getCarLoading) {
     return (
@@ -474,6 +485,33 @@ const EditCarForm = ({ carId }) => {
                 )}
               </div>
 
+              {/* Drive Type */}
+              <div className="space-y-2" dir="rtl">
+                <Label htmlFor="driveType" className="text-right block">نوع الدفع</Label>
+                <Select
+                  value={watch("driveType")}
+                  onValueChange={(value) => setValue("driveType", value)}
+                >
+                  <SelectTrigger
+                    className={errors.driveType ? "border-red-500 text-right" : "text-right"}
+                  >
+                    <SelectValue placeholder="اختر نوع الدفع" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {driveTypeOptions.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.driveType && (
+                  <p className="text-xs text-red-500 text-right">
+                    {errors.driveType.message}
+                  </p>
+                )}
+              </div>
+
               {/* Seats */}
               <div className="space-y-2" dir="rtl">
                 <Label htmlFor="seats" className="text-right block">
@@ -547,20 +585,39 @@ const EditCarForm = ({ carId }) => {
               />
             </div>
 
-            {/* Featured */}
-            <div className="flex items-start space-x-reverse space-x-3 space-y-0 rounded-md border p-4" dir="rtl">
-              <Checkbox
-                id="featured"
-                checked={watch("featured")}
-                onCheckedChange={(checked) => {
-                  setValue("featured", checked);
-                }}
-              />
-              <div className="space-y-1 leading-none text-right">
-                <Label htmlFor="featured">جعل هذه السيارة مميزة</Label>
-                <p className="text-sm text-gray-500">
-                  السيارات المميزة تظهر في الصفحة الرئيسية
-                </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Featured */}
+              <div className="flex items-start space-x-reverse space-x-3 space-y-0 rounded-md border p-4" dir="rtl">
+                <Checkbox
+                  id="featured"
+                  checked={watch("featured")}
+                  onCheckedChange={(checked) => {
+                    setValue("featured", checked);
+                  }}
+                />
+                <div className="space-y-1 leading-none text-right">
+                  <Label htmlFor="featured">جعل هذه السيارة مميزة</Label>
+                  <p className="text-sm text-gray-500">
+                    السيارات المميزة تظهر في الصفحة الرئيسية
+                  </p>
+                </div>
+              </div>
+
+              {/* Luxury */}
+              <div className="flex items-start space-x-reverse space-x-3 space-y-0 rounded-md border p-4" dir="rtl">
+                <Checkbox
+                  id="isLuxury"
+                  checked={watch("isLuxury")}
+                  onCheckedChange={(checked) => {
+                    setValue("isLuxury", checked);
+                  }}
+                />
+                <div className="space-y-1 leading-none text-right">
+                  <Label htmlFor="isLuxury">سيارة فارهة</Label>
+                  <p className="text-sm text-gray-500">
+                    سيتم عرض وسم "فارهة" على هذه السيارة
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -598,40 +655,10 @@ const EditCarForm = ({ carId }) => {
                 <p className="text-xs text-red-500 mt-1 text-right">{imageError}</p>
               )}
 
-              {/* Preview uploaded images */}
-              {uploadedImages.length > 0 && (
-                <div>
-                  <h3 className="text-right">تم رفع {uploadedImages.length} صورة </h3>
-                  <div className="grid xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-4 ">
-                    {uploadedImages.map((image, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="relative group rounded-md"
-                        >
-                          <Image
-                            src={image}
-                            alt={`صورة السيارة ${index + 1} `}
-                            height={50}
-                            width={50}
-                            className="h-32 w-full rounded-lg p-2 mx-auto "
-                            priority
-                          />
-                          <Button
-                            className="absolute top-1 left-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                            type="button"
-                            size="icon"
-                            variant="destructive"
-                            onClick={() => removeImage(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+              <CarImageGalleryEditor
+                images={uploadedImages}
+                setImages={setUploadedImages}
+              />
             </div>
 
             <div className="flex gap-4 justify-end">

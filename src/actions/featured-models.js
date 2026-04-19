@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 
 import { unstable_cache } from "next/cache";
+import { bodyTypeOptions as predefinedBodyTypes } from "@/lib/data";
 
 // Get unique car body types from database
 export async function getCarBodyTypes() {
@@ -22,11 +23,14 @@ export async function getCarBodyTypes() {
       },
     });
 
-    const bodyTypes = cars.map(car => car.bodyType);
+    const dbBodyTypes = cars.map(car => car.bodyType);
+    
+    // Merge with predefined ones and remove duplicates
+    const allBodyTypes = Array.from(new Set([...dbBodyTypes, ...predefinedBodyTypes])).sort();
 
     return {
       success: true,
-      data: bodyTypes,
+      data: allBodyTypes,
     };
   } catch (error) {
     console.error("Error fetching car body types:", error);
@@ -40,25 +44,17 @@ export async function getCarBodyTypes() {
 // Get all featured models (public - no auth required)
 export const getFeaturedModels = unstable_cache(
   async () => {
-    try {
-      const models = await db.featuredModel.findMany({
-        where: { isActive: true },
-        orderBy: { order: "asc" },
-      });
+    const models = await db.featuredModel.findMany({
+      where: { isActive: true },
+      orderBy: { order: "asc" },
+    });
 
-      return {
-        success: true,
-        data: models,
-      };
-    } catch (error) {
-      console.error("Error fetching featured models:", error);
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      success: true,
+      data: models,
+    };
   },
-  ["featured-models"],
+  ["home-featured-models"],
   { revalidate: 3600, tags: ["models"] }
 );
 
@@ -162,6 +158,7 @@ export async function createFeaturedModel({ name, nameAr, image, order }) {
 
     revalidatePath("/admin/featured-models");
     revalidatePath("/");
+    revalidatePath("/featured-models");
 
     return {
       success: true,
@@ -255,6 +252,7 @@ export async function updateFeaturedModel(id, { name, nameAr, image, order, isAc
 
     revalidatePath("/admin/featured-models");
     revalidatePath("/");
+    revalidatePath("/featured-models");
 
     return {
       success: true,
@@ -314,6 +312,7 @@ export async function deleteFeaturedModel(id) {
 
     revalidatePath("/admin/featured-models");
     revalidatePath("/");
+    revalidatePath("/featured-models");
 
     return {
       success: true,
@@ -359,6 +358,7 @@ export async function toggleFeaturedModelStatus(id) {
 
     revalidatePath("/admin/featured-models");
     revalidatePath("/");
+    revalidatePath("/featured-models");
 
     return {
       success: true,

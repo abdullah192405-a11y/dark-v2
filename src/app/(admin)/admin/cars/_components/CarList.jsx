@@ -198,7 +198,7 @@ const CarList = () => {
             <div className="flex items-centr justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
             </div>
-          ) : getCarsData?.success && getCarsData.data.length > 0 ? (
+          ) : getCarsData?.success && getCarsData.data?.length > 0 ? (
             <div className="overflow-x-auto">
               <Table>
                 {/* table Head */}

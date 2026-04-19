@@ -42,7 +42,7 @@ const createPrismaClient = () => {
   });
 };
 
-export const db = globalThis.prisma || createPrismaClient();
+export const db = createPrismaClient(); // globalThis.prisma || createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.prisma = db;

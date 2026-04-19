@@ -36,6 +36,8 @@ model Car {
   fuelType           String
   transmission       String
   bodyType           String
+  isLuxury           Boolean   @default(false)
+  driveType          String?
   seats              Int?
   description        String
   category           String?

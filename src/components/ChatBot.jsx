@@ -26,24 +26,42 @@ export default function ChatBot({ onOpenChange }) {
 
   // Starter message options - aligned with chatbot's search capabilities
   const starterMessages = [
- {
+    {
       id: 1,
-      text: "أبحث عن سيارة BMW أو مرسيدس موديل حديث",
-      icon: "⭐",
-      description: "سيارات فاخرة حديثة"
+      text: "هل يوجد سيارات فاخرة لديكم؟",
+      icon: "✨",
+      description: "سيارات فاخرة"
     },
     {
       id: 2,
-      text: "أبحث عن تويوتا كامري موديل 2023 أو 2024",
-      icon: "🔍",
-      description: "بحث محدد عن موديل معين"
+      text: "أبحث عن أحدث عروض السيارات المتوفرة حالياً؟",
+      icon: "🚗",
+      description: "أحدث العروض"
     },
     {
       id: 3,
-      text: "عندكم سيارات هجينة أو كهربائية؟",
-      icon: "⚡",
-      description: "سيارات صديقة للبيئة"
-    }
+      text: "ما هي أفضل سيارة اقتصادية في السعر والوقود؟",
+      icon: "💰",
+      description: "اقتصادية في السعر والوقود"
+    },
+    {
+      id: 4,
+      text: "أريد مقارنة بين موديلات السيارات المختلفة",
+      icon: "📊",
+      description: "مقارنة الموديلات"
+    },
+    {
+      id: 5,
+      text: "هل يوجد تقسيط أو تمويل بنكي؟ وما هي الشروط؟",
+      icon: "🏦",
+      description: "التقسيط والتمويل البنكي"
+    },
+    {
+      id: 6,
+      text: "أريد التواصل بخصوص عروض الشركات والمؤسسات؟",
+      icon: "🏢",
+      description: "عروض الشركات والمؤسسات"
+    },
   ];
 
   useEffect(() => {

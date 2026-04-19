@@ -40,25 +40,17 @@ export async function getCarMakes() {
 // Get all featured brands (public - no auth required)
 export const getFeaturedBrands = unstable_cache(
   async () => {
-    try {
-      const brands = await db.featuredBrand.findMany({
-        where: { isActive: true },
-        orderBy: { order: "asc" },
-      });
+    const brands = await db.featuredBrand.findMany({
+      where: { isActive: true },
+      orderBy: { order: "asc" },
+    });
 
-      return {
-        success: true,
-        data: brands,
-      };
-    } catch (error) {
-      console.error("Error fetching featured brands:", error);
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
+    return {
+      success: true,
+      data: brands,
+    };
   },
-  ["featured-brands"],
+  ["home-featured-brands"],
   { revalidate: 3600, tags: ["brands"] }
 );
 

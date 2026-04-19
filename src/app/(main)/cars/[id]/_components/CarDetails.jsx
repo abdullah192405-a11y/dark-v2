@@ -296,8 +296,13 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
 
         {/* Car Details */}
         <div className="w-full lg:w-5/12 sm:mt-4 lg:mt-0 mx-0">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <Badge className="mb-2 mt-2 sm:mt-0">{car.bodyType}</Badge>
+            {car.isLuxury && (
+              <Badge className="mb-2 mt-2 sm:mt-0 bg-yellow-500 text-black hover:bg-yellow-600 font-bold">
+                سيارة فارهة
+              </Badge>
+            )}
           </div>
 
           <h1 className="text-4xl font-bold mb-1">
@@ -322,6 +327,12 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
               <Car className="text-gray-500 h-5 w-5" />
               <span>{car.transmission}</span>
             </div>
+            {car.driveType && (
+              <div className="flex items-center gap-2">
+                <LocateFixed className="text-gray-500 h-5 w-5" />
+                <span>{car.driveType}</span>
+              </div>
+            )}
           </div>
 
           {/* Emi Calculator */}
@@ -429,6 +440,12 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
                 <span className="h-2 w-2 bg-yellow-600 rounded-full"></span>
                 {car.bodyType} نوع الهيكل
               </li>
+              {car.driveType && (
+                <li className="flex items-center gap-2">
+                  <span className="h-2 w-2 bg-yellow-600 rounded-full"></span>
+                  {car.driveType} نوع الدفع
+                </li>
+              )}
               {car.seats && (
                 <li className="flex items-center gap-2">
                   <span className="h-2 w-2 bg-yellow-600 rounded-full"></span>
@@ -485,6 +502,12 @@ const CarDetails = ({ car, testDriveInfo, user }) => {
                 {car.mileage.toLocaleString()} ميل
               </span>
             </div>
+            {car.driveType && (
+              <div className="flex justify-between py-2 border-b">
+                <span className="text-white-600">نوع الدفع</span>
+                <span className="font-medium">{car.driveType}</span>
+              </div>
+            )}
             <div className="flex justify-between py-2 border-b">
               <span className="text-white-600">اللون</span>
               <span className="font-medium">{car.color}</span>

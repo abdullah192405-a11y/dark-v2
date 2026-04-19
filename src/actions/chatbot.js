@@ -358,6 +358,13 @@ const arabicSpellingVariations = {
   "مودييل": "موديل",
   "مووديل": "موديل",
   "مودل": "موديل",
+
+  // فخامة / luxury (تصحيحات شائعة)
+  "فارهه": "فاخرة",
+  "فارهة": "فاخرة",
+  "فاره": "فاخرة",
+  "lexury": "luxury",
+  "lexuary": "luxury",
   
   "اوتوماتيك": "أوتوماتيك",
   "اوتوماتك": "أوتوماتيك",
@@ -569,6 +576,7 @@ async function searchCarsInDatabase(query, conversationHistory = []) {
       { ar: ["سي اكس 5", "سي اكس5"], en: "cx-5" },
       { ar: ["فورستر", "فورستار"], en: "forester" },
       { ar: ["امبريزا", "إمبريزا"], en: "impreza" },
+      { ar: ["راف فور", "راف4", "راف٤"], en: "rav4" },
     ];
 
     // Check if contextual search mentions any car model
@@ -604,12 +612,16 @@ async function searchCarsInDatabase(query, conversationHistory = []) {
       { ar: ["كوبيه", "كوبية"], en: "كوبيه", search: ["coupe"] },
       { ar: ["ستيشن"], en: "ستيشن", search: ["wagon", "station"] },
       { ar: ["بيك اب", "بيك أب"], en: "بيك أب", search: ["pickup", "truck"] },
+      { ar: ["رياضية", "رياضيه"], en: "رياضية", search: ["sport", "sports", "sportscar"] },
     ];
+
+    // Body / color / fuel: use current message only so stacked context + luxury لا تفرض OR متضاربة (مثلاً سيدان من لصق بطاقة + سيارة SUV في القاعدة)
+    const termsForBodyColorFuel = searchTerms;
 
     let bodyTypeConditions = [];
     bodyTypes.forEach(({ ar, en, search }) => {
-      const matchesArabic = ar.some(arabicName => contextualSearchTerms.includes(arabicName));
-      const matchesEnglish = search.some(englishName => contextualSearchTerms.includes(englishName));
+      const matchesArabic = ar.some(arabicName => termsForBodyColorFuel.includes(arabicName));
+      const matchesEnglish = search.some(englishName => termsForBodyColorFuel.includes(englishName));
       
       if (matchesArabic || matchesEnglish) {
         console.log(`✅ Matched body type: ${en}`);
@@ -627,11 +639,11 @@ async function searchCarsInDatabase(query, conversationHistory = []) {
 
     // Search by fuel type
     let fuelTypeConditions = [];
-    if (contextualSearchTerms.includes("كهربائي") || contextualSearchTerms.includes("كهربائى") || contextualSearchTerms.includes("electric")) {
+    if (termsForBodyColorFuel.includes("كهربائي") || termsForBodyColorFuel.includes("كهربائى") || termsForBodyColorFuel.includes("electric")) {
       console.log(`✅ Matched fuel type: electric`);
       fuelTypeConditions.push({ fuelType: "كهربائي" });
     }
-    if (contextualSearchTerms.includes("هجين") || contextualSearchTerms.includes("هايبرد") || contextualSearchTerms.includes("hybrid")) {
+    if (termsForBodyColorFuel.includes("هجين") || termsForBodyColorFuel.includes("هايبرد") || termsForBodyColorFuel.includes("hybrid")) {
       console.log(`✅ Matched fuel type: hybrid`);
       fuelTypeConditions.push({ 
         fuelType: { in: ["هجين", "هجين قابل للشحن"] }
@@ -662,8 +674,8 @@ async function searchCarsInDatabase(query, conversationHistory = []) {
 
     let colorConditions = [];
     colors.forEach(({ ar, en }) => {
-      const matchesArabic = ar.some(arabicName => contextualSearchTerms.includes(arabicName));
-      const matchesEnglish = en.some(englishName => contextualSearchTerms.includes(englishName.toLowerCase()));
+      const matchesArabic = ar.some(arabicName => termsForBodyColorFuel.includes(arabicName));
+      const matchesEnglish = en.some(englishName => termsForBodyColorFuel.includes(englishName.toLowerCase()));
       
       if (matchesArabic || matchesEnglish) {
         console.log(`✅ Matched color: ${en[en.length - 1]}`);
@@ -679,6 +691,36 @@ async function searchCarsInDatabase(query, conversationHistory = []) {
       // Add color to OR
       whereConditions.OR.push(...colorConditions);
       console.log(`📌 Added ${colorConditions.length} color search conditions`);
+    }
+
+    // Luxury cars: Car.isLuxury === true ⇔ وسم «فارهة» في الموقع/لوحة التحكم (same field)
+    const luxuryKeywords = [
+      "فاخر",
+      "فاخرة",
+      "فاره",
+      "فارهة",
+      "فارهه",
+      "سيارة فارهة",
+      "سيارات فارهة",
+      "وسم فارهة",
+      "بالفارهة",
+      "luxury",
+      "luxurious",
+      "lexury",
+      "lexuary",
+      "prestige",
+      "راقي",
+      "راقية",
+      "لكسري",
+      "فخم",
+      "فخمة",
+    ];
+    const wantsLuxuryCars = luxuryKeywords.some((kw) =>
+      contextualSearchTerms.includes(kw.toLowerCase())
+    );
+    if (wantsLuxuryCars) {
+      console.log("✅ Luxury intent detected — filtering by isLuxury = true");
+      whereConditions.AND.push({ isLuxury: true });
     }
 
     // Check for general "show me cars" type queries
@@ -768,31 +810,52 @@ async function searchCarsInDatabase(query, conversationHistory = []) {
       finalWhereConditions.OR = whereConditions.OR;
     }
     // If neither, just status: AVAILABLE (show featured cars)
-    
-    const cars = await db.car.findMany({
+
+    const orderBy = wantsLuxuryCars
+      ? [
+          { featured: "desc" },
+          { price: "desc" },
+          { createdAt: "desc" },
+        ]
+      : [{ featured: "desc" }, { createdAt: "desc" }];
+
+    const carSelect = {
+      id: true,
+      make: true,
+      model: true,
+      year: true,
+      price: true,
+      mileage: true,
+      color: true,
+      fuelType: true,
+      transmission: true,
+      bodyType: true,
+      seats: true,
+      description: true,
+      images: true,
+      featured: true,
+      isLuxury: true,
+    };
+
+    let cars = await db.car.findMany({
       where: finalWhereConditions,
       take: 5, // Limit to 5 results to avoid overwhelming the AI
-      orderBy: [
-        { featured: "desc" }, // Featured cars first
-        { createdAt: "desc" }
-      ],
-      select: {
-        id: true,
-        make: true,
-        model: true,
-        year: true,
-        price: true,
-        mileage: true,
-        color: true,
-        fuelType: true,
-        transmission: true,
-        bodyType: true,
-        seats: true,
-        description: true,
-        images: true,
-        featured: true,
-      }
+      orderBy,
+      select: carSelect,
     });
+
+    // فخامة + شروط OR (لون/هيكل/…) قد تُصفّر النتائج رغم وجود سيارات فارهة — أعد المحاولة بفلتر isLuxury فقط
+    if (cars.length === 0 && wantsLuxuryCars) {
+      console.log(
+        "⚠️ Luxury search returned 0 rows — retrying with status AVAILABLE + isLuxury only"
+      );
+      cars = await db.car.findMany({
+        where: { status: "AVAILABLE", isLuxury: true },
+        take: 5,
+        orderBy,
+        select: carSelect,
+      });
+    }
 
     console.log(`✅ Database returned ${cars.length} cars`);
     if (cars.length > 0) {
@@ -859,8 +922,121 @@ function formatCarsForAI(cars) {
 الوصف: ${car.description}
 رابط السيارة: ${carUrl}
 ${mainImage ? `الصورة الرئيسية: ${mainImage}` : ''}
-${car.featured ? 'تصنيف: ⭐ سيارة مميزة' : ''}`;
+${car.featured ? 'تصنيف: ⭐ سيارة مميزة' : ''}
+${car.isLuxury ? 'تصنيف: سيارة فاخرة — وسم «فارهة» (isLuxury)' : ''}`;
   }).join('\n\n');
+}
+
+const CAR_SELECT_CHATBOT = {
+  id: true,
+  make: true,
+  model: true,
+  year: true,
+  price: true,
+  mileage: true,
+  color: true,
+  fuelType: true,
+  transmission: true,
+  bodyType: true,
+  seats: true,
+  description: true,
+  images: true,
+  featured: true,
+  isLuxury: true,
+};
+
+function detectChatIntents(text) {
+  const corporate =
+    /شركات|مؤسسات|عروض الشركات|المؤسسات|جهات|أسطول|fleet|قطاع\s*حكومي/i.test(
+      text
+    );
+  const financing =
+    /تقسيط|تمويل|بنك|بنكي|قرض|قسط|أقساط|فائدة|شروط.*تمويل|loan|finance|installment|تمويلية/i.test(
+      text
+    );
+  const compare =
+    /مقارنة|قارن|مقارنه|compare|versus|\bvs\b|ضد\b|بين\s*موديل/i.test(text);
+  const economical =
+    /اقتصاد|توفير|وقود|استهلاك|رخيص|cheap|fuel|اقتصادية|أفضل\s*سيارة\s*اقتصاد/i.test(
+      text
+    );
+  const latestOffers =
+    !corporate &&
+    (/أحدث.*عروض|عروض.*السيارات|أحدث.*متوفرة|المتوفرة حالياً|وصلت\s*حديثا|new arrivals|latest\s*offers/i.test(
+      text
+    ) ||
+      /ابحث عن أحدث عروض|أبحث عن أحدث عروض/i.test(text));
+
+  return { corporate, financing, compare, economical, latestOffers };
+}
+
+async function fetchLatestOfferCars() {
+  return db.car.findMany({
+    where: { status: "AVAILABLE" },
+    take: 8,
+    orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
+    select: CAR_SELECT_CHATBOT,
+  });
+}
+
+async function fetchEconomicalCars() {
+  return db.car.findMany({
+    where: { status: "AVAILABLE" },
+    take: 8,
+    orderBy: [{ price: "asc" }, { mileage: "asc" }],
+    select: CAR_SELECT_CHATBOT,
+  });
+}
+
+async function fetchBanksForChatbot() {
+  try {
+    return await db.bank.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (e) {
+    console.error("fetchBanksForChatbot:", e);
+    return [];
+  }
+}
+
+async function fetchStoreInfoForChatbot() {
+  try {
+    return await db.storeInfo.findFirst();
+  } catch (e) {
+    console.error("fetchStoreInfoForChatbot:", e);
+    return null;
+  }
+}
+
+function formatBanksForAI(banks) {
+  if (!banks?.length) {
+    return "لا توجد بنوك مسجلة في الجدول حالياً — وجّه العميل لصفحة البنوك على الموقع أو لطلب التمويل من صفحة السيارة.";
+  }
+  return banks
+    .map((b, i) => {
+      const rate = b.interestRate != null ? Number(b.interestRate) : null;
+      const rateStr =
+        rate != null && !Number.isNaN(rate) ? `${rate}%` : "غير محدد";
+      const policy = b.loanPolicy?.trim()
+        ? `\n   سياسة التمويل / الشروط: ${b.loanPolicy}`
+        : "";
+      return `${i + 1}. **${b.name}** — نسبة الفائدة السنوية التقريبية: ${rateStr}${policy}`;
+    })
+    .join("\n\n");
+}
+
+function formatStoreForAI(store) {
+  if (!store) return "لا تتوفر بيانات متجر في قاعدة البيانات.";
+  const parts = [
+    store.name && `اسم المعرض: ${store.name}`,
+    store.phone && `هاتف: ${store.phone}`,
+    store.whatsapp && `واتساب: ${store.whatsapp}`,
+    store.email && `بريد: ${store.email}`,
+    [store.address, store.city, store.country].filter(Boolean).join("، ") &&
+      `عنوان: ${[store.address, store.city, store.country].filter(Boolean).join("، ")}`,
+    store.description && `نبذة: ${store.description}`,
+  ].filter(Boolean);
+  return parts.join("\n");
 }
 
 export async function getChatbotResponse(message, conversationHistory = []) {
@@ -893,14 +1069,99 @@ export async function getChatbotResponse(message, conversationHistory = []) {
       }
     }
 
-    // Search for relevant cars in the database
-    console.log('🔍 Searching database for cars with conversation context...');
-    const relevantCars = await searchCarsInDatabase(correctedMessage, conversationHistory);
+    const intents = detectChatIntents(correctedMessage);
+    console.log("🎯 Chat intents:", intents);
+
+    let relevantCars = [];
+    if (intents.economical) {
+      relevantCars = await fetchEconomicalCars();
+      console.log("🔍 Using economical (low price) car set");
+    } else if (intents.latestOffers) {
+      relevantCars = await fetchLatestOfferCars();
+      console.log("🔍 Using latest offers / newest arrivals car set");
+    } else {
+      console.log(
+        "🔍 Searching database for cars with conversation context..."
+      );
+      relevantCars = await searchCarsInDatabase(
+        correctedMessage,
+        conversationHistory
+      );
+    }
+
+    if (intents.compare && relevantCars.length < 2) {
+      const sample = await fetchLatestOfferCars();
+      if (sample.length >= 2) {
+        relevantCars = sample;
+        console.log("🔍 Compare intent: using diverse latest cars for comparison");
+      }
+    }
+
+    if (
+      (intents.financing || intents.corporate) &&
+      relevantCars.length === 0
+    ) {
+      relevantCars = await fetchLatestOfferCars();
+      console.log("🔍 Added sample cars for financing/corporate context");
+    }
+
     console.log(`✅ Found ${relevantCars.length} cars in database`);
-    
+
+    const banks = intents.financing ? await fetchBanksForChatbot() : [];
+    const storeInfo =
+      intents.financing || intents.corporate
+        ? await fetchStoreInfoForChatbot()
+        : null;
+
+    const banksContext = intents.financing
+      ? `\n\n=== بيانات البنوك والتمويل (من جدول البنوك في لوحة التحكم) ===\n${formatBanksForAI(banks)}`
+      : "";
+
+    const storeContactContext =
+      intents.financing || intents.corporate
+        ? `\n\n=== بيانات التواصل الرسمية للمعرض (من إعدادات المتجر) ===\n${formatStoreForAI(storeInfo)}`
+        : "";
+
+    let intentInstructions = "";
+    if (intents.compare) {
+      intentInstructions += `
+موضوع الرسالة: **مقارنة بين موديلات**.
+- اسأل العميل بلطف عن **موديلين أو أكثر** يريد مقارنتها بالاسم (مثلاً: كامري مقابل ألتيما)، أو قارِن بين سيارتين **من القائمة أدناه** إذا وُجد أكثر من خيار.
+- قدّم مقارنة منظمة (سعر، سنة، وقود، ناقل حركة، هيكل، تمييز) باستخدام **نفس أسماء الماركة والموديل كما في القاعدة**.
+- لا تخترع سيارات غير موجودة في القائمة أو في سياق المحادثة السابقة.
+`;
+    }
+    if (intents.economical) {
+      intentInstructions += `
+موضوع الرسالة: **أفضل اقتصادية في السعر والوقود**.
+- ركّز على **أقل الأسعار** وأنواع الوقود **المنطقية للتوفير** (هجين، بنزين، إلخ) حسب بيانات القائمة فقط.
+`;
+    }
+    if (intents.latestOffers) {
+      intentInstructions += `
+موضوع الرسالة: **أحدث العروض والسيارات المتوفرة حالياً**.
+- قدّم السيارات كأحدث إضافات أو عروض مميزة حسب ترتيب القائمة (⭐ مميزة ثم الأحدث وصولاً).
+`;
+    }
+    if (intents.financing) {
+      intentInstructions += `
+موضوع الرسالة: **التقسيط أو التمويل البنكي والشروط**.
+- اشرح التمويل **اعتماداً على بيانات البنوك في القسم أعلاه** (نسبة الفائدة، سياسة التمويل إن وُجدت).
+- التفاصيل النهائية والموافقة من عند البنك؛ يمكن للعميل متابعة طلب التمويل من صفحة السيارة عند توفر النموذج.
+- استخدم بيانات التواصل للمعرض عند الحاجة لتوجيه العميل.
+`;
+    }
+    if (intents.corporate) {
+      intentInstructions += `
+موضوع الرسالة: **عروض الشركات والمؤسسات**.
+- ركّز على **التنسيق عبر قنوات التواصل الرسمية** في قسم «بيانات التواصل» أعلاه (هاتف، واتساب، بريد).
+- لا تخترع أرقاماً أو سياسات غير مذكورة في البيانات المقدمة.
+`;
+    }
+
     // Format car data for the AI
     const carsContext = formatCarsForAI(relevantCars);
-    console.log('📝 Formatted cars context for AI');
+    console.log("📝 Formatted cars context for AI");
 
     // Enhanced price query detection and handling
     let priceContext = "";
@@ -941,11 +1202,12 @@ export async function getChatbotResponse(message, conversationHistory = []) {
 
     // Create a context-aware prompt with car dealership information
     const systemContext = `أنت مساعد ذكي لمنصة ماكس موتورز، منصة متخصصة في بيع وشراء السيارات في المملكة العربية السعودية.
-
+${intentInstructions}
 معلومات عن المنصة:
 - نوفر آلاف السيارات الجديدة والمستعملة المفحوصة
 - يمكن للمستخدمين حجز اختبار قيادة بسهولة عبر الإنترنت
 - لدينا علامات تجارية مميزة مثل: تويوتا، BMW، مرسيدس، هيونداي، كيا، نيسان، فورد، شيفروليه
+- **سيارة فاخرة (luxury)** = أي سيارة عليها وسم **«فارهة»** في الموقع؛ هذا يطابق الحقل isLuxury في قاعدة البيانات. لا تُسمِّ سيارة «فاخرة» إلا إذا وردت في النتائج أدناه مع سطر يذكر وسم الفارهة أو isLuxury
 - نوفر سيارات كهربائية وهجينة
 - جميع السيارات تأتي مع تقرير فحص شامل
 - عملية شراء آمنة ومضمونة
@@ -979,6 +1241,7 @@ export async function getChatbotResponse(message, conversationHistory = []) {
 - مثال: إذا تحدثت عن السيارة 1 والسيارة 3، أضف: [CARS_TO_SHOW]1,3
 - **قاعدة حاسمة**: عند ذكر أسماء السيارات في ردك، استخدم **بالضبط** نفس أسماء العلامات التجارية والموديلات الموجودة في قاعدة البيانات أعلاه (مثال: إذا كانت السيارة في القاعدة هي "تويوتا كامري"، اذكرها "تويوتا كامري" وليس "تاما كامري" أو أي تهجئة أخرى)
 - **يجب أن تتطابق أسماء السيارات في ردك مع الأسماء في قاعدة البيانات تماماً** لضمان تطابق بطاقات السيارات المعروضة مع النص
+${banksContext}${storeContactContext}
 ${previousCarsContext}
 
 السيارات المتوفرة حالياً في قاعدة البيانات (نتائج البحث الحالية):

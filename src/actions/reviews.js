@@ -111,18 +111,13 @@ export async function addReview(formData) {
 // getHomeReviews - fetch limited reviews for homepage with caching
 export const getHomeReviews = unstable_cache(
   async (limit = 3) => {
-    try {
-      const reviews = await db.review.findMany({
-        take: limit,
-        orderBy: { createdAt: "desc" },
-      });
-      return reviews;
-    } catch (error) {
-      console.error("Error fetching home reviews:", error);
-      return [];
-    }
+    const reviews = await db.review.findMany({
+      take: limit,
+      orderBy: { createdAt: "desc" },
+    });
+    return reviews;
   },
-  ["home-reviews"],
+  ["home-reviews-list"],
   { revalidate: 3600, tags: ["reviews"] }
 );
 

@@ -14,41 +14,30 @@ async function fileToBase64(file) {
 }
 
 import { unstable_cache } from "next/cache";
+import { carDisplayPriorityOrderBy } from "@/lib/data";
 
 export const getFeaturedCars = unstable_cache(
   async (limit = 4) => {
-    try {
-      const cars = await db.Car.findMany({
-        where: {
-          featured: true,
-          status: "AVAILABLE",
-        },
-        take: limit,
-        orderBy: { createdAt: "desc" },
-      });
+    const orderBy = [...carDisplayPriorityOrderBy, { createdAt: "desc" }];
 
-      if (!cars || cars.length === 0) {
-        return {
-          success: true,
-          data: [],
-        };
-      }
+    const cars = await db.car.findMany({
+      where: { status: "AVAILABLE" },
+      take: limit,
+      orderBy,
+    });
 
-      const serializedCars = cars.map(serializedCarsData);
-
-      return {
-        success: true,
-        data: serializedCars,
-      };
-    } catch (error) {
-      console.error(`Error in getFeaturedCars server action -> ${error.message}`);
-      return {
-        success: false,
-        data: [],
-      };
+    if (!cars.length) {
+      return { success: true, data: [] };
     }
+
+    const serializedCars = cars.map((c) => serializedCarsData(c));
+
+    return {
+      success: true,
+      data: serializedCars,
+    };
   },
-  ["featured-cars"],
+  ["home-featured-cars"],
   { revalidate: 3600, tags: ["cars"] }
 );
 
@@ -112,7 +101,7 @@ export async function processAiImageSearch(formData) {
     const prompt = `
       قم بتحليل صورة السيارة هذه واستخراج المعلومات التالية لاستعلام البحث:
       1. الشركة المصنعة (Make) - بالعربية فقط
-      2. نوع الهيكل - اختر واحداً فقط من: دفع رباعي، سيدان، هاتشباك، كشف، كوبيه، ستيشن، بيك أب
+      2. نوع الهيكل - اختر واحداً فقط من: دفع رباعي، سيدان، هاتشباك، كشف، كوبيه، ستيشن، بيك أب، رياضية
       3. اللون - بالعربية فقط
 
       قم بتنسيق إجابتك ككائن JSON نظيف بهذه الحقول:
@@ -125,7 +114,7 @@ export async function processAiImageSearch(formData) {
 
       مهم جداً: 
       - يجب أن تكون جميع حقول النص (make, bodyType, color) باللغة العربية فقط.
-      - نوع الهيكل (bodyType) يجب أن يكون بالضبط واحد من هذه القيم: "دفع رباعي" أو "سيدان" أو "هاتشباك" أو "كشف" أو "كوبيه" أو "ستيشن" أو "بيك أب"
+      - نوع الهيكل (bodyType) يجب أن يكون بالضبط واحد من هذه القيم: "دفع رباعي" أو "سيدان" أو "هاتشباك" أو "كشف" أو "كوبيه" أو "ستيشن" أو "بيك أب" أو "رياضية"
       - بالنسبة للثقة (confidence)، قدم قيمة بين 0 و 1 تمثل مدى ثقتك في التعرف العام.
       قم بالرد بكائن JSON فقط، لا شيء آخر. يجب أن تكون جميع القيم النصية باللغة العربية.
       `;

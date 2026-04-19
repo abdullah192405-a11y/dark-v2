@@ -7,7 +7,8 @@ import { revalidatePath } from "next/cache";
 import {
   fuelTypes as predefinedFuelTypes,
   transmissions as predefinedTransmissions,
-  bodyTypeOptions as predefinedBodyTypes
+  bodyTypeOptions as predefinedBodyTypes,
+  carDisplayPriorityOrderBy,
 } from "@/lib/data";
 
 import { unstable_cache } from "next/cache";
@@ -138,20 +139,20 @@ export async function getCarsByFilters({
 
     const skip = (page - 1) * limit;
 
-    // Determine sort order
-    let orderBy = {};
+    // Determine sort order (فارهة → featured → normal, then price or date)
+    let orderBy = [];
     switch (sortBy) {
       case "priceAsc":
-        orderBy = { price: "asc" };
+        orderBy = [...carDisplayPriorityOrderBy, { price: "asc" }];
         break;
 
       case "priceDesc":
-        orderBy = { price: "desc" };
+        orderBy = [...carDisplayPriorityOrderBy, { price: "desc" }];
         break;
 
       case "newest":
       default:
-        orderBy = { createdAt: "desc" };
+        orderBy = [...carDisplayPriorityOrderBy, { createdAt: "desc" }];
         break;
     }
 

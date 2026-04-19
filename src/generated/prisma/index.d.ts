@@ -4141,6 +4141,8 @@ export namespace Prisma {
     fuelType: string | null
     transmission: string | null
     bodyType: string | null
+    isLuxury: boolean | null
+    driveType: string | null
     seats: number | null
     description: string | null
     category: string | null
@@ -4163,6 +4165,8 @@ export namespace Prisma {
     fuelType: string | null
     transmission: string | null
     bodyType: string | null
+    isLuxury: boolean | null
+    driveType: string | null
     seats: number | null
     description: string | null
     category: string | null
@@ -4185,6 +4189,8 @@ export namespace Prisma {
     fuelType: number
     transmission: number
     bodyType: number
+    isLuxury: number
+    driveType: number
     seats: number
     description: number
     category: number
@@ -4224,6 +4230,8 @@ export namespace Prisma {
     fuelType?: true
     transmission?: true
     bodyType?: true
+    isLuxury?: true
+    driveType?: true
     seats?: true
     description?: true
     category?: true
@@ -4246,6 +4254,8 @@ export namespace Prisma {
     fuelType?: true
     transmission?: true
     bodyType?: true
+    isLuxury?: true
+    driveType?: true
     seats?: true
     description?: true
     category?: true
@@ -4268,6 +4278,8 @@ export namespace Prisma {
     fuelType?: true
     transmission?: true
     bodyType?: true
+    isLuxury?: true
+    driveType?: true
     seats?: true
     description?: true
     category?: true
@@ -4378,6 +4390,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury: boolean
+    driveType: string | null
     seats: number | null
     description: string
     category: string | null
@@ -4420,6 +4434,8 @@ export namespace Prisma {
     fuelType?: boolean
     transmission?: boolean
     bodyType?: boolean
+    isLuxury?: boolean
+    driveType?: boolean
     seats?: boolean
     description?: boolean
     category?: boolean
@@ -4447,6 +4463,8 @@ export namespace Prisma {
     fuelType?: boolean
     transmission?: boolean
     bodyType?: boolean
+    isLuxury?: boolean
+    driveType?: boolean
     seats?: boolean
     description?: boolean
     category?: boolean
@@ -4470,6 +4488,8 @@ export namespace Prisma {
     fuelType?: boolean
     transmission?: boolean
     bodyType?: boolean
+    isLuxury?: boolean
+    driveType?: boolean
     seats?: boolean
     description?: boolean
     category?: boolean
@@ -4493,6 +4513,8 @@ export namespace Prisma {
     fuelType?: boolean
     transmission?: boolean
     bodyType?: boolean
+    isLuxury?: boolean
+    driveType?: boolean
     seats?: boolean
     description?: boolean
     category?: boolean
@@ -4505,7 +4527,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CarOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "make" | "model" | "year" | "price" | "mileage" | "color" | "fuelType" | "transmission" | "bodyType" | "seats" | "description" | "category" | "videoUrl" | "status" | "featured" | "testDriveAvailable" | "images" | "createdAt" | "updatedAt", ExtArgs["result"]["car"]>
+  export type CarOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "make" | "model" | "year" | "price" | "mileage" | "color" | "fuelType" | "transmission" | "bodyType" | "isLuxury" | "driveType" | "seats" | "description" | "category" | "videoUrl" | "status" | "featured" | "testDriveAvailable" | "images" | "createdAt" | "updatedAt", ExtArgs["result"]["car"]>
   export type CarInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     testDriveBookings?: boolean | Car$testDriveBookingsArgs<ExtArgs>
     savedBy?: boolean | Car$savedByArgs<ExtArgs>
@@ -4533,6 +4555,8 @@ export namespace Prisma {
       fuelType: string
       transmission: string
       bodyType: string
+      isLuxury: boolean
+      driveType: string | null
       seats: number | null
       description: string
       category: string | null
@@ -4979,6 +5003,8 @@ export namespace Prisma {
     readonly fuelType: FieldRef<"Car", 'String'>
     readonly transmission: FieldRef<"Car", 'String'>
     readonly bodyType: FieldRef<"Car", 'String'>
+    readonly isLuxury: FieldRef<"Car", 'Boolean'>
+    readonly driveType: FieldRef<"Car", 'String'>
     readonly seats: FieldRef<"Car", 'Int'>
     readonly description: FieldRef<"Car", 'String'>
     readonly category: FieldRef<"Car", 'String'>
@@ -26411,6 +26437,8 @@ export namespace Prisma {
     fuelType: 'fuelType',
     transmission: 'transmission',
     bodyType: 'bodyType',
+    isLuxury: 'isLuxury',
+    driveType: 'driveType',
     seats: 'seats',
     description: 'description',
     category: 'category',
@@ -26859,6 +26887,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'CarStatus'
    */
   export type EnumCarStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CarStatus'>
@@ -26869,13 +26904,6 @@ export namespace Prisma {
    * Reference to a field of type 'CarStatus[]'
    */
   export type ListEnumCarStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CarStatus[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -27038,6 +27066,8 @@ export namespace Prisma {
     fuelType?: StringFilter<"Car"> | string
     transmission?: StringFilter<"Car"> | string
     bodyType?: StringFilter<"Car"> | string
+    isLuxury?: BoolFilter<"Car"> | boolean
+    driveType?: StringNullableFilter<"Car"> | string | null
     seats?: IntNullableFilter<"Car"> | number | null
     description?: StringFilter<"Car"> | string
     category?: StringNullableFilter<"Car"> | string | null
@@ -27064,6 +27094,8 @@ export namespace Prisma {
     fuelType?: SortOrder
     transmission?: SortOrder
     bodyType?: SortOrder
+    isLuxury?: SortOrder
+    driveType?: SortOrderInput | SortOrder
     seats?: SortOrderInput | SortOrder
     description?: SortOrder
     category?: SortOrderInput | SortOrder
@@ -27093,6 +27125,8 @@ export namespace Prisma {
     fuelType?: StringFilter<"Car"> | string
     transmission?: StringFilter<"Car"> | string
     bodyType?: StringFilter<"Car"> | string
+    isLuxury?: BoolFilter<"Car"> | boolean
+    driveType?: StringNullableFilter<"Car"> | string | null
     seats?: IntNullableFilter<"Car"> | number | null
     description?: StringFilter<"Car"> | string
     category?: StringNullableFilter<"Car"> | string | null
@@ -27119,6 +27153,8 @@ export namespace Prisma {
     fuelType?: SortOrder
     transmission?: SortOrder
     bodyType?: SortOrder
+    isLuxury?: SortOrder
+    driveType?: SortOrderInput | SortOrder
     seats?: SortOrderInput | SortOrder
     description?: SortOrder
     category?: SortOrderInput | SortOrder
@@ -27150,6 +27186,8 @@ export namespace Prisma {
     fuelType?: StringWithAggregatesFilter<"Car"> | string
     transmission?: StringWithAggregatesFilter<"Car"> | string
     bodyType?: StringWithAggregatesFilter<"Car"> | string
+    isLuxury?: BoolWithAggregatesFilter<"Car"> | boolean
+    driveType?: StringNullableWithAggregatesFilter<"Car"> | string | null
     seats?: IntNullableWithAggregatesFilter<"Car"> | number | null
     description?: StringWithAggregatesFilter<"Car"> | string
     category?: StringNullableWithAggregatesFilter<"Car"> | string | null
@@ -28775,6 +28813,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -28801,6 +28841,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -28827,6 +28869,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28853,6 +28897,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28879,6 +28925,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -28902,6 +28950,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28925,6 +28975,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30903,6 +30955,11 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -30919,11 +30976,6 @@ export namespace Prisma {
     in?: $Enums.CarStatus[] | ListEnumCarStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.CarStatus[] | ListEnumCarStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumCarStatusFilter<$PrismaModel> | $Enums.CarStatus
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -30955,6 +31007,8 @@ export namespace Prisma {
     fuelType?: SortOrder
     transmission?: SortOrder
     bodyType?: SortOrder
+    isLuxury?: SortOrder
+    driveType?: SortOrder
     seats?: SortOrder
     description?: SortOrder
     category?: SortOrder
@@ -30985,6 +31039,8 @@ export namespace Prisma {
     fuelType?: SortOrder
     transmission?: SortOrder
     bodyType?: SortOrder
+    isLuxury?: SortOrder
+    driveType?: SortOrder
     seats?: SortOrder
     description?: SortOrder
     category?: SortOrder
@@ -31007,6 +31063,8 @@ export namespace Prisma {
     fuelType?: SortOrder
     transmission?: SortOrder
     bodyType?: SortOrder
+    isLuxury?: SortOrder
+    driveType?: SortOrder
     seats?: SortOrder
     description?: SortOrder
     category?: SortOrder
@@ -31057,6 +31115,14 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -31081,14 +31147,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCarStatusFilter<$PrismaModel>
     _max?: NestedEnumCarStatusFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type WorkingHourListRelationFilter = {
@@ -32259,6 +32317,10 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type NullableIntFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
@@ -32269,10 +32331,6 @@ export namespace Prisma {
 
   export type EnumCarStatusFieldUpdateOperationsInput = {
     set?: $Enums.CarStatus
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type CarUpdateimagesInput = {
@@ -32770,16 +32828,16 @@ export namespace Prisma {
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedEnumCarStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.CarStatus | EnumCarStatusFieldRefInput<$PrismaModel>
     in?: $Enums.CarStatus[] | ListEnumCarStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.CarStatus[] | ListEnumCarStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumCarStatusFilter<$PrismaModel> | $Enums.CarStatus
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -32825,6 +32883,14 @@ export namespace Prisma {
     _max?: NestedDecimalFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -32860,14 +32926,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumCarStatusFilter<$PrismaModel>
     _max?: NestedEnumCarStatusFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumDayOfWeekFilter<$PrismaModel = never> = {
@@ -33525,6 +33583,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -33550,6 +33610,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -33626,6 +33688,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33651,6 +33715,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33717,6 +33783,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -33742,6 +33810,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -33818,6 +33888,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33843,6 +33915,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34081,6 +34155,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -34106,6 +34182,8 @@ export namespace Prisma {
     fuelType: string
     transmission: string
     bodyType: string
+    isLuxury?: boolean
+    driveType?: string | null
     seats?: number | null
     description: string
     category?: string | null
@@ -34172,6 +34250,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34197,6 +34277,8 @@ export namespace Prisma {
     fuelType?: StringFieldUpdateOperationsInput | string
     transmission?: StringFieldUpdateOperationsInput | string
     bodyType?: StringFieldUpdateOperationsInput | string
+    isLuxury?: BoolFieldUpdateOperationsInput | boolean
+    driveType?: NullableStringFieldUpdateOperationsInput | string | null
     seats?: NullableIntFieldUpdateOperationsInput | number | null
     description?: StringFieldUpdateOperationsInput | string
     category?: NullableStringFieldUpdateOperationsInput | string | null

@@ -9,7 +9,7 @@ import { db } from "@/lib/prisma";
 import { createClient } from "@/lib/superbase";
 import { auth } from "@clerk/nextjs/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 import { checkPermission } from "@/lib/permissions";
@@ -65,7 +65,7 @@ export async function processCarImageWithAI(formData) {
       2. الموديل (Model)
       3. السنة (تقريباً)
       4. اللون
-      5. نوع الهيكل - اختر واحداً فقط من: دفع رباعي، سيدان، هاتشباك، كشف، كوبيه، ستيشن، بيك أب
+      5. نوع الهيكل - اختر واحداً فقط من: دفع رباعي، سيدان، هاتشباك، كشف، كوبيه، ستيشن، بيك أب، رياضية
       6. استهلاك الوقود (تخمينك الأفضل بالكيلومتر لكل لتر ويجب أن يكون رقم في نص)
       7. نوع الوقود - اختر واحداً فقط من: بنزين، ديزل، كهربائي، هجين، هجين قابل للشحن
       8. نوع ناقل الحركة - اختر واحداً فقط من: أوتوماتيك، يدوي، نصف أوتوماتيك
@@ -89,7 +89,7 @@ export async function processCarImageWithAI(formData) {
       }
 
       مهم جداً:
-      - نوع الهيكل (bodyType) يجب أن يكون بالضبط واحد من: "دفع رباعي" أو "سيدان" أو "هاتشباك" أو "كشف" أو "كوبيه" أو "ستيشن" أو "بيك أب"
+      - نوع الهيكل (bodyType) يجب أن يكون بالضبط واحد من: "دفع رباعي" أو "سيدان" أو "هاتشباك" أو "كشف" أو "كوبيه" أو "ستيشن" أو "بيك أب" أو "رياضية"
       - نوع الوقود (fuelType) يجب أن يكون واحد من: "بنزين" أو "ديزل" أو "كهربائي" أو "هجين" أو "هجين قابل للشحن"
       - ناقل الحركة (transmission) يجب أن يكون واحد من: "أوتوماتيك" أو "يدوي" أو "نصف أوتوماتيك"
       - بالنسبة للثقة (confidence)، قدم قيمة بين 0 و 1 تمثل مدى ثقتك في التعرف العام.
@@ -264,12 +264,15 @@ export async function addCarToDB({ carData, images }) {
         videoUrl: carData.videoUrl,
         status: carData.status,
         featured: carData.featured,
+        isLuxury: carData.isLuxury,
+        driveType: carData.driveType,
         testDriveAvailable: carData.testDriveAvailable,
         images: imageUrls, // Store the array of image URLs
       },
     });
 
     revalidatePath("/admin/cars");
+    revalidateTag("cars");
 
     return {
       success: true,
@@ -313,7 +316,7 @@ export async function getCars(search = "") {
   } catch (error) {
     console.error(`Error while gettingCars from DB ${error}`);
     return {
-      success: true,
+      success: false,
       error: error.message,
     };
   }
@@ -375,6 +378,7 @@ export async function deleteCars(carId) {
     }
 
     revalidatePath("/admin/cars");
+    revalidateTag("cars");
     return {
       success: true,
     };
@@ -408,6 +412,7 @@ export async function updateCarStatus(id, { status, featured, testDriveAvailable
     });
 
     revalidatePath("/admin/cars");
+    revalidateTag("cars");
     return {
       success: true,
     };
@@ -507,6 +512,8 @@ export async function updateCar(id, carData, newImages = []) {
         videoUrl: carData.videoUrl,
         status: carData.status,
         featured: carData.featured,
+        isLuxury: carData.isLuxury,
+        driveType: carData.driveType,
         testDriveAvailable: carData.testDriveAvailable,
         images: imageUrls, // update images if new ones provided
       },
@@ -514,6 +521,7 @@ export async function updateCar(id, carData, newImages = []) {
 
     revalidatePath("/admin/cars");
     revalidatePath(`/admin/cars/${id}/edit`);
+    revalidateTag("cars");
 
     return {
       success: true,

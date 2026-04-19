@@ -69,14 +69,28 @@ export default async function RootLayout({ children }) {
   const pathname = headerList.get("x-invoke-path") || "";
   const isSignUpPage = pathname.includes("/sign-up");
 
-  // Fetch all layout data on server in parallel
-  const [navLogoRes, footerLogoRes, socialLinks, storeInfo, pixelSettingsRes] = await Promise.all([
+  // Fetch all layout data on server in parallel. Logos/pixels use actions that catch DB errors;
+  // these raw queries must not crash the whole app when the DB is unreachable (e.g. Supabase paused, network).
+  const [navLogoRes, footerLogoRes, pixelSettingsRes, footerDb] = await Promise.all([
     getLogoByType("navbar"),
     getLogoByType("footer"),
-    db.socialMedia.findMany({ where: { isActive: true }, orderBy: { order: "asc" } }),
-    db.storeInfo.findFirst(),
-    getPixelSettings()
+    getPixelSettings(),
+    (async () => {
+      try {
+        const [socialLinks, storeInfo] = await Promise.all([
+          db.socialMedia.findMany({ where: { isActive: true }, orderBy: { order: "asc" } }),
+          db.storeInfo.findFirst(),
+        ]);
+        return { socialLinks, storeInfo };
+      } catch (e) {
+        console.error("[layout] Footer DB (socialMedia / storeInfo) unavailable:", e?.message || e);
+        return { socialLinks: [], storeInfo: null };
+      }
+    })(),
   ]);
+
+  const socialLinks = footerDb.socialLinks;
+  const storeInfo = footerDb.storeInfo;
 
   const pixels = pixelSettingsRes?.data || {};
 

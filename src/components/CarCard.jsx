@@ -123,11 +123,21 @@ const CarCard = ({ car, isFeatured }) => {
         </div>
 
         <div className="flex flex-wrap gap-1 mb-4">
+          {car.isLuxury && (
+            <Badge className="bg-yellow-500 text-black border-yellow-500 hover:bg-yellow-600">
+              فارهة
+            </Badge>
+          )}
+
           <Badge variant="outline" className="bg-black/30">
             {car.bodyType}
           </Badge>
 
-
+          {car.driveType && (
+            <Badge variant="outline" className="bg-black/30">
+              {car.driveType}
+            </Badge>
+          )}
 
           <Badge variant="outline" className="bg-black/30">
             {car.mileage.toLocaleString()} ميل

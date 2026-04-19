@@ -145,6 +145,8 @@ exports.Prisma.CarScalarFieldEnum = {
   fuelType: 'fuelType',
   transmission: 'transmission',
   bodyType: 'bodyType',
+  isLuxury: 'isLuxury',
+  driveType: 'driveType',
   seats: 'seats',
   description: 'description',
   category: 'category',

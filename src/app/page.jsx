@@ -1,6 +1,5 @@
 import { ChevronLeft, Car, Calendar, Shield } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { getFeaturedCars } from "@/actions/home";
 import { getFeaturedBrands } from "@/actions/featured-brands";
 import { getFeaturedModels } from "@/actions/featured-models";
@@ -9,7 +8,6 @@ import { getWhatsAppNumber, getHeroSection, getLogoByType } from "@/actions/site
 import { getHomeReviews } from "@/actions/reviews";
 import { db } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { faqItems } from "@/lib/data";
 
@@ -17,6 +15,7 @@ import LinkWithLoader from "@/components/LinkWithLoader";
 import HomeSearch from "@/components/HomeSearch";
 import CarCard from "@/components/CarCard";
 import FeaturedBrandCard from "@/components/FeaturedBrandCard";
+import FeaturedModelCard from "@/components/FeaturedModelCard";
 import BankCard from "@/components/BankCard";
 import ChatBot from "@/components/ChatBot";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -24,8 +23,17 @@ import LetterByLetterText from "@/components/LetterByLetterText";
 import ScrollAnimate from "@/components/ScrollAnimate";
 import VideoPlayer from "@/components/VideoPlayer";
 
+async function homeSafe(promiseFn, fallback) {
+  try {
+    return await promiseFn();
+  } catch (e) {
+    console.error("[home] fetch failed:", e?.message || e);
+    return fallback;
+  }
+}
+
 export default async function Home() {
-  // Parallel data fetching on the server
+  // Parallel data fetching on the server (errors must not be cached as empty — see actions/banks etc.)
   const [
     featuredCarsRes,
     featuredBrandsRes,
@@ -36,14 +44,14 @@ export default async function Home() {
     mainLogoRes,
     reviewsRes
   ] = await Promise.all([
-    getFeaturedCars(),
-    getFeaturedBrands(),
-    getFeaturedModels(),
-    getBanks(),
-    getHeroSection(),
-    getWhatsAppNumber(),
-    getLogoByType("main"),
-    getHomeReviews(3)
+    homeSafe(() => getFeaturedCars(), { data: [] }),
+    homeSafe(() => getFeaturedBrands(), { data: [] }),
+    homeSafe(() => getFeaturedModels(), { data: [] }),
+    homeSafe(() => getBanks(), { data: [] }),
+    homeSafe(() => getHeroSection(), { data: null }),
+    homeSafe(() => getWhatsAppNumber(), { data: null }),
+    homeSafe(() => getLogoByType("main"), { data: null }),
+    homeSafe(() => getHomeReviews(3), [])
   ]);
 
   const featuredCars = featuredCarsRes?.data || [];
@@ -151,22 +159,20 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Banks Section */}
+      {/* Banks Section — avoid ScrollAnimate here so tiles are not stuck at opacity:0 if animation never runs */}
       <section className="py-20 px-6 md:px-12 bg-black/50 backdrop-blur-sm">
         <div className="container mx-auto">
-          <ScrollAnimate>
-            <div className="flex justify-between items-center mb-12">
-              <h2 className="text-3xl font-bold text-white">البنوك الشريكة</h2>
-              <LinkWithLoader href="/banks">
-                <Button variant="ghost" className="text-white">عرض الكل <ChevronLeft className="mr-1 h-4 w-4" /></Button>
-              </LinkWithLoader>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-              {banks.slice(0, 6).map((bank) => (
-                <BankCard key={bank.id} bank={bank} />
-              ))}
-            </div>
-          </ScrollAnimate>
+          <div className="flex justify-between items-center mb-12">
+            <h2 className="text-3xl font-bold text-white">البنوك الشريكة</h2>
+            <LinkWithLoader href="/banks">
+              <Button variant="ghost" className="text-white">عرض الكل <ChevronLeft className="mr-1 h-4 w-4" /></Button>
+            </LinkWithLoader>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            {banks.slice(0, 6).map((bank) => (
+              <BankCard key={bank.id} bank={bank} />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -180,7 +186,7 @@ export default async function Home() {
             </LinkWithLoader>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {featuredBrands.map((brand) => (
+            {featuredBrands.slice(0, 8).map((brand) => (
               <FeaturedBrandCard key={brand.id} brand={brand} />
             ))}
           </div>
@@ -222,32 +228,13 @@ export default async function Home() {
         <div className="container mx-auto">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-3xl font-bold text-white">الموديلات المميزة</h2>
-            <LinkWithLoader href="/cars">
+            <LinkWithLoader href="/featured-models">
               <Button variant="ghost" className="text-white">عرض الكل <ChevronLeft className="mr-1 h-4 w-4" /></Button>
             </LinkWithLoader>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {featuredModels.map((model) => (
-              <LinkWithLoader key={model.id} href={`/cars?bodyType=${model.name}`}>
-                <Card className="relative group cursor-pointer rounded-2xl overflow-hidden h-48 md:h-64 border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 p-0">
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={model.image}
-                      alt={model.nameAr}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
-                  </div>
-                  <div className="absolute inset-x-0 bottom-0 p-6 text-right">
-                    <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">{model.nameAr}</h3>
-                    <div className="flex items-center text-white/80 text-sm opacity-0 group-hover:opacity-100 transition-opacity justify-end">
-                      <span>استكشف المزيد</span>
-                      <ChevronLeft className="w-4 h-4 mr-1 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </div>
-                </Card>
-              </LinkWithLoader>
+              <FeaturedModelCard key={model.id} model={model} />
             ))}
           </div>
         </div>

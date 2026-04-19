@@ -63,15 +63,25 @@ export const bodyTypes = [
 export const fuelTypes = ["بنزين", "ديزل", "كهربائي", "هجين", "هجين قابل للشحن"];
 export const transmissions = ["أوتوماتيك", "يدوي", "نصف أوتوماتيك"];
 export const bodyTypeOptions = [
-  "دفع رباعي",
+  "إقتصادية",
   "سيدان",
+  "مركبة تجارية",
+  "بيك اب",
+  "كروس أوفر",
   "هاتشباك",
-  "كشف",
-  "كوبيه",
-  "ستيشن",
-  "بيك أب",
+  "suv",
+  "فان",
+  "ميني فان",
+  "رياضية",
 ];
 export const carStatuses = ["AVAILABLE", "UNAVAILABLE", "SOLD"];
+export const driveTypeOptions = ["دفع رباعي", "دفع خلفي", "دفع أمامي"];
+
+/** Prisma orderBy prefix: فارهة (luxury) first, then featured, then normal. Append createdAt or price. */
+export const carDisplayPriorityOrderBy = [
+  { isLuxury: "desc" },
+  { featured: "desc" },
+];
 
 export const faqItems = [
   {
