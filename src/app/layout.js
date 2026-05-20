@@ -7,7 +7,7 @@ import { SITE_CONFIG } from "@/lib/seo";
 import Script from "next/script";
 import ClientWrapper from "@/components/ClientWrapper";
 import { headers } from "next/headers";
-import { db } from "@/lib/prisma";
+import { db, isDbConnectionError, withDbRetry } from "@/lib/prisma";
 import { getLogoByType, getPixelSettings } from "@/actions/site-management";
 
 const cairo = Cairo({
@@ -77,13 +77,21 @@ export default async function RootLayout({ children }) {
     getPixelSettings(),
     (async () => {
       try {
-        const [socialLinks, storeInfo] = await Promise.all([
-          db.socialMedia.findMany({ where: { isActive: true }, orderBy: { order: "asc" } }),
-          db.storeInfo.findFirst(),
-        ]);
-        return { socialLinks, storeInfo };
+        return await withDbRetry(async () => {
+          const [socialLinks, storeInfo] = await Promise.all([
+            db.socialMedia.findMany({ where: { isActive: true }, orderBy: { order: "asc" } }),
+            db.storeInfo.findFirst(),
+          ]);
+          return { socialLinks, storeInfo };
+        });
       } catch (e) {
-        console.error("[layout] Footer DB (socialMedia / storeInfo) unavailable:", e?.message || e);
+        if (process.env.NODE_ENV === "development" && isDbConnectionError(e)) {
+          console.warn(
+            "[layout] Footer DB unreachable — using empty footer data. If this persists, open Supabase Dashboard and ensure the project is not paused."
+          );
+        } else {
+          console.error("[layout] Footer DB (socialMedia / storeInfo) unavailable:", e?.message || e);
+        }
         return { socialLinks: [], storeInfo: null };
       }
     })(),

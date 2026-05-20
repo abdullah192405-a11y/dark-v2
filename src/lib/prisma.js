@@ -9,25 +9,32 @@ const prismaClientOptions = {
 // Function to handle database URL with connection pooling settings
 const getDatabaseUrl = () => {
   let url = process.env.DATABASE_URL || "";
-  
+
+  if (!url) {
+    throw new Error("DATABASE_URL is not set");
+  }
+
   // If using Supabase pooler (port 6543), ensure pgbouncer=true is present
-  if (url.includes(':6543') && !url.includes('pgbouncer=true')) {
-    url += (url.includes('?') ? '&' : '?') + 'pgbouncer=true';
+  if (url.includes(":6543") && !url.includes("pgbouncer=true")) {
+    url += (url.includes("?") ? "&" : "?") + "pgbouncer=true";
   }
-  
-  // Explicitly set connection limits and timeouts to prevent pool exhaustion
-  // 5 is usually enough for a single dev machine, 20 is a safe default for production
-  const limit = process.env.NODE_ENV === 'development' ? 5 : 20;
-  const timeout = 30; // 30 seconds wait for a connection
-  
-  if (!url.includes('connection_limit=')) {
-    url += (url.includes('?') ? '&' : '?') + `connection_limit=${limit}`;
+
+  if (!url.includes("sslmode=")) {
+    url += (url.includes("?") ? "&" : "?") + "sslmode=require";
   }
-  
-  if (!url.includes('pool_timeout=')) {
-    url += (url.includes('?') ? '&' : '?') + `pool_timeout=${timeout}`;
+
+  // Dev needs a small pool for parallel layout queries; keep below Supabase free-tier limits
+  const limit = process.env.NODE_ENV === "development" ? 5 : 20;
+  const timeout = 30;
+
+  if (!url.includes("connection_limit=")) {
+    url += (url.includes("?") ? "&" : "?") + `connection_limit=${limit}`;
   }
-  
+
+  if (!url.includes("pool_timeout=")) {
+    url += (url.includes("?") ? "&" : "?") + `pool_timeout=${timeout}`;
+  }
+
   return url;
 };
 
@@ -42,10 +49,54 @@ const createPrismaClient = () => {
   });
 };
 
-export const db = createPrismaClient(); // globalThis.prisma || createPrismaClient();
+const globalForPrisma = globalThis;
+
+export const db = globalForPrisma.prisma ?? createPrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
-  globalThis.prisma = db;
+  globalForPrisma.prisma = db;
+}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** True when Supabase is paused, pooler is cold, or the network dropped briefly. */
+export function isDbConnectionError(error) {
+  const code = error?.code;
+  const message = error?.message || String(error);
+  return (
+    code === "P1001" ||
+    code === "P1017" ||
+    message.includes("Can't reach database server") ||
+    message.includes("Connection terminated") ||
+    message.includes("ECONNREFUSED") ||
+    message.includes("ETIMEDOUT")
+  );
+}
+
+/** Retry transient Supabase/pooler failures (common after project wake or HMR). */
+export async function withDbRetry(operation, { retries = 3, delayMs = 500 } = {}) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (!isDbConnectionError(error) || attempt === retries) {
+        throw error;
+      }
+
+      try {
+        await db.$disconnect();
+      } catch {
+        // ignore disconnect errors during retry
+      }
+
+      await sleep(delayMs * attempt);
+    }
+  }
+
+  throw lastError;
 }
 
 // globalThis.prisma: This global variable ensures that the Prisma client instance is

@@ -7,6 +7,12 @@ import { getChatbotResponse } from "@/actions/chatbot";
 import Link from "next/link";
 import Image from "next/image";
 
+const PROACTIVE_GREETING =
+  "👋 أهلاً، أنا مساعد MAX AI\nأقدر أرشح لك سيارة حسب راتبك أو ميزانيتك";
+
+/** First show and repeat interval when chat is closed (ms). */
+const PROACTIVE_INTERVAL_MS = 8000;
+
 export default function ChatBot({ onOpenChange }) {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +28,10 @@ export default function ChatBot({ onOpenChange }) {
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showStarterMessages, setShowStarterMessages] = useState(true);
+  const [showProactiveBubble, setShowProactiveBubble] = useState(false);
   const messagesEndRef = useRef(null);
+  const proactiveTimersRef = useRef({ hide: null, next: null });
+  const scheduleNextBubbleRef = useRef(null);
 
   // Starter message options - aligned with chatbot's search capabilities
   const starterMessages = [
@@ -73,6 +82,68 @@ export default function ChatBot({ onOpenChange }) {
       onOpenChange(isOpen);
     }
   }, [isOpen, onOpenChange]);
+
+  useEffect(() => {
+    if (!mounted || isOpen) {
+      setShowProactiveBubble(false);
+      return;
+    }
+
+    const clearProactiveTimers = () => {
+      if (proactiveTimersRef.current.hide) {
+        clearTimeout(proactiveTimersRef.current.hide);
+        proactiveTimersRef.current.hide = null;
+      }
+      if (proactiveTimersRef.current.next) {
+        clearTimeout(proactiveTimersRef.current.next);
+        proactiveTimersRef.current.next = null;
+      }
+    };
+
+    const showBubble = () => {
+      setShowProactiveBubble(true);
+      if (proactiveTimersRef.current.hide) {
+        clearTimeout(proactiveTimersRef.current.hide);
+      }
+      proactiveTimersRef.current.hide = setTimeout(() => {
+        setShowProactiveBubble(false);
+        scheduleNextBubble();
+      }, 12000);
+    };
+
+    const scheduleNextBubble = () => {
+      if (proactiveTimersRef.current.next) {
+        clearTimeout(proactiveTimersRef.current.next);
+      }
+      proactiveTimersRef.current.next = setTimeout(
+        showBubble,
+        PROACTIVE_INTERVAL_MS
+      );
+    };
+
+    scheduleNextBubbleRef.current = scheduleNextBubble;
+
+    proactiveTimersRef.current.next = setTimeout(
+      showBubble,
+      PROACTIVE_INTERVAL_MS
+    );
+
+    return () => {
+      clearProactiveTimers();
+      scheduleNextBubbleRef.current = null;
+    };
+  }, [mounted, isOpen]);
+
+  const dismissProactiveBubble = (scheduleNext = true) => {
+    setShowProactiveBubble(false);
+    if (proactiveTimersRef.current.hide) {
+      clearTimeout(proactiveTimersRef.current.hide);
+      proactiveTimersRef.current.hide = null;
+    }
+    if (scheduleNext) {
+      scheduleNextBubbleRef.current?.();
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -244,14 +315,54 @@ export default function ChatBot({ onOpenChange }) {
   return !mounted ? null : (
     <>
       {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-4 left-4 md:bottom-6 md:left-6 bg-yellow-600 hover:bg-yellow-800 text-black rounded-full p-3 md:p-4 shadow-2xl transition-all duration-300 hover:scale-110 z-50 flex items-center gap-2"
-          aria-label="فتح الدردشة"
-        >
-          <MessageSquare className="h-5 w-5 md:h-6 md:w-6" />
-          <span className="hidden md:inline font-medium">مساعد AI</span>
-        </button>
+        <div className="fixed z-[60] left-[max(1rem,env(safe-area-inset-left,0px))] bottom-[max(1rem,env(safe-area-inset-bottom,0px))] md:left-6 md:bottom-6">
+          {/* w-fit = عرض الزر فقط؛ الفقاعة محاذية من يسار الزر */}
+          <div className="relative w-fit">
+            {showProactiveBubble && (
+              <div
+                className="absolute bottom-full left-0 z-10 mb-1.5 w-max max-w-[min(13.5rem,calc(100vw-1.5rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] animate-in fade-in slide-in-from-bottom-2 duration-300 md:mb-2 md:max-w-[min(17rem,calc(100vw-2rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))]"
+                role="status"
+                aria-live="polite"
+              >
+                <div
+                  dir="rtl"
+                  className="relative w-full min-w-0 cursor-pointer rounded-lg border border-white/15 bg-black/85 px-2.5 pb-2 pt-1.5 shadow-md backdrop-blur-md md:px-3 md:py-2 md:shadow-lg"
+                  onClick={() => {
+                    dismissProactiveBubble(false);
+                    setIsOpen(true);
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dismissProactiveBubble();
+                    }}
+                    className="absolute top-1.5 end-1.5 z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-700/95 text-gray-200 ring-1 ring-white/10 transition hover:bg-gray-600 hover:text-white touch-manipulation after:pointer-events-none after:absolute after:-inset-2 after:content-[''] md:top-2 md:end-2 md:h-5 md:w-5 md:after:hidden"
+                    aria-label="إغلاق الرسالة"
+                  >
+                    <X className="h-3 w-3 shrink-0" strokeWidth={2.5} />
+                  </button>
+                  <p className="min-w-0 pe-8 ps-1 text-start text-[0.6875rem] font-normal leading-[1.5] text-white/95 [overflow-wrap:anywhere] whitespace-pre-line sm:text-xs md:pe-7 md:text-[11px] md:leading-snug">
+                    {PROACTIVE_GREETING}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={() => {
+                dismissProactiveBubble(false);
+                setIsOpen(true);
+              }}
+              className="relative flex shrink-0 items-center gap-2 rounded-full bg-yellow-600 p-3 text-black shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-yellow-800 active:scale-105 touch-manipulation md:p-4"
+              aria-label="فتح الدردشة"
+            >
+              <MessageSquare className="h-5 w-5 md:h-6 md:w-6" />
+              <span className="hidden font-medium md:inline">مساعد AI</span>
+            </button>
+          </div>
+        </div>
       )}
 
       {isOpen && (

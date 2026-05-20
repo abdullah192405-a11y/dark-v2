@@ -27,7 +27,7 @@ export default function CarsPageWrapper() {
       label="لم تجد سياراتك؟"
       text="السلام عليكم%0Aلقد بحثت عن سيارة ولم أجدها%0Aهل يمكنكم مساعدتي؟"
       bottomOffset="bottom-4 md:bottom-6"
-      leftOffset="left-4 md:left-6"
+      rightOffset="right-4 md:right-6"
     />
   );
 }

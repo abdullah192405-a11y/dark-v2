@@ -291,7 +291,7 @@ export default async function Home() {
       </section>
 
       <ChatBot />
-      <WhatsAppButton number={whatsappNumber} />
+      <WhatsAppButton phoneNumber={whatsappNumber} />
     </div>
   );
 }

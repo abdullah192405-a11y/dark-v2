@@ -2,7 +2,7 @@
 
 import { FaWhatsapp } from "react-icons/fa";
 
-export default function WhatsAppButton({ phoneNumber, className = "", fixed = true, text = "", label = "", bottomOffset = "bottom-16 md:bottom-24", leftOffset = "left-4 md:left-6" }) {
+export default function WhatsAppButton({ phoneNumber, className = "", fixed = true, text = "", label = "", bottomOffset = "bottom-4 md:bottom-6", rightOffset = "right-4 md:right-6" }) {
   // Clean the phone number: remove + and spaces
   const cleanPhoneNumber = phoneNumber ? phoneNumber.replace(/[\+\s]/g, '') : '';
   const encodedText = text ? encodeURIComponent(text) : '';
@@ -10,7 +10,7 @@ export default function WhatsAppButton({ phoneNumber, className = "", fixed = tr
 
   if (fixed) {
     return (
-      <div className={`fixed ${bottomOffset} ${leftOffset} z-50 flex flex-col items-center`}>
+      <div className={`fixed ${bottomOffset} ${rightOffset} z-50 flex flex-col items-center`}>
         {/* Label */}
         <span className="text-white text-xs mb-2 bg-black/50 px-2 py-1 rounded backdrop-blur-sm md:whitespace-nowrap whitespace-pre-line text-center">
           {label || text || 'تواصل\nمعنا'}
